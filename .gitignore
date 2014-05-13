@@ -1,0 +1,6 @@
+*.lock
+package.xml
+/vendor
+.idea
+bin/phpunit
+.DS_Store

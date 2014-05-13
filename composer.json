@@ -1,0 +1,25 @@
+{
+    "name": "GetStream/stream",
+    "type": "package",
+    "description": "A PHP client for Stream (http://getstream.io)",
+    "keywords": ["stream", "newsfeed", "feedly"],
+    "homepage": "http://getfeedly.io",
+    "license": "BSD",
+    "authors": [
+        {
+            "name": "Tommaso Barbugli",
+            "email": "tbarbugli@gmail.com"
+        }
+    ],
+    "require-dev": {
+        "phpunit/phpunit": "3.7.*"
+    },
+    "require": {
+        "php": ">=5.2.4"
+    },
+    "autoload": {
+        "psr-0" : {
+            "GetStream\\Stream" : "lib/"
+        }
+    }
+}
