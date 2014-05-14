@@ -15,7 +15,8 @@
         "phpunit/phpunit": "3.7.*"
     },
     "require": {
-        "php": ">=5.2.4"
+        "php": ">=5.4.*",
+        "guzzlehttp/guzzle": "4.*"
     },
     "autoload": {
         "psr-0" : {
