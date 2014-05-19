@@ -10,7 +10,7 @@ stream-php is a PHP client for `Stream <https://getstream.io/>`_.
 .. code-block:: php
 
     // Instantiate a new client
-    $client = new new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
+    $client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
 
     // Instantiate a feed object
     $user_feed_1 = $client->feed('user:1');
