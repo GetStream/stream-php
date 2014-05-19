@@ -30,7 +30,7 @@ class BaseFeed
 
     public function removeActivity($activity_id)
     {
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'DELETE');
+        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/{$activity_id}/", 'DELETE');
     }
 
     public function getActivities($offset = 0, $limit = 20)

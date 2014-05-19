@@ -72,7 +72,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
         $aid = '123';
         $response = $feed->removeActivity($aid);
         $lastRequest = TestFeed::getHistory()->getLastRequest();
-        $this->assertSame($lastRequest->getUrl(), "https://getstream.io/api/feed/feed/1/?api_key=api");
+        $this->assertSame($lastRequest->getUrl(), "https://getstream.io/api/feed/feed/1/123/?api_key=api");
         $this->assertSame($lastRequest->getMethod(), "DELETE");
     }
 

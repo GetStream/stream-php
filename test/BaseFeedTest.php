@@ -45,6 +45,6 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
         $feed = new _BaseFeed('feed:1', 'api', 'token');
         $aid = '123';
         extract($feed->removeActivity($aid));
-        $this->assertSame($uri, "feed/feed/1/");
+        $this->assertSame($uri, "feed/feed/1/123/");
     }
 }
