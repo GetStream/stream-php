@@ -15,7 +15,7 @@ stream-php is a PHP client for `Stream <https://getstream.io/>`_.
     // Instantiate a feed object
     $user_feed_1 = $client->feed('user:1');
 
-    // Get activities from 5 to 10
+    // Get 10 activities starting from the 5th
     $results = $user_feed_1->getActivities(5, 10);
 
     // Create a new activity
