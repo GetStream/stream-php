@@ -2,9 +2,8 @@
 namespace GetStream\Stream;
 
 
-class HttpBinFeed extends BaseFeed
+class HttpBinFeed extends Feed
 {
-    use GuzzleHttpTrait;
     const API_ENDPOINT = 'http://eu.httpbin.org';
 
     public function addActivity($activity_data)
