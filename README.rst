@@ -11,6 +11,7 @@ stream-php is a PHP client for `Stream <https://getstream.io/>`_.
 
     // Instantiate a new client
     $client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
+    // Find your API keys here https://getstream.io/dashboard/
 
     // Instantiate a feed object
     $user_feed_1 = $client->feed('user:1');
