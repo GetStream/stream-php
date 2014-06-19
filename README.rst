@@ -15,7 +15,10 @@ stream-php is a PHP client for `Stream <https://getstream.io/>`_.
     // Instantiate a feed object
     $user_feed_1 = $client->feed('user:1');
 
-    // Get 10 activities starting from the 5th
+    // Get 20 activities starting from activity with id $last_id (fast id offset pagination)
+    $results = $user_feed_1->getActivities(0, 20, id_lte=$last_id);
+
+    // Get 10 activities starting from the 5th (slow offset pagination)
     $results = $user_feed_1->getActivities(5, 10);
 
     // Create a new activity

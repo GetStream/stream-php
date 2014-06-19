@@ -1,2 +1,2 @@
 tests:
-	vendor/bin/phpunit --bootstrap vendor/autoload.php test/*
+	vendor/bin/phpunit --bootstrap vendor/autoload.php

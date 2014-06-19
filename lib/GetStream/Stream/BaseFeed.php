@@ -33,9 +33,10 @@ class BaseFeed
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/{$activity_id}/", 'DELETE');
     }
 
-    public function getActivities($offset = 0, $limit = 20)
+    public function getActivities($offset = 0, $limit = 20, $options = array())
     {
         $query_params = ['offset' => $offset, 'limit' => $limit];
+        $query_params = array_merge($query_params, $options);
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'GET', null, $query_params);
     }
 

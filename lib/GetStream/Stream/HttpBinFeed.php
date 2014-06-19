@@ -16,9 +16,10 @@ class HttpBinFeed extends Feed
         return $this->makeHttpRequest("delete", 'DELETE');
     }
 
-    public function getActivities($offset = 0, $limit = 20)
+    public function getActivities($offset = 0, $limit = 20, $options = array())
     {
         $query_params = ['offset' => $offset, 'limit' => $limit];
+        $query_params = array_merge($query_params, $options);
         return $this->makeHttpRequest("get", 'GET', null, $query_params);
     }
 }
