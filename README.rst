@@ -31,13 +31,13 @@ stream-php is a PHP client for `Stream <https://getstream.io/>`_.
     $user_feed_1->addActivity($data);
 
     // Remove an activity by its id
-    $user1->removeActivity('12345678910');
+    $user_feed_1->removeActivity('12345678910');
 
     // Follow another feed
-    $user1->followFeed('flat:42');
+    $user_feed_1->followFeed('flat:42');
 
     // Stop following another feed
-    $user1->unfollowFeed('flat:42');
+    $user_feed_1->unfollowFeed('flat:42');
 
 
 Installation
@@ -57,7 +57,7 @@ dependencies, you can add Stream with it.
         }
     }
 
-(replace ``$VERSION`` with one of the available versions on `Packagist <https://packagist.org/packages/raven/raven>`_)
+(replace ``$VERSION`` with one of the available versions on `Packagist <https://packagist.org/packages/get-stream/stream>`_)
 or to get the latest version off the master branch:
 
 .. code-block:: json
