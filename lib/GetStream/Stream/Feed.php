@@ -3,7 +3,10 @@ namespace GetStream\Stream;
 
 use GuzzleHttp;
 use GuzzleHttp\Exception\ClientErrorResponseException;
+use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\Exception\ServerErrorResponse;
+use \Exception;
+
 
 class Feed extends BaseFeed
 {
@@ -34,8 +37,8 @@ class Feed extends BaseFeed
         try {
             $response = $client->send($request);
         } catch (Exception $e) {
-            if ($e instanceof ClientErrorResponseException || $e instanceof ServerErrorResponse) {
-                throw new StreamFeedException($e->getResponse());
+            if ($e instanceof ClientErrorResponseException || $e instanceof ServerErrorResponse || $e instanceof ClientException) {
+                throw new StreamFeedException($e->getResponse()->getBody());
             } else {
                 throw $e;
             }

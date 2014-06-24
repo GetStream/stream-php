@@ -1,6 +1,6 @@
 <?php
 namespace GetStream\Stream;
 
-class StreamFeedException extends Exception
+class StreamFeedException extends \Exception
 {
 }
