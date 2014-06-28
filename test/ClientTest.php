@@ -20,6 +20,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $feed1 = $client->feed('flat:1');
     }
 
+    /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage feed must be in format type:id
+     */
+    public function testClientWrongFeedId()
+    {
+        $client = new Client('key', 'secret');
+        $feed1 = $client->feed('flat_1');
+    }
+
     public function testClientFeedAddActivity()
     {
         $feed = new HttpBinFeed('feed:1', 'api', 'token');
