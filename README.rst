@@ -5,6 +5,10 @@ stream-php
    :target: http://travis-ci.org/tbarbugli/stream-php
 
 
+.. image:: https://coveralls.io/repos/tbarbugli/stream-php/badge.png?branch=master
+  :target: https://coveralls.io/r/tbarbugli/stream-php?branch=master
+
+
 stream-php is a PHP client for `Stream <https://getstream.io/>`_.
 
 .. code-block:: php
