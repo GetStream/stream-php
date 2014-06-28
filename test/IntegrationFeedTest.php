@@ -40,18 +40,22 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($activities[0]['id'], $activity_id);
     }
 
-    public function testFlatFollow() {
-        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
-        $response = $this->flat3->addActivity($activity_data);
-        $activity_id = $response['id'];
-        $this->user1->followFeed('flat:33');
-        sleep(5);
-        $activities = $this->user1->getActivities(0, 1)['results'];
-        $this->assertSame(count($activities), 1);
-        $this->assertSame($activities[0]['id'], $activity_id);
-    }
+    // public function testFlatFollow() {
+    //     $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
+    //     $response = $this->flat3->addActivity($activity_data);
+    //     $activity_id = $response['id'];
+    //     $this->user1->unfollowFeed('flat:33');
+    //     sleep(5);
+    //     $this->user1->followFeed('flat:33');
+    //     sleep(5);
+    //     $activities = $this->user1->getActivities(0, 1)['results'];
+    //     $this->assertSame(count($activities), 1);
+    //     $this->assertSame($activities[0]['id'], $activity_id);
+    // }
 
-    public function testFlatUnfollow() {
+    public function testFlatFollowUnfollow() {
+        $this->user1->unfollowFeed('flat:33');
+        sleep(3);
         $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
         $response = $this->flat3->addActivity($activity_data);
         $activity_id = $response['id'];
@@ -61,6 +65,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame(count($activities), 1);
         $this->assertSame($activities[0]['id'], $activity_id);
         $this->user1->unfollowFeed('flat:33');
+        sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertNotSame($activities[0]['id'], $activity_id);
     }

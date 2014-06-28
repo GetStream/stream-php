@@ -7,10 +7,13 @@
          convertWarningsToExceptions="true"
          processIsolation="false"
          bootstrap="vendor/autoload.php"
->
-  <testsuites>
-    <testsuite name="Test Suite">
-      <directory>test/</directory>
-    </testsuite>
-  </testsuites>
+         >
+    <logging>
+        <log type="coverage-clover" target="build/logs/clover.xml"/>
+    </logging>
+    <testsuites>
+        <testsuite name="Test Suite">
+            <directory>test/</directory>
+        </testsuite>
+    </testsuites>
 </phpunit>
