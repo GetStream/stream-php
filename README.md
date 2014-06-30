@@ -5,6 +5,39 @@ stream-php
 
 [![Coverage Status](https://coveralls.io/repos/tbarbugli/stream-php/badge.png?branch=master)](https://coveralls.io/r/tbarbugli/stream-php?branch=master)
 
+### Installation
+
+#### Install with Composer
+
+If you're using [Composer](https://getcomposer.org/) to manage
+dependencies, you can add Stream with it.
+
+```javascript
+{
+    "require": {
+        "get-stream/stream": "$VERSION"
+    }
+}
+```
+
+(replace `$VERSION` with one of the available versions on
+[Packagist](https://packagist.org/packages/get-stream/stream)) or to get
+the latest version off the master branch:
+
+```javascript
+{
+    "require": {
+        "get-stream/stream": "dev-master"
+    }
+}
+```
+
+Note that using unstable versions is not recommended and should be
+avoided.
+
+Composer will take care of the autoloading for you, so if you require
+the `vendor/autoload.php`, you're good to go.
+
 ### Usage
 
 ```php
@@ -39,41 +72,7 @@ $user_feed_1->followFeed('flat:42');
 $user_feed_1->unfollowFeed('flat:42');
 ```
 
-### Installation
-
-#### Install with Composer
-
-If you're using [Composer](https://getcomposer.org/) to manage
-dependencies, you can add Stream with it.
-
-```javascript
-{
-    "require": {
-        "get-stream/stream": "$VERSION"
-    }
-}
-```
-
-(replace `$VERSION` with one of the available versions on
-[Packagist](https://packagist.org/packages/get-stream/stream)) or to get
-the latest version off the master branch:
-
-```javascript
-{
-    "require": {
-        "get-stream/stream": "dev-master"
-    }
-}
-```
-
-Note that using unstable versions is not recommended and should be
-avoided.
-
-Composer will take care of the autoloading for you, so if you require
-the `vendor/autoload.php`, you're good to go.
-
-Contributing
-============
+### Contributing
 
 First, make sure you can run the test suite. Install development
 dependencies :
