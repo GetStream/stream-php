@@ -63,7 +63,7 @@ $data = [
 $user_feed_1->addActivity($data);
 
 // Remove an activity by its id
-$user_feed_1->removeActivity('12345678910');
+$user_feed_1->removeActivity("e561de8f-00f1-11e4-b400-0cc47a024be0");
 
 // Follow another feed
 $user_feed_1->followFeed('flat:42');
