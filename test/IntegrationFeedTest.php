@@ -12,7 +12,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     protected $flat3;
 
     protected function setUp() {
-        $this->client = new Client('5crf3bhfzesn', 'tfq2sdqpj9g446sbv653x3aqmgn33hsn8uzdc9jpskaw8mj6vsnhzswuwptuj9su');
+        $this->client = new Client('ahj2ndz7gsan', 'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy');
         $this->user1 = $this->client->feed('user:11');
         $this->aggregated2 = $this->client->feed('aggregated:22');
         $this->aggregated3 = $this->client->feed('aggregated:33');
@@ -67,11 +67,11 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testDelete() {
         $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
-        $activities = $this->user1->addActivity($activity_data)['results'];
+        $this->user1->addActivity($activity_data);
+        $activities = $this->user1->getActivities(0,1)['results'];
         $this->assertSame(count($activities), 1);
-        $activities = $this->user1->getActivities()['results'];
         $this->user1->delete();
-        $activities = $this->user1->getActivities()['results'];
+        $activities = $this->user1->getActivities(0,1)['results'];
         $this->assertSame(count($activities), 0);
     }
 
