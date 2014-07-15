@@ -65,6 +65,16 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($activities[0]['id'], $activity_id);
     }
 
+    public function testDelete() {
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
+        $activities = $this->user1->addActivity($activity_data)['results'];
+        $this->assertSame(count($activities), 1);
+        $activities = $this->user1->getActivities()['results'];
+        $this->user1->delete();
+        $activities = $this->user1->getActivities()['results'];
+        $this->assertSame(count($activities), 0);
+    }
+
     public function testGet() {
         $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
         $first_id = $this->user1->addActivity($activity_data)['id'];

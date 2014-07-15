@@ -70,6 +70,9 @@ $user_feed_1->followFeed('flat:42');
 
 // Stop following another feed
 $user_feed_1->unfollowFeed('flat:42');
+
+// Delete a feed (and its content)
+$user_feed_1->delete();
 ```
 
 ### Contributing

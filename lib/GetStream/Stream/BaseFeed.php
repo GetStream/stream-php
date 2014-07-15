@@ -52,4 +52,9 @@ class BaseFeed
         Client::validateFeed($feed);
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/follows/{$feed}/", 'DELETE');
     }
+
+    public function delete()
+    {
+        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'DELETE');
+    }
 }
