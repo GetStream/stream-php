@@ -45,6 +45,15 @@ class FeedTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($lastReq->getMethod(), "POST");
     }
 
+    /**
+     * @expectedException GetStream\Stream\StreamWrongInputException
+     */
+    public function testArrayParameter() {
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> array('id'=>1));
+        $feed = new _Feed('feed:1', 'api', 'token');
+        $feed->addActivity($activity_data);
+    }
+
     public function testClientFeedGetActivities()
     {
         $api = 'api';

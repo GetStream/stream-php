@@ -31,6 +31,9 @@ class Feed extends BaseFeed
 
         $data = is_null($data) ? array() : $data;
         foreach ($data as $key => $value) {
+            if (is_array($value) || is_object($value)) {
+                throw new StreamWrongInputException("$key is an array or an object");
+            }
             $postBody->setField($key, $value);
         }
 
