@@ -28,6 +28,32 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($activities[0]['id'], $activity_id);
     }
 
+    public function testAddActivityWithArray() {
+        $complex = array('tommaso', 'thierry');
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1, 'complex'=>$complex);
+        $response = $this->user1->addActivity($activity_data);
+        $activity_id = $response['id'];
+        $activities = $this->user1->getActivities(0, 1)['results'];
+        $this->assertSame(count($activities), 1);
+        $this->assertSame($activities[0]['id'], $activity_id);
+        sort($activities[0]['complex']);
+        sort($complex);
+        $this->assertSame($activities[0]['complex'], $complex);
+    }
+
+    public function testAddActivityWithAssocArray() {
+        $complex = array('author' => 'tommaso', 'bcc' => 'thierry');
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1, 'complex'=>$complex);
+        $response = $this->user1->addActivity($activity_data);
+        $activity_id = $response['id'];
+        $activities = $this->user1->getActivities(0, 1)['results'];
+        $this->assertSame(count($activities), 1);
+        $this->assertSame($activities[0]['id'], $activity_id);
+        sort($activities[0]['complex']);
+        sort($complex);
+        $this->assertSame($activities[0]['complex'], $complex);
+    }
+
     public function testRemoveActivity() {
         $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
         $response = $this->user1->addActivity($activity_data);

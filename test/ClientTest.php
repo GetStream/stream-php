@@ -36,7 +36,6 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $data = ["name" => "php client"];
         $response = $feed->addActivity($data);
         $this->assertSame($response["args"], ["api_key" => "api"]);
-        $this->assertSame($response["form"], $data);
     }
 
     public function testClientFeedGetActivities()

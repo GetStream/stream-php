@@ -25,17 +25,12 @@ class Feed extends BaseFeed
 
         $request = $client->createRequest($method, $url);
         $request->setHeader('Authorization', "{$feed_name} {$this->token}");
+        $request->setHeader('Content-Type', "application/json");
         $request->setQuery($query_params);
 
-        $postBody = $request->getBody();
-
         $data = is_null($data) ? array() : $data;
-        foreach ($data as $key => $value) {
-            if (is_array($value) || is_object($value)) {
-                throw new StreamWrongInputException("$key is an array or an object");
-            }
-            $postBody->setField($key, $value);
-        }
+        $json_data = json_encode($data);
+        $request->setBody(GuzzleHttp\Stream\Stream::factory($json_data));
 
         try {
             $response = $client->send($request);
