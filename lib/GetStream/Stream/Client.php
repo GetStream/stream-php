@@ -40,7 +40,7 @@ class Client
         return implode(explode(':', $feed));
     }
 
-    public function feedSignature($feed)
+    public function createToken($feed)
     {
         return $this->signer->signature($feed);
     }
@@ -48,7 +48,7 @@ class Client
     public function feed($feed, $token = null)
     {
         $feed_auth_name = $this::validateFeed($feed);
-        $token = is_null($token) ? $this->feedSignature($feed_auth_name) : $token;
+        $token = is_null($token) ? $this->createToken($feed_auth_name) : $token;
         return new Feed($feed, $this->api_key, $token);
     }
 }

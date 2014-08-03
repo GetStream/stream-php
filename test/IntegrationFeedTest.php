@@ -40,12 +40,11 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($activities[0]['id'], $activity_id);
     }
 
-    /**
-     * @expectedException GetStream\Stream\StreamFeedException
-     */
     public function testException() {
-        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1, 'missing' => 'field');
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1, 'new_field' => '42');
         $response = $this->user1->addActivity($activity_data);
+        $activities = $this->user1->getActivities(0, 1)['results'];
+        $this->assertNotSame($activities[0]['new_field'], 42);
     }
 
     public function testFlatFollowUnfollow() {
