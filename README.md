@@ -73,6 +73,13 @@ $user_feed_1->unfollowFeed('flat:42');
 
 // Delete a feed (and its content)
 $user_feed_1->delete();
+
+// Generating tokens for client side usage
+token = $user_feed_1->getToken();
+
+// Javascript client side feed initialization
+// user1 = client.feed('user:1', "$token");
+
 ```
 
 ### Contributing

@@ -23,6 +23,11 @@ class BaseFeed
         $this->api_key = $api_key;
     }
 
+    public function getToken()
+    {
+        return $this->token;
+    }
+
     public function addActivity($activity_data)
     {
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $activity_data);

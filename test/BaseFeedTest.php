@@ -22,6 +22,12 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($uri, "feed/feed/1/");
     }
 
+    public function testGetToken()
+    {
+        $feed = new _BaseFeed('feed:1', 'api', 'token');
+        $this->assertSame($feed->getToken(), 'token');
+    }
+
     public function testClientFeedGetActivities()
     {
         $api = 'api';
