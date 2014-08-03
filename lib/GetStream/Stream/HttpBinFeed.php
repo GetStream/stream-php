@@ -11,7 +11,7 @@ class HttpBinFeed extends Feed
         return $this->makeHttpRequest("post", 'POST', $activity_data);
     }
 
-    public function removeActivity($activity_id)
+    public function removeActivity($activity_id, $foreign_id = false)
     {
         return $this->makeHttpRequest("delete", 'DELETE');
     }

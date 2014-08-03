@@ -33,9 +33,13 @@ class BaseFeed
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $activity_data);
     }
 
-    public function removeActivity($activity_id)
+    public function removeActivity($activity_id, $foreign_id = false)
     {
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/{$activity_id}/", 'DELETE');
+        $query_params = array();
+        if ($foreign_id === true) {
+            $query_params['foreign_id'] = 1;
+        }
+        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/{$activity_id}/", 'DELETE', null, $query_params);
     }
 
     public function getActivities($offset = 0, $limit = 20, $options = array())

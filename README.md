@@ -58,12 +58,16 @@ $results = $user_feed_1->getActivities(5, 10);
 $data = [
     "actor_id"=>"1",
     "verb"=>"like",
-    "object_id"=>"3"
+    "object_id"=>"3",
+    "foreign_id"=>"post:42"
 ];
 $user_feed_1->addActivity($data);
 
 // Remove an activity by its id
 $user_feed_1->removeActivity("e561de8f-00f1-11e4-b400-0cc47a024be0");
+
+// Remove activities by their foreign_id
+$user_feed_1.remove('post:42', true)
 
 // Follow another feed
 $user_feed_1->followFeed('flat:42');
