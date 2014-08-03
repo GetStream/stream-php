@@ -28,6 +28,18 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($activities[0]['id'], $activity_id);
     }
 
+    public function testAddActivityWithTime() {
+        $now = new \DateTime("now", new \DateTimeZone('Pacific/Nauru'));
+        $time = $now->format(\DateTime::ISO8601);
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1, 'time'=>$time);
+        $response = $this->user1->addActivity($activity_data);
+        $activity_id = $response['id'];
+        $activities = $this->user1->getActivities(0, 1)['results'];
+        $this->assertSame(count($activities), 1);
+        $utc_time = new \DateTime($activities[0]['time'], new \DateTimeZone("UTC"));
+        $this->assertSame($now->format('U'), $utc_time->format('U'));
+    }
+
     public function testAddActivityWithArray() {
         $complex = array('tommaso', 'thierry');
         $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1, 'complex'=>$complex);
