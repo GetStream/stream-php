@@ -33,6 +33,12 @@ class BaseFeed
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $activity_data);
     }
 
+    public function addActivities($activities_data)
+    {
+        $data = array("activities" => $activities_data);
+        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $data);
+    }
+
     public function removeActivity($activity_id, $foreign_id = false)
     {
         $query_params = array();

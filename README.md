@@ -75,6 +75,13 @@ $user_feed_1->followFeed('flat:42');
 // Stop following another feed
 $user_feed_1->unfollowFeed('flat:42');
 
+// Batch adding activities
+$activities = array(
+    array('actor' => '1', 'verb' => 'tweet', 'object' => '1'),
+    array('actor' => '2', 'verb' => 'like', 'object' => '3')
+);
+$user_feed_1->addActivities($activities);
+
 // Delete a feed (and its content)
 $user_feed_1->delete();
 
