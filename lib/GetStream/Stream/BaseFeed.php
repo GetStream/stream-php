@@ -10,9 +10,10 @@ class BaseFeed
     protected $feed_id;
     protected $token;
     protected $api_key;
+    protected $client;
     const API_ENDPOINT = 'https://getstream.io/api';
 
-    public function __construct($feed, $api_key, $token)
+    public function __construct($client, $feed, $api_key, $token)
     {
         Client::validateFeed($feed);
         $this->feed = $feed;
@@ -21,6 +22,7 @@ class BaseFeed
         $this->feed_id = $feed_components[1];
         $this->token = $token;
         $this->api_key = $api_key;
+        $this->client = $client;
     }
 
     public function getToken()
@@ -59,6 +61,10 @@ class BaseFeed
     {
         Client::validateFeed($feed);
         $data = ["target" => $feed];
+        if ($this->client !== null) {
+            $target_feed = $this->client->feed($feed);
+            $data["target_token"] = $target_feed->getToken();
+        }
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/follows/", 'POST', $data);
     }
 

@@ -49,6 +49,6 @@ class Client
     {
         $feed_auth_name = $this::validateFeed($feed);
         $token = is_null($token) ? $this->createToken($feed_auth_name) : $token;
-        return new Feed($feed, $this->api_key, $token);
+        return new Feed($this, $feed, $this->api_key, $token);
     }
 }

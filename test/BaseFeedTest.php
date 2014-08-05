@@ -16,7 +16,7 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientFeedAddActivity()
     {
-        $feed = new _BaseFeed('feed:1', 'api', 'token');
+        $feed = new _BaseFeed(null, 'feed:1', 'api', 'token');
         $data = ["name" => "php client"];
         $response = extract($feed->addActivity($data));
         $this->assertSame($uri, "feed/feed/1/");
@@ -24,14 +24,14 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
 
     public function testGetToken()
     {
-        $feed = new _BaseFeed('feed:1', 'api', 'token');
+        $feed = new _BaseFeed(null, 'feed:1', 'api', 'token');
         $this->assertSame($feed->getToken(), 'token');
     }
 
     public function testClientFeedGetActivities()
     {
         $api = 'api';
-        $feed = new _BaseFeed('feed:1', $api, 'token');
+        $feed = new _BaseFeed(null, 'feed:1', $api, 'token');
 
         $limit = 1;
         $offset = 3;
@@ -48,7 +48,7 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientremoveActivity()
     {
-        $feed = new _BaseFeed('feed:1', 'api', 'token');
+        $feed = new _BaseFeed(null, 'feed:1', 'api', 'token');
         $aid = '123';
         extract($feed->removeActivity($aid));
         $this->assertSame($uri, "feed/feed/1/123/");

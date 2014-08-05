@@ -32,7 +32,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testClientFeedAddActivity()
     {
-        $feed = new HttpBinFeed('feed:1', 'api', 'token');
+        $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
         $data = ["name" => "php client"];
         $response = $feed->addActivity($data);
         $this->assertSame($response["args"], ["api_key" => "api"]);
@@ -41,7 +41,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testClientFeedGetActivities()
     {
         $api = 'api';
-        $feed = new HttpBinFeed('feed:1', $api, 'token');
+        $feed = new HttpBinFeed(null, 'feed:1', $api, 'token');
 
         $limit = 1;
         $offset = 3;
@@ -61,7 +61,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testClientremoveActivity()
     {
-        $feed = new HttpBinFeed('feed:1', 'api', 'token');
+        $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
         $aid = '123';
         $response = $feed->removeActivity($aid);
     }

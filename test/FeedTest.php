@@ -37,7 +37,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientFeedAddActivity()
     {
-        $feed = new _Feed('feed:1', 'api', 'token');
+        $feed = new _Feed(null, 'feed:1', 'api', 'token');
         $data = ["name" => "php client"];
         $feed->addActivity($data);
         $lastReq = _Feed::getHistory()->getLastRequest();
@@ -48,7 +48,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
     public function testClientFeedGetActivities()
     {
         $api = 'api';
-        $feed = new _Feed('feed:1', $api, 'token');
+        $feed = new _Feed(null, 'feed:1', $api, 'token');
 
         $limit = 1;
         $offset = 3;
@@ -73,7 +73,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientremoveActivity()
     {
-        $feed = new _Feed('feed:1', 'api', 'token');
+        $feed = new _Feed(null, 'feed:1', 'api', 'token');
         $aid = '123';
         $response = $feed->removeActivity($aid);
         $lastReq = _Feed::getHistory()->getLastRequest();
@@ -83,7 +83,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientFollow()
     {
-        $feed = new _Feed('feed:1', 'api', 'token');
+        $feed = new _Feed(null, 'feed:1', 'api', 'token');
         $target = 'feed:123';
         $response = $feed->followFeed($target);
         $lastReq = _Feed::getHistory()->getLastRequest();
@@ -93,7 +93,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientUnfollow()
     {
-        $feed = new _Feed('feed:1', 'api', 'token');
+        $feed = new _Feed(null, 'feed:1', 'api', 'token');
         $target = 'feed:123';
         $response = $feed->unfollowFeed($target);
         $lastReq = _Feed::getHistory()->getLastRequest();
