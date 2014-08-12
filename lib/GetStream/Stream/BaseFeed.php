@@ -68,6 +68,35 @@ class BaseFeed
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/follows/", 'POST', $data);
     }
 
+    public function parseFollowData($response)
+    {
+        return array(
+            'count' => $response['count'],
+            'results' => $response['results']
+        );
+    }
+
+    public function followers($limit = 100, $page = 1)
+    {
+        $query_params = array(
+            "limit" => $limit,
+            "page" => $page,
+        );
+        $response = $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/followers/", 'GET', null, $query_params);
+        return $this->parseFollowData($response);
+    }
+
+    public function following($limit = 100, $page = 1, $filter = array())
+    {
+        $query_params = array(
+            "limit" => $limit,
+            "page" => $page,
+            "filter" => implode(',', $filter),
+        );
+        $response = $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/follows/", 'GET', null, $query_params);
+        return $this->parseFollowData($response);
+    }
+
     public function unfollowFeed($feed)
     {
         Client::validateFeed($feed);
