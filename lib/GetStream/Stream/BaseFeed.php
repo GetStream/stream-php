@@ -30,13 +30,33 @@ class BaseFeed
         return $this->token;
     }
 
+    public function signToField($to)
+    {
+        $recipients = [];
+        foreach ($to as $recipient) {
+            Client::validateFeed($recipient);
+            $recipient_feed = $this->client->feed($recipient);
+            $recipient_token = $recipient_feed->getToken();
+            $recipients[] = "$recipient $recipient_token";
+        }
+        return $recipients;
+    }
+
     public function addActivity($activity_data)
     {
+        if (array_key_exists('to', $activity_data)) {
+            $activity_data['to'] = $this->signToField($activity_data['to']);
+        }
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $activity_data);
     }
 
     public function addActivities($activities_data)
     {
+        foreach ($activities_data as $i => $activity) {
+            if (array_key_exists('to', $activity)) {
+                $activities_data[$i]['to'] = $this->signToField($activity['to']);
+            }
+        }
         $data = array("activities" => $activities_data);
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $data);
     }

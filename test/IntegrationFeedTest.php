@@ -228,4 +228,30 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($response['results'][0]['target_id'], 'flat:php42');
     }
 
+    public function testAddActivityTo() {
+        $activity = array(
+            'actor'=> 'multi1', 'verb'=> 'tweet', 'object'=> 1,
+            'to'=> array('flat:remotefeed1')
+        );
+        $this->user1->addActivity($activity);
+        $response = $this->client->feed('flat:remotefeed1')->getActivities(0, 2);
+        $this->assertSame($response['results'][0]['actor'], 'multi1');       
+    }
+
+    public function testAddActivitiesTo() {
+        $activities = array(
+            array(
+                'actor'=> 'many1', 'verb'=> 'tweet', 'object'=> 1,
+                'to'=> array('flat:remotefeed2')
+            ),
+            array(
+                'actor'=> 'many2', 'verb'=> 'tweet', 'object'=> 1,
+                'to'=> array('flat:remotefeed2')
+            )
+        );
+        $this->user1->addActivities($activities);
+        $response = $this->client->feed('flat:remotefeed2')->getActivities(0, 2);
+        $this->assertSame($response['results'][0]['actor'], 'many2');
+    }
+
 }

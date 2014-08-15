@@ -82,6 +82,15 @@ $activities = array(
 );
 $user_feed_1->addActivities($activities);
 
+// Add an activity and push it to other feeds too using the `to` field
+$data = [
+    "actor_id"=>"1",
+    "verb"=>"like",
+    "object_id"=>"3",
+    "to"=>["user:44", "user:45"]
+];
+$user_feed_1->addActivity($data);
+
 // Delete a feed (and its content)
 $user_feed_1->delete();
 
