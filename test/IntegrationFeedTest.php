@@ -183,15 +183,15 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testFollowersEmpty() {
         $lonely = $this->client->feed('flat:lonely');
         $response = $lonely->followers();
-        $this->assertSame($response['count'], 0);
+        $this->assertSame(count($response['results']), 0);
         $this->assertSame($response['results'], []);
     }
 
     public function testFollowersWithLimit() {
         $this->client->feed('flat:php43')->followFeed('flat:php42');
         $this->client->feed('flat:php44')->followFeed('flat:php42');
-        $response = $this->client->feed('flat:php42')->followers(1,1);
-        $this->assertSame($response['count'], 2);
+        $response = $this->client->feed('flat:php42')->followers(0, 2);
+        $this->assertSame(count($response['results']), 2);
         $this->assertSame($response['results'][0]['feed_id'], 'flat:php44');
         $this->assertSame($response['results'][0]['target_id'], 'flat:php42');
     }
@@ -199,31 +199,31 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testFollowingEmpty() {
         $lonely = $this->client->feed('flat:lonely');
         $response = $lonely->following();
-        $this->assertSame($response['count'], 0);
+        $this->assertSame(count($response['results']), 0);
         $this->assertSame($response['results'], []);
     }
 
     public function testFollowingsWithLimit() {
         $this->client->feed('flat:php43')->followFeed('flat:php42');
         $this->client->feed('flat:php43')->followFeed('flat:php44');
-        $response = $this->client->feed('flat:php43')->following(1, 1);
-        $this->assertSame($response['count'], 2);
+        $response = $this->client->feed('flat:php43')->following(0, 2);
+        $this->assertSame(count($response['results']), 2);
         $this->assertSame($response['results'][0]['feed_id'], 'flat:php43');
         $this->assertSame($response['results'][0]['target_id'], 'flat:php44');
     }
 
     public function testDoIFollowEmpty() {
         $lonely = $this->client->feed('flat:lonely');
-        $response = $lonely->following(10, 1, array('flat:asocial'));
-        $this->assertSame($response['count'], 0);
+        $response = $lonely->following(0, 10, array('flat:asocial'));
+        $this->assertSame(count($response['results']), 0);
         $this->assertSame($response['results'], []);
     }
 
     public function testDoIFollow() {
         $this->client->feed('flat:php43')->followFeed('flat:php42');
         $this->client->feed('flat:php43')->followFeed('flat:php44');
-        $response = $this->client->feed('flat:php43')->following(10, 1, array('flat:php42'));
-        $this->assertSame($response['count'], 1);
+        $response = $this->client->feed('flat:php43')->following(0, 10, array('flat:php42'));
+        $this->assertSame(count($response['results']), 1);
         $this->assertSame($response['results'][0]['feed_id'], 'flat:php43');
         $this->assertSame($response['results'][0]['target_id'], 'flat:php42');
     }

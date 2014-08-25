@@ -101,19 +101,19 @@ token = $user_feed_1->getToken();
 // user1 = client.feed('user:1', "$token");
 
 // Retrieve first 10 followers of a feed
-$user_feed_1->followers(10);
+$user_feed_1->followers(0, 10);
 
-// Retrieve 10 followers of a feed starting from 11th (2nd page)
-$user_feed_1->followers(10, 2);
+// Retrieve 2 to 10 followers
+$user_feed_1->followers(2, 10);
 
 // Retrieve 10 feeds followed by $user_feed_1
-$user_feed_1->following(10);
+$user_feed_1->following(0, 10);
 
-// Retrieve 10 feeds followed by $user_feed_1 starting from 11th (2nd page)
-$user_feed_1->following(10, 2);
+// Retrieve 10 feeds followed by $user_feed_1 starting from the 10th (2nd page)
+$user_feed_1->following(10, 20);
 
 // Check if $user_feed_1 follows specific feeds
-$user_feed_1->following(2, 1, ['user:42', 'user:43']);
+$user_feed_1->following(0, 2, ['user:42', 'user:43']);
 
 ```
 
