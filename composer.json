@@ -1,9 +1,9 @@
 {
     "name": "get-stream/stream",
     "type": "package",
-    "description": "A PHP client for Stream (http://getstream.io)",
+    "description": "A PHP client for Stream (https://getstream.io)",
     "keywords": ["stream", "newsfeed", "feedly"],
-    "homepage": "http://getfeedly.io",
+    "homepage": "https://getstream.io",
     "license": "BSD",
     "authors": [
         {
