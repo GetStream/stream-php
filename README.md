@@ -62,6 +62,14 @@ $data = [
     "foreign_id"=>"post:42"
 ];
 $user_feed_1->addActivity($data);
+// Create a bit more complex activity
+$now = new \DateTime("now", new \DateTimeZone('Pacific/Nauru'));
+$data = ['actor' => 1, 'verb' => 'run', 'object' => 1, 'foreign_id' => 'run:1', 
+	'course' => ['name'=> 'Golden Gate park', 'distance'=> 10],
+	'participants' => ['Thierry', 'Tommaso'],
+	'started_at' => $now
+];
+$user_feed_1->addActivity($data);
 
 // Remove an activity by its id
 $user_feed_1->removeActivity("e561de8f-00f1-11e4-b400-0cc47a024be0");
