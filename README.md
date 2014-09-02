@@ -56,9 +56,9 @@ $results = $user_feed_1->getActivities(5, 10);
 
 // Create a new activity
 $data = [
-    "actor_id"=>"1",
+    "actor"=>"1",
     "verb"=>"like",
-    "object_id"=>"3",
+    "object"=>"3",
     "foreign_id"=>"post:42"
 ];
 $user_feed_1->addActivity($data);
@@ -92,9 +92,9 @@ $user_feed_1->addActivities($activities);
 
 // Add an activity and push it to other feeds too using the `to` field
 $data = [
-    "actor_id"=>"1",
+    "actor"=>"1",
     "verb"=>"like",
-    "object_id"=>"3",
+    "object"=>"3",
     "to"=>["user:44", "user:45"]
 ];
 $user_feed_1->addActivity($data);
