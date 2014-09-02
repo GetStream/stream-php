@@ -103,7 +103,7 @@ $user_feed_1->addActivity($data);
 $user_feed_1->delete();
 
 // Generating tokens for client side usage
-token = $user_feed_1->getToken();
+$token = $user_feed_1->getToken();
 
 // Javascript client side feed initialization
 // user1 = client.feed('user:1', "$token");
