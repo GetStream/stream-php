@@ -1,0 +1,6 @@
+machine:
+  php:
+    version: 5.4.4
+test:
+  post:
+    - php vendor/bin/coveralls
