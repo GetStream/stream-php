@@ -19,6 +19,9 @@ class Feed extends BaseFeed
     {
         $client = static::getHttpClient();
         $url = static::API_ENDPOINT . "/{$uri}";
+        if (getenv('LOCAL')) {
+            $url = "http://localhost:8000/api/{$uri}";   
+        }
         $feed_name = Client::validateFeed($this->feed);
         $query_params = is_null($query_params) ? array() : $query_params;
         $query_params['api_key'] = $this->api_key;

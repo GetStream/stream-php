@@ -73,6 +73,9 @@ class BaseFeed
     public function getActivities($offset = 0, $limit = 20, $options = array())
     {
         $query_params = ['offset' => $offset, 'limit' => $limit];
+        if (array_key_exists('mark_read', $options) && is_array($options['mark_read'])) {
+            $options['mark_read'] = implode(",", $options['mark_read']);
+        }
         $query_params = array_merge($query_params, $options);
         return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'GET', null, $query_params);
     }

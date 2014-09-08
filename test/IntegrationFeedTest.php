@@ -177,7 +177,55 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $id_offset =  array('id_lt'=>$third_id);
         $activities = $this->user1->getActivities(0, 2, $id_offset)['results'];
         $this->assertSame($activities[0]['id'], $second_id);
+    }
 
+    public function testMarkRead() {
+        $notification_feed = $this->client->feed('notification:php1');
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
+        $notification_feed->addActivity($activity_data)['id'];
+
+        $activity_data = array('actor'=> 2, 'verb'=> 'run', 'object'=> 2);
+        $notification_feed->addActivity($activity_data)['id'];
+
+        $activity_data = array('actor'=> 3, 'verb'=> 'share', 'object'=> 3);
+        $notification_feed->addActivity($activity_data)['id'];
+
+        $options = array("mark_read" => true);
+        $activities = $notification_feed->getActivities(0, 2, $options)['results'];
+        $this->assertSame(count($activities), 2);
+        $this->assertFalse($activities[0]['is_read']);
+        $this->assertFalse($activities[1]['is_read']);
+
+        $activities = $notification_feed->getActivities(0, 2)['results'];
+        $this->assertSame(count($activities), 2);
+        $this->assertTrue($activities[0]['is_read']);
+        $this->assertTrue($activities[1]['is_read']);
+    }
+
+    public function testMarkReadByIds() {
+        $notification_feed = $this->client->feed('notification:php2');
+        $activity_data = array('actor'=> 1, 'verb'=> 'tweet', 'object'=> 1);
+        $notification_feed->addActivity($activity_data)['id'];
+
+        $activity_data = array('actor'=> 2, 'verb'=> 'run', 'object'=> 2);
+        $notification_feed->addActivity($activity_data)['id'];
+
+        $activity_data = array('actor'=> 3, 'verb'=> 'share', 'object'=> 3);
+        $notification_feed->addActivity($activity_data)['id'];
+
+        $options = array('mark_read' => array());
+        $activities = $notification_feed->getActivities(0, 2)['results'];
+        foreach ($activities as $activity) {
+            $options['mark_read'][] = $activity['id'];
+        }
+        $this->assertFalse($activities[0]['is_read']);
+        $this->assertFalse($activities[1]['is_read']);
+        $notification_feed->getActivities(0, 3, $options);
+
+        $activities = $notification_feed->getActivities(0, 3, $options)['results'];
+        $this->assertTrue($activities[0]['is_read']);
+        $this->assertTrue($activities[1]['is_read']);
+        $this->assertFalse($activities[2]['is_read']);
     }
 
     public function testFollowersEmpty() {
