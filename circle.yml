@@ -1,8 +1,0 @@
-machine:
-  php:
-    version: 5.4.4
-test:
-  pre:
-    - composer install --dev --no-interaction
-  post:
-    - php vendor/bin/coveralls
