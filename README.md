@@ -56,10 +56,18 @@ $results = $user_feed_1->getActivities(5, 10);
 
 // Create a new activity
 $data = [
-    "actor_id"=>"1",
+    "actor"=>"1",
     "verb"=>"like",
-    "object_id"=>"3",
+    "object"=>"3",
     "foreign_id"=>"post:42"
+];
+$user_feed_1->addActivity($data);
+// Create a bit more complex activity
+$now = new \DateTime("now", new \DateTimeZone('Pacific/Nauru'));
+$data = ['actor' => 1, 'verb' => 'run', 'object' => 1, 'foreign_id' => 'run:1', 
+	'course' => ['name'=> 'Golden Gate park', 'distance'=> 10],
+	'participants' => ['Thierry', 'Tommaso'],
+	'started_at' => $now
 ];
 $user_feed_1->addActivity($data);
 
@@ -84,9 +92,9 @@ $user_feed_1->addActivities($activities);
 
 // Add an activity and push it to other feeds too using the `to` field
 $data = [
-    "actor_id"=>"1",
+    "actor"=>"1",
     "verb"=>"like",
-    "object_id"=>"3",
+    "object"=>"3",
     "to"=>["user:44", "user:45"]
 ];
 $user_feed_1->addActivity($data);
@@ -95,7 +103,7 @@ $user_feed_1->addActivity($data);
 $user_feed_1->delete();
 
 // Generating tokens for client side usage
-token = $user_feed_1->getToken();
+$token = $user_feed_1->getToken();
 
 // Javascript client side feed initialization
 // user1 = client.feed('user:1', "$token");
