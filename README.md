@@ -1,9 +1,9 @@
 stream-php
 ==========
 
-[![image](https://secure.travis-ci.org/tbarbugli/stream-php.png?branch=master)](http://travis-ci.org/tbarbugli/stream-php)
+[![image](https://secure.travis-ci.org/GetStream/stream-php.png?branch=master)](http://travis-ci.org/GetStream/stream-php)
 
-[![Coverage Status](https://coveralls.io/repos/tbarbugli/stream-php/badge.png?branch=master)](https://coveralls.io/r/tbarbugli/stream-php?branch=master)
+[![Coverage Status](https://coveralls.io/repos/GetStream/stream-php/badge.png?branch=master)](https://coveralls.io/r/GetStream/stream-php?branch=master)
 
 ### Installation
 
