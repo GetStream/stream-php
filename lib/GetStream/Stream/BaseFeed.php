@@ -30,6 +30,11 @@ class BaseFeed
         return $this->token;
     }
 
+    public function getFeedId()
+    {
+        return $this->feed_id;
+    }
+
     public function signToField($to)
     {
         $recipients = [];
