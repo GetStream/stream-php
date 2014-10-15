@@ -32,7 +32,7 @@ class BaseFeed
 
     public function getFeedId()
     {
-        return $this->feed_id;
+        return $this->feed;
     }
 
     public function signToField($to)
