@@ -1,13 +1,34 @@
 <?php
 namespace GetStream\Stream;
 
+use Exception;
+
 class Client
 {
+    /**
+     * @var string
+     */
     protected $api_key;
+
+    /**
+     * @var string
+     */
     protected $api_secret;
+
+    /**
+     * @var string
+     */
     protected $api_endpoint;
+
+    /**
+     * @var Signer
+     */
     public $signer;
 
+    /**
+     * @param string $api_key
+     * @param string $api_secret
+     */
     public function __construct($api_key, $api_secret)
     {
         $this->api_key = $api_key;
@@ -15,40 +36,70 @@ class Client
         $this->signer = new Signer($api_secret);
     }
 
-    public static function herokuConnect($url=null)
+    /**
+     * @param  string|null $url
+     * @return Client
+     * @throws Exception
+     */
+    public static function herokuConnect($url = null)
     {
         if ($url === null) {
             $url = getenv('STREAM_URL');
         }
+
         $parsed_url = parse_url($url);
         $api_key = $parsed_url['user'];
         $api_secret = $parsed_url['pass'];
-        $params = array();
-        parse_str($parsed_url['query'], $params);
-        $site_id = $params['site'];
-        if($api_key == '' || $api_secret == '') {
-            throw new Exception("url malformed");
+
+        if ($api_key == '' || $api_secret == '') {
+            throw new Exception('url malformed');
         }
+
         return new static($api_key, $api_secret);
     }
 
+    /**
+     * @param  string $feed
+     * @return string
+     * @throws Exception
+     */
     public static function validateFeed($feed)
     {
-        if (count(explode(':', $feed)) != 2) {
-            throw new \Exception("feed must be in format type:id");
+        $valid_feed_types = ['user', 'flat', 'aggregated', 'notification'];
+        $pattern = '/^(' . implode('|', $valid_feed_types) . ')\:([a-z\d]++)$/';
+        $pattern = '/^([a-z]+)\:([a-z\d]+)$/';
+        $replace = '\\1\\2';
+
+        $str = preg_replace($pattern, $replace, $feed);
+        if (is_null($str) || $str == $feed) {
+            throw new Exception('feed must be in format type:id');
         }
-        return implode(explode(':', $feed));
+
+        return $str;
     }
 
+    /**
+     * @param  string $feed
+     * @return string
+     */
     public function createToken($feed)
     {
         return $this->signer->signature($feed);
     }
 
+    /**
+     * @param  string $feed
+     * @param  string|null $token
+     * @return Feed
+     */
     public function feed($feed, $token = null)
     {
-        $feed_auth_name = $this::validateFeed($feed);
-        $token = is_null($token) ? $this->createToken($feed_auth_name) : $token;
+        $feed_auth_name = self::validateFeed($feed);
+
+        if (null === $token) {
+            $token = $this->createToken($feed_auth_name);
+        }
+
         return new Feed($this, $feed, $this->api_key, $token);
     }
 }
