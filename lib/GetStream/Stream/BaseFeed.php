@@ -2,39 +2,90 @@
 
 namespace GetStream\Stream;
 
-
 class BaseFeed
 {
-    protected $feed;
-    protected $feed_type;
-    protected $feed_id;
-    protected $token;
-    protected $api_key;
-    protected $client;
     const API_ENDPOINT = 'https://getstream.io/api';
 
+    /**
+     * @var string
+     */
+    protected $feed;
+
+    /**
+     * @var string
+     */
+    protected $feed_type;
+
+    /**
+     * @var string
+     */
+    protected $feed_id;
+
+    /**
+     * @var string
+     */
+    protected $base_feed_url;
+
+    /**
+     * @var string
+     */
+    protected $token;
+
+    /**
+     * @var string
+     */
+    protected $api_key;
+
+    /**
+     * @var string
+     */
+    protected $client;
+
+    /**
+     * @param Client $client
+     * @param string $feed
+     * @param string $api_key
+     * @param string $token
+     */
     public function __construct($client, $feed, $api_key, $token)
     {
         Client::validateFeed($feed);
+
         $this->feed = $feed;
         $feed_components = explode(':', $feed);
         $this->feed_type = $feed_components[0];
-        $this->feed_id = $feed_components[1];
-        $this->token = $token;
+        $this->feed_id   = $feed_components[1];
+
+        $this->base_feed_url = "feed/{$this->feed_type}/{$this->feed_id}";
+
+        $this->token   = $token;
         $this->api_key = $api_key;
-        $this->client = $client;
+
+        if ($client instanceof Client) {
+            $this->client  = $client;
+        }
     }
 
+    /**
+     * @return string
+     */
     public function getToken()
     {
         return $this->token;
     }
 
+    /**
+     * @return string
+     */
     public function getFeedId()
     {
         return $this->feed;
     }
 
+    /**
+     * @param  array $to
+     * @return array
+     */
     public function signToField($to)
     {
         $recipients = [];
@@ -44,17 +95,27 @@ class BaseFeed
             $recipient_token = $recipient_feed->getToken();
             $recipients[] = "$recipient $recipient_token";
         }
+
         return $recipients;
     }
 
+    /**
+     * @param  array $activity_data
+     * @return mixed
+     */
     public function addActivity($activity_data)
     {
         if (array_key_exists('to', $activity_data)) {
             $activity_data['to'] = $this->signToField($activity_data['to']);
         }
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $activity_data);
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity_data);
     }
 
+    /**
+     * @param  array $activities_data
+     * @return mixed
+     */
     public function addActivities($activities_data)
     {
         foreach ($activities_data as $i => $activity) {
@@ -62,67 +123,108 @@ class BaseFeed
                 $activities_data[$i]['to'] = $this->signToField($activity['to']);
             }
         }
-        $data = array("activities" => $activities_data);
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'POST', $data);
+
+        $data = ['activities' => $activities_data];
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $data);
     }
 
+    /**
+     * @param  int $activity_id
+     * @param  bool $foreign_id
+     * @return mixed
+     */
     public function removeActivity($activity_id, $foreign_id = false)
     {
-        $query_params = array();
+        $query_params = [];
         if ($foreign_id === true) {
             $query_params['foreign_id'] = 1;
         }
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/{$activity_id}/", 'DELETE', null, $query_params);
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', null, $query_params);
     }
 
-    public function getActivities($offset = 0, $limit = 20, $options = array())
+    /**
+     * @param  int $offset
+     * @param  int $limit
+     * @param  array $options
+     * @return mixed
+     */
+    public function getActivities($offset = 0, $limit = 20, $options = [])
     {
         $query_params = ['offset' => $offset, 'limit' => $limit];
         if (array_key_exists('mark_read', $options) && is_array($options['mark_read'])) {
-            $options['mark_read'] = implode(",", $options['mark_read']);
+            $options['mark_read'] = implode(',', $options['mark_read']);
         }
         $query_params = array_merge($query_params, $options);
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'GET', null, $query_params);
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'GET', null, $query_params);
     }
 
+    /**
+     * @param  string $feed
+     * @return mixed
+     */
     public function followFeed($feed)
     {
         Client::validateFeed($feed);
-        $data = ["target" => $feed];
-        if ($this->client !== null) {
+
+        $data = ['target' => $feed];
+        if (null !== $this->client) {
             $target_feed = $this->client->feed($feed);
-            $data["target_token"] = $target_feed->getToken();
+            $data['target_token'] = $target_feed->getToken();
         }
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/follows/", 'POST', $data);
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data);
     }
 
+    /**
+     * @param  int $offset
+     * @param  int $limit
+     * @return mixed
+     */
     public function followers($offset = 0, $limit = 25)
     {
-        $query_params = array(
-            "limit" => $limit,
-            "offset" => $offset,
-        );
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/followers/", 'GET', null, $query_params);
+        $query_params = [
+            'limit'  => $limit,
+            'offset' => $offset,
+        ];
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/followers/", 'GET', null, $query_params);
     }
 
-    public function following($offset = 0, $limit = 25, $filter = array())
+    /**
+     * @param  int $offset
+     * @param  int $limit
+     * @param  array $filter
+     * @return mixed
+     */
+    public function following($offset = 0, $limit = 25, $filter = [])
     {
-        $query_params = array(
-            "limit" => $limit,
-            "offset" => $offset,
-            "filter" => implode(',', $filter),
-        );
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/follows/", 'GET', null, $query_params);
+        $query_params = [
+            'limit'  => $limit,
+            'offset' => $offset,
+            'filter' => implode(',', $filter),
+        ];
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'GET', null, $query_params);
     }
 
+    /**
+     * @param  string $feed
+     * @return mixed
+     */
     public function unfollowFeed($feed)
     {
         Client::validateFeed($feed);
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/follows/{$feed}/", 'DELETE');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$feed}/", 'DELETE');
     }
 
+    /**
+     * @return mixed
+     */
     public function delete()
     {
-        return $this->makeHttpRequest("feed/{$this->feed_type}/{$this->feed_id}/", 'DELETE');
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'DELETE');
     }
 }

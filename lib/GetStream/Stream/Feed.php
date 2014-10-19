@@ -1,49 +1,99 @@
 <?php
 namespace GetStream\Stream;
 
+use Exception;
 use GuzzleHttp;
-use GuzzleHttp\Exception\ClientErrorResponseException;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Exception\ServerErrorResponse;
-use \Exception;
-
+use GuzzleHttp\Stream\Stream;
 
 class Feed extends BaseFeed
 {
+    /**
+     * @var string
+     */
+    protected $baseUrl;
+
+    /**
+     * @var array
+     */
+    protected $httpRequestHeaders = [];
+
+    /**
+     * @return \GuzzleHttp\Client
+     */
     public static function getHttpClient()
     {
         return new GuzzleHttp\Client();
     }
 
-    public function makeHttpRequest($uri, $method, $data = null, $query_params = null)
+    /**
+     * @param  string $uri
+     * @return string
+     */
+    protected function buildRequestUrl($uri)
     {
-        $client = static::getHttpClient();
-        $url = static::API_ENDPOINT . "/{$uri}";
-        if (getenv('LOCAL')) {
-            $url = "http://localhost:8000/api/{$uri}";   
+        if (null === $this->baseUrl) {
+            if (getenv('LOCAL')) {
+                $this->baseUrl = 'http://localhost:8000/api';
+            } else {
+                $this->baseUrl = static::API_ENDPOINT;
+            }
         }
-        $feed_name = Client::validateFeed($this->feed);
-        $query_params = is_null($query_params) ? array() : $query_params;
+
+        return $this->baseUrl . '/' . $uri;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getHttpRequestHeaders()
+    {
+        if (empty($this->httpRequestHeaders)) {
+            $feed_name = Client::validateFeed($this->feed);
+
+            $this->httpRequestHeaders = [
+                'Authorization' => "{$feed_name} {$this->token}",
+                'Content-Type'  => 'application/json',
+            ];
+        }
+
+        return $this->httpRequestHeaders;
+    }
+
+    /**
+     * @param  string $uri
+     * @param  string $method
+     * @param  array $data
+     * @param  array $query_params
+     * @return mixed
+     * @throws StreamFeedException
+     */
+    public function makeHttpRequest($uri, $method, $data = [], $query_params = [])
+    {
         $query_params['api_key'] = $this->api_key;
 
-        $request = $client->createRequest($method, $url);
-        $request->setHeader('Authorization', "{$feed_name} {$this->token}");
-        $request->setHeader('Content-Type', "application/json");
-        $request->setQuery($query_params);
+        $client = static::getHttpClient();
+        $request = $client->createRequest($method, $this->buildRequestUrl($uri));
+        $request->setHeaders($this->getHttpRequestHeaders());
 
-        $data = is_null($data) ? array() : $data;
+        $query = $request->getQuery();
+        foreach ($query_params as $key => $value) {
+            $query[$key] = $value;
+        }
+
         $json_data = json_encode($data);
-        $request->setBody(GuzzleHttp\Stream\Stream::factory($json_data));
+        $request->setBody(Stream::factory($json_data));
 
         try {
             $response = $client->send($request);
         } catch (Exception $e) {
-            if ($e instanceof ClientErrorResponseException || $e instanceof ServerErrorResponse || $e instanceof ClientException) {
+            if ($e instanceof ClientException) {
                 throw new StreamFeedException($e->getResponse()->getBody());
             } else {
                 throw $e;
             }
         }
+
         return $response->json();
     }
 }

@@ -4,3 +4,4 @@ package.xml
 .idea
 bin/phpunit
 .DS_Store
+/nbproject
