@@ -74,9 +74,12 @@ class Feed extends BaseFeed
 
         $client = static::getHttpClient();
         $request = $client->createRequest($method, $this->buildRequestUrl($uri));
-        $request
-            ->setHeaders($this->getHttpRequestHeaders())
-            ->setQuery($query_params);
+        $request->setHeaders($this->getHttpRequestHeaders());
+
+        $query = $request->getQuery();
+        foreach ($query_params as $key => $value) {
+            $query[$key] = $value;
+        }
 
         $json_data = json_encode($data);
         $request->setBody(Stream::factory($json_data));
