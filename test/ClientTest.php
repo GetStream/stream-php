@@ -2,7 +2,6 @@
 
 namespace GetStream\Stream;
 
-
 class ClientTest extends \PHPUnit_Framework_TestCase
 {
     public function testClientSigning()
@@ -33,33 +32,32 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testClientFeedAddActivity()
     {
         $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
-        $data = ["name" => "php client"];
+        $data = ['name' => 'php client'];
         $response = $feed->addActivity($data);
-        $this->assertSame($response["args"], ["api_key" => "api"]);
+        $this->assertSame($response['args'], ['api_key' => 'api']);
     }
 
     public function testClientFeedGetActivities()
     {
-        $api = 'api';
-        $feed = new HttpBinFeed(null, 'feed:1', $api, 'token');
+        $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
 
         $limit = 1;
         $offset = 3;
 
         $response = $feed->getActivities($offset, $limit);
-        $this->assertSame($response["args"]["limit"], "$limit");
-        $this->assertSame($response["args"]["offset"], "$offset");
+        $this->assertSame($response['args']['limit'], "$limit");
+        $this->assertSame($response['args']['offset'], "$offset");
 
         $response = $feed->getActivities($offset);
-        $this->assertSame($response["args"]["limit"], "20");
-        $this->assertSame($response["args"]["offset"], "$offset");
+        $this->assertSame($response['args']['limit'], "20");
+        $this->assertSame($response['args']['offset'], "$offset");
 
         $response = $feed->getActivities();
-        $this->assertSame($response["args"]["limit"], "20");
-        $this->assertSame($response["args"]["offset"], "0");
+        $this->assertSame($response['args']['limit'], "20");
+        $this->assertSame($response['args']['offset'], "0");
     }
 
-    public function testClientremoveActivity()
+    public function testClientRemoveActivity()
     {
         $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
         $aid = '123';
