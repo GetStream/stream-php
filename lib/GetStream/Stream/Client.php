@@ -67,7 +67,7 @@ class Client
     {
         $valid_feed_types = ['user', 'flat', 'aggregated', 'notification'];
         $pattern = '/^(' . implode('|', $valid_feed_types) . ')\:([a-z\d]++)$/';
-        $pattern = '/^([a-z]+)\:([a-z\d]+)$/';
+        $pattern = '/^([a-z_]+)\:([a-z\d]+)$/';
         $replace = '\\1\\2';
 
         $str = preg_replace($pattern, $replace, $feed);
