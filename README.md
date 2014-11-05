@@ -49,7 +49,7 @@ $client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
 $user_feed_1 = $client->feed('user:1');
 
 // Get 20 activities starting from activity with id $last_id (fast id offset pagination)
-$results = $user_feed_1->getActivities(0, 20, id_lte=$last_id);
+$results = $user_feed_1->getActivities(0, 20, $last_id);
 
 // Get 10 activities starting from the 5th (slow offset pagination)
 $results = $user_feed_1->getActivities(5, 10);
