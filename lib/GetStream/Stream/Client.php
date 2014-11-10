@@ -59,47 +59,16 @@ class Client
     }
 
     /**
-     * @param  string $feed
-     * @return string
-     * @throws Exception
-     */
-    public static function validateFeed($feed)
-    {
-        $valid_feed_types = ['user', 'flat', 'aggregated', 'notification'];
-        $pattern = '/^(' . implode('|', $valid_feed_types) . ')\:([a-z\d]++)$/';
-        $pattern = '/^([a-z]+)\:([a-z\d]+)$/';
-        $replace = '\\1\\2';
-
-        $str = preg_replace($pattern, $replace, $feed);
-        if (is_null($str) || $str == $feed) {
-            throw new Exception('feed must be in format type:id');
-        }
-
-        return $str;
-    }
-
-    /**
-     * @param  string $feed
-     * @return string
-     */
-    public function createToken($feed)
-    {
-        return $this->signer->signature($feed);
-    }
-
-    /**
-     * @param  string $feed
+     * @param  string $feed_slug
+     * @param  string $user_id
      * @param  string|null $token
      * @return Feed
      */
-    public function feed($feed, $token = null)
+    public function feed($feed_slug, $user_id, $token = null)
     {
-        $feed_auth_name = self::validateFeed($feed);
-
         if (null === $token) {
-            $token = $this->createToken($feed_auth_name);
+            $token = $this->signer->signature($feed_slug . $user_id);
         }
-
-        return new Feed($this, $feed, $this->api_key, $token);
+        return new Feed($this, $feed_slug, $user_id, $this->api_key, $token);
     }
 }

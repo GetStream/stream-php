@@ -36,7 +36,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 {
     public function testClientFeedAddActivity()
     {
-        $feed = new _Feed(null, 'feed:1', 'api', 'token');
+        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
         $data = ['name' => 'php client'];
         $feed->addActivity($data);
         $lastReq = _Feed::getHistory()->getLastRequest();
@@ -49,7 +49,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientFeedGetActivities()
     {
-        $feed = new _Feed(null, 'feed:1', 'api', 'token');
+        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
 
         $limit = 1;
         $offset = 3;
@@ -86,7 +86,7 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientRemoveActivity()
     {
-        $feed = new _Feed(null, 'feed:1', 'api', 'token');
+        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
         $aid = '123';
         $response = $feed->removeActivity($aid);
         $lastReq = _Feed::getHistory()->getLastRequest();
@@ -99,9 +99,8 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientFollow()
     {
-        $feed = new _Feed(null, 'feed:1', 'api', 'token');
-        $target = 'feed:123';
-        $response = $feed->followFeed($target);
+        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
+        $response = $feed->followFeed('feed', '123');
         $lastReq = _Feed::getHistory()->getLastRequest();
         $this->assertSame(
             $lastReq->getUrl(),
@@ -112,9 +111,8 @@ class FeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientUnfollow()
     {
-        $feed = new _Feed(null, 'feed:1', 'api', 'token');
-        $target = 'feed:123';
-        $response = $feed->unfollowFeed($target);
+        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
+        $response = $feed->unfollowFeed('feed', '123');
         $lastReq = _Feed::getHistory()->getLastRequest();
         $this->assertSame(
             $lastReq->getUrl(),

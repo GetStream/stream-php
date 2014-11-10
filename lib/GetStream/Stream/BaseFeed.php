@@ -4,22 +4,22 @@ namespace GetStream\Stream;
 
 class BaseFeed
 {
-    const API_ENDPOINT = 'https://getstream.io/api';
+    const API_ENDPOINT = 'https://getstream.io/api/v1.0';
 
     /**
      * @var string
      */
-    protected $feed;
+    protected $slug;
 
     /**
      * @var string
      */
-    protected $feed_type;
+    protected $user_id;
 
     /**
      * @var string
      */
-    protected $feed_id;
+    protected $id;
 
     /**
      * @var string
@@ -47,16 +47,12 @@ class BaseFeed
      * @param string $api_key
      * @param string $token
      */
-    public function __construct($client, $feed, $api_key, $token)
+    public function __construct($client, $feed_slug, $user_id, $api_key, $token)
     {
-        Client::validateFeed($feed);
-
-        $this->feed = $feed;
-        $feed_components = explode(':', $feed);
-        $this->feed_type = $feed_components[0];
-        $this->feed_id   = $feed_components[1];
-
-        $this->base_feed_url = "feed/{$this->feed_type}/{$this->feed_id}";
+        $this->slug = $feed_slug;
+        $this->user_id = $user_id;
+        $this->id = "$feed_slug:$user_id";
+        $this->base_feed_url = "feed/{$feed_slug}/{$user_id}";
 
         $this->token   = $token;
         $this->api_key = $api_key;
@@ -77,9 +73,9 @@ class BaseFeed
     /**
      * @return string
      */
-    public function getFeedId()
+    public function getId()
     {
-        return $this->feed;
+        return $this->id;
     }
 
     /**
@@ -90,8 +86,8 @@ class BaseFeed
     {
         $recipients = [];
         foreach ($to as $recipient) {
-            Client::validateFeed($recipient);
-            $recipient_feed = $this->client->feed($recipient);
+            $bits = explode(':', $recipient);
+            $recipient_feed = $this->client->feed($bits[0], $bits[1]);
             $recipient_token = $recipient_feed->getToken();
             $recipients[] = "$recipient $recipient_token";
         }
@@ -165,13 +161,12 @@ class BaseFeed
      * @param  string $feed
      * @return mixed
      */
-    public function followFeed($feed)
+    public function followFeed($target_feed_slug, $target_user_id)
     {
-        Client::validateFeed($feed);
-
-        $data = ['target' => $feed];
+        $target_feed_id = "$target_feed_slug:$target_user_id";
+        $data = ['target' => $target_feed_id];
         if (null !== $this->client) {
-            $target_feed = $this->client->feed($feed);
+            $target_feed = $this->client->feed($target_feed_slug, $target_user_id);
             $data['target_token'] = $target_feed->getToken();
         }
 
@@ -214,10 +209,10 @@ class BaseFeed
      * @param  string $feed
      * @return mixed
      */
-    public function unfollowFeed($feed)
+    public function unfollowFeed($target_feed_slug, $target_user_id)
     {
-        Client::validateFeed($feed);
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$feed}/", 'DELETE');
+        $target_feed_id = "$target_feed_slug:$target_user_id";
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE');
     }
 
     /**

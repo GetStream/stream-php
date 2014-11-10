@@ -49,10 +49,8 @@ class Feed extends BaseFeed
     protected function getHttpRequestHeaders()
     {
         if (empty($this->httpRequestHeaders)) {
-            $feed_name = Client::validateFeed($this->feed);
-
             $this->httpRequestHeaders = [
-                'Authorization' => "{$feed_name} {$this->token}",
+                'Authorization' => "{$this->slug}{$this->user_id} {$this->token}",
                 'Content-Type'  => 'application/json',
             ];
         }

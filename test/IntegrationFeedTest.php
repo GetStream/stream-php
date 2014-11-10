@@ -18,10 +18,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             'ahj2ndz7gsan',
             'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy'
         );
-        $this->user1 = $this->client->feed('user:11');
-        $this->aggregated2 = $this->client->feed('aggregated:22');
-        $this->aggregated3 = $this->client->feed('aggregated:33');
-        $this->flat3 = $this->client->feed('flat:33');
+        $this->user1 = $this->client->feed('user', '11');
+        $this->aggregated2 = $this->client->feed('aggregated', '22');
+        $this->aggregated3 = $this->client->feed('aggregated', '33');
+        $this->flat3 = $this->client->feed('flat', '33');
     }
 
     public function testAddActivity()
@@ -128,17 +128,17 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFlatFollowUnfollow()
     {
-        $this->user1->unfollowFeed('flat:33');
+        $this->user1->unfollowFeed('flat', '33');
         sleep(3);
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $response = $this->flat3->addActivity($activity_data);
         $activity_id = $response['id'];
-        $this->user1->followFeed('flat:33');
+        $this->user1->followFeed('flat', '33');
         sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
-        $this->user1->unfollowFeed('flat:33');
+        $this->user1->unfollowFeed('flat', '33');
         sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertNotSame($activities[0]['id'], $activity_id);
@@ -146,18 +146,18 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFlatFollowUnfollowPrivate()
     {
-        $secret = $this->client->feed('secret:33');
-        $this->user1->unfollowFeed('secret:33');
+        $secret = $this->client->feed('secret', '33');
+        $this->user1->unfollowFeed('secret', '33');
         sleep(3);
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $response = $secret->addActivity($activity_data);
         $activity_id = $response['id'];
-        $this->user1->followFeed('secret:33');
+        $this->user1->followFeed('secret', '33');
         sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
-        $this->user1->unfollowFeed('secret:33');
+        $this->user1->unfollowFeed('secret', '33');
     }
 
     public function testDelete()
@@ -197,7 +197,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testMarkRead()
     {
-        $notification_feed = $this->client->feed('notification:php1');
+        $notification_feed = $this->client->feed('notification', 'php1');
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $notification_feed->addActivity($activity_data);
 
@@ -221,7 +221,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testMarkReadByIds()
     {
-        $notification_feed = $this->client->feed('notification:php2');
+        $notification_feed = $this->client->feed('notification', 'php2');
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $notification_feed->addActivity($activity_data);
 
@@ -248,7 +248,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFollowersEmpty()
     {
-        $lonely = $this->client->feed('flat:lonely');
+        $lonely = $this->client->feed('flat', 'lonely');
         $response = $lonely->followers();
         $this->assertCount(0, $response['results']);
         $this->assertSame($response['results'], []);
@@ -256,9 +256,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFollowersWithLimit()
     {
-        $this->client->feed('flat:php43')->followFeed('flat:php42');
-        $this->client->feed('flat:php44')->followFeed('flat:php42');
-        $response = $this->client->feed('flat:php42')->followers(0, 2);
+        $this->client->feed('flat', 'php43')->followFeed('flat', 'php42');
+        $this->client->feed('flat', 'php44')->followFeed('flat', 'php42');
+        $response = $this->client->feed('flat', 'php42')->followers(0, 2);
         $this->assertCount(2, $response['results']);
         $this->assertSame($response['results'][0]['feed_id'], 'flat:php44');
         $this->assertSame($response['results'][0]['target_id'], 'flat:php42');
@@ -266,7 +266,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFollowingEmpty()
     {
-        $lonely = $this->client->feed('flat:lonely');
+        $lonely = $this->client->feed('flat', 'lonely');
         $response = $lonely->following();
         $this->assertCount(0, $response['results']);
         $this->assertSame($response['results'], []);
@@ -274,9 +274,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFollowingsWithLimit()
     {
-        $this->client->feed('flat:php43')->followFeed('flat:php42');
-        $this->client->feed('flat:php43')->followFeed('flat:php44');
-        $response = $this->client->feed('flat:php43')->following(0, 2);
+        $this->client->feed('flat', 'php43')->followFeed('flat', 'php42');
+        $this->client->feed('flat', 'php43')->followFeed('flat','php44');
+        $response = $this->client->feed('flat', 'php43')->following(0, 2);
         $this->assertCount(2, $response['results']);
         $this->assertSame($response['results'][0]['feed_id'], 'flat:php43');
         $this->assertSame($response['results'][0]['target_id'], 'flat:php44');
@@ -284,7 +284,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testDoIFollowEmpty()
     {
-        $lonely = $this->client->feed('flat:lonely');
+        $lonely = $this->client->feed('flat', 'lonely');
         $response = $lonely->following(0, 10, ['flat:asocial']);
         $this->assertCount(0, $response['results']);
         $this->assertSame($response['results'], []);
@@ -292,9 +292,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testDoIFollow()
     {
-        $this->client->feed('flat:php43')->followFeed('flat:php42');
-        $this->client->feed('flat:php43')->followFeed('flat:php44');
-        $response = $this->client->feed('flat:php43')->following(0, 10, ['flat:php42']);
+        $this->client->feed('flat', 'php43')->followFeed('flat', 'php42');
+        $this->client->feed('flat', 'php43')->followFeed('flat', 'php44');
+        $response = $this->client->feed('flat', 'php43')->following(0, 10, ['flat:php42']);
         $this->assertCount(1, $response['results']);
         $this->assertSame($response['results'][0]['feed_id'], 'flat:php43');
         $this->assertSame($response['results'][0]['target_id'], 'flat:php42');
@@ -307,7 +307,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             'to'    => ['flat:remotefeed1'],
         ];
         $this->user1->addActivity($activity);
-        $response = $this->client->feed('flat:remotefeed1')->getActivities(0, 2);
+        $response = $this->client->feed('flat', 'remotefeed1')->getActivities(0, 2);
         $this->assertSame($response['results'][0]['actor'], 'multi1');
     }
 
@@ -324,7 +324,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             ],
         ];
         $this->user1->addActivities($activities);
-        $response = $this->client->feed('flat:remotefeed2')->getActivities(0, 2);
+        $response = $this->client->feed('flat', 'remotefeed2')->getActivities(0, 2);
         $this->assertSame($response['results'][0]['actor'], 'many2');
     }
 }

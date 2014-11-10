@@ -16,22 +16,12 @@ class ClientTest extends \PHPUnit_Framework_TestCase
     public function testClientFeed()
     {
         $client = new Client('key', 'secret');
-        $feed1 = $client->feed('flat:1');
-    }
-
-    /**
-     * @expectedException \Exception
-     * @expectedExceptionMessage feed must be in format type:id
-     */
-    public function testClientWrongFeedId()
-    {
-        $client = new Client('key', 'secret');
-        $feed1 = $client->feed('flat_1');
+        $feed1 = $client->feed('flat', '1');
     }
 
     public function testClientFeedAddActivity()
     {
-        $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
+        $feed = new HttpBinFeed(null, 'feed', '1', 'api', 'token');
         $data = ['name' => 'php client'];
         $response = $feed->addActivity($data);
         $this->assertSame($response['args'], ['api_key' => 'api']);
@@ -39,7 +29,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testClientFeedGetActivities()
     {
-        $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
+        $feed = new HttpBinFeed(null, 'feed', '1', 'api', 'token');
 
         $limit = 1;
         $offset = 3;
@@ -59,7 +49,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
 
     public function testClientRemoveActivity()
     {
-        $feed = new HttpBinFeed(null, 'feed:1', 'api', 'token');
+        $feed = new HttpBinFeed(null, 'feed', '1', 'api', 'token');
         $aid = '123';
         $response = $feed->removeActivity($aid);
     }
