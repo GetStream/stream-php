@@ -71,7 +71,7 @@ class Feed extends BaseFeed
         $query_params['api_key'] = $this->api_key;
 
         $client = static::getHttpClient();
-        $request = $client->createRequest($method, $this->buildRequestUrl($uri));
+        $request = $client->createRequest($method, $this->buildRequestUrl($uri), ['timeout' => 3.0]);
         $request->setHeaders($this->getHttpRequestHeaders());
 
         $query = $request->getQuery();

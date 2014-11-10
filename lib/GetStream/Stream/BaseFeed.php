@@ -91,7 +91,6 @@ class BaseFeed
             $recipient_token = $recipient_feed->getToken();
             $recipients[] = "$recipient $recipient_token";
         }
-
         return $recipients;
     }
 
@@ -104,7 +103,6 @@ class BaseFeed
         if (array_key_exists('to', $activity_data)) {
             $activity_data['to'] = $this->signToField($activity_data['to']);
         }
-
         return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity_data);
     }
 
@@ -119,9 +117,7 @@ class BaseFeed
                 $activities_data[$i]['to'] = $this->signToField($activity['to']);
             }
         }
-
         $data = ['activities' => $activities_data];
-
         return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $data);
     }
 
@@ -136,7 +132,6 @@ class BaseFeed
         if ($foreign_id === true) {
             $query_params['foreign_id'] = 1;
         }
-
         return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', null, $query_params);
     }
 
