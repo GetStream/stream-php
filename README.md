@@ -5,6 +5,8 @@ stream-php
 
 [![Coverage Status](https://coveralls.io/repos/GetStream/stream-php/badge.png?branch=master)](https://coveralls.io/r/GetStream/stream-php?branch=master)
 
+**Users of versions < 2.0.0, Feed constructor signature and other methods has changed. Please read this before upgrading:** [Breaking Changes](http://github.com/GetStream/stream-php/blob/master/upgrading.txt)
+
 ### Installation
 
 #### Install with Composer
@@ -21,19 +23,7 @@ dependencies, you can add Stream with it.
 ```
 
 (replace `$VERSION` with one of the available versions on
-[Packagist](https://packagist.org/packages/get-stream/stream)) or to get
-the latest version off the master branch:
-
-```javascript
-{
-    "require": {
-        "get-stream/stream": "dev-master"
-    }
-}
-```
-
-Note that using unstable versions is not recommended and should be
-avoided.
+[Packagist](https://packagist.org/packages/get-stream/stream))
 
 Composer will take care of the autoloading for you, so if you require
 the `vendor/autoload.php`, you're good to go.
@@ -46,10 +36,10 @@ $client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
 // Find your API keys here https://getstream.io/dashboard/
 
 // Instantiate a feed object
-$user_feed_1 = $client->feed('user:1');
+$user_feed_1 = $client->feed('user', '1');
 
 // Get 20 activities starting from activity with id $last_id (fast id offset pagination)
-$results = $user_feed_1->getActivities(0, 20, id_lte=$last_id);
+$results = $user_feed_1->getActivities(0, 20, $last_id);
 
 // Get 10 activities starting from the 5th (slow offset pagination)
 $results = $user_feed_1->getActivities(5, 10);
@@ -77,11 +67,11 @@ $user_feed_1->removeActivity("e561de8f-00f1-11e4-b400-0cc47a024be0");
 // Remove activities by their foreign_id
 $user_feed_1.remove('post:42', true)
 
-// Follow another feed
-$user_feed_1->followFeed('flat:42');
+// Let user 1 start following user 42's flat feed
+$user_feed_1->followFeed('flat', '42');
 
-// Stop following another feed
-$user_feed_1->unfollowFeed('flat:42');
+// Let user 1 stop following user 42's flat feed
+$user_feed_1->unfollowFeed('flat', '42');
 
 // Batch adding activities
 $activities = array(
@@ -106,7 +96,7 @@ $user_feed_1->delete();
 $token = $user_feed_1->getToken();
 
 // Javascript client side feed initialization
-// user1 = client.feed('user:1', "$token");
+// user1 = client.feed('user', '1', "$token");
 
 // Retrieve first 10 followers of a feed
 $user_feed_1->followers(0, 10);
