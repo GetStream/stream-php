@@ -26,14 +26,28 @@ class Client
     public $signer;
 
     /**
+     * @var string
+     */
+    public $api_version;
+
+    /**
+     * @var float
+     */
+    public $timeout;
+
+    /**
      * @param string $api_key
      * @param string $api_secret
+     * @param string $api_version
+     * @param string $timeout
      */
-    public function __construct($api_key, $api_secret)
+    public function __construct($api_key, $api_secret, $api_version='v1.0', $timeout=3.0)
     {
         $this->api_key = $api_key;
         $this->api_secret = $api_secret;
         $this->signer = new Signer($api_secret);
+        $this->api_version = $api_version;
+        $this->timeout = $timeout;
     }
 
     /**

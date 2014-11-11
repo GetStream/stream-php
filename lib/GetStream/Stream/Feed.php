@@ -39,8 +39,7 @@ class Feed extends BaseFeed
                 $this->baseUrl = static::API_ENDPOINT;
             }
         }
-
-        return $this->baseUrl . '/' . $uri;
+        return "{$this->baseUrl}/{$this->client->api_version}/{$uri}";
     }
 
     /**
@@ -71,7 +70,7 @@ class Feed extends BaseFeed
         $query_params['api_key'] = $this->api_key;
 
         $client = static::getHttpClient();
-        $request = $client->createRequest($method, $this->buildRequestUrl($uri), ['timeout' => 3.0]);
+        $request = $client->createRequest($method, $this->buildRequestUrl($uri), ['timeout' => $this->client->timeout]);
         $request->setHeaders($this->getHttpRequestHeaders());
 
         $query = $request->getQuery();

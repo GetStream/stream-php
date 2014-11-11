@@ -6,6 +6,7 @@ use GuzzleHttp\Message\Response;
 use GuzzleHttp\Subscriber\History;
 use GuzzleHttp\Subscriber\Mock;
 
+
 class _Feed extends Feed
 {
     public static $history;
@@ -30,94 +31,10 @@ class _Feed extends Feed
 
         return $client;
     }
-}
 
-class FeedTest extends \PHPUnit_Framework_TestCase
-{
-    public function testClientFeedAddActivity()
+    protected function buildRequestUrl($uri)
     {
-        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
-        $data = ['name' => 'php client'];
-        $feed->addActivity($data);
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/?api_key=api'
-        );
-        $this->assertSame($lastReq->getMethod(), 'POST');
+        return BaseFeed::API_ENDPOINT;
     }
 
-    public function testClientFeedGetActivities()
-    {
-        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
-
-        $limit = 1;
-        $offset = 3;
-
-        $response = $feed->getActivities($offset, $limit);
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/?offset=3&limit=1&api_key=api'
-        );
-
-        $response = $feed->getActivities($offset);
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/?offset=3&limit=20&api_key=api'
-        );
-
-        $response = $feed->getActivities();
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/?offset=0&limit=20&api_key=api'
-        );
-
-        $options = ['id_gte' => 42];
-        $response = $feed->getActivities(0, 20, $options);
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/?offset=0&limit=20&id_gte=42&api_key=api'
-        );
-    }
-
-    public function testClientRemoveActivity()
-    {
-        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
-        $aid = '123';
-        $response = $feed->removeActivity($aid);
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/123/?api_key=api'
-        );
-        $this->assertSame($lastReq->getMethod(), 'DELETE');
-    }
-
-    public function testClientFollow()
-    {
-        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
-        $response = $feed->followFeed('feed', '123');
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/follows/?api_key=api'
-        );
-        $this->assertSame($lastReq->getMethod(), 'POST');
-    }
-
-    public function testClientUnfollow()
-    {
-        $feed = new _Feed(null, 'feed', '1', 'api', 'token');
-        $response = $feed->unfollowFeed('feed', '123');
-        $lastReq = _Feed::getHistory()->getLastRequest();
-        $this->assertSame(
-            $lastReq->getUrl(),
-            BaseFeed::API_ENDPOINT . '/feed/feed/1/follows/feed:123/?api_key=api'
-        );
-        $this->assertSame($lastReq->getMethod(), 'DELETE');
-    }
 }
