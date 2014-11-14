@@ -16,6 +16,11 @@ class Feed extends BaseFeed
     /**
      * @var array
      */
+    protected $guzzleOptions = [];
+
+    /**
+     * @var array
+     */
     protected $httpRequestHeaders = [];
 
     /**
@@ -24,6 +29,11 @@ class Feed extends BaseFeed
     public static function getHttpClient()
     {
         return new GuzzleHttp\Client();
+    }
+
+    public function setGuzzleDefaultOption($option, $value)
+    {
+        $this->guzzleOptions[$option] = $value;
     }
 
     /**
@@ -70,6 +80,10 @@ class Feed extends BaseFeed
         $query_params['api_key'] = $this->api_key;
 
         $client = static::getHttpClient();
+
+        foreach ($this->guzzleOptions as $key => $value) {
+            $client->setDefaultOption($key, $value);
+        }
         $request = $client->createRequest($method, $this->buildRequestUrl($uri), ['timeout' => $this->client->timeout]);
         $request->setHeaders($this->getHttpRequestHeaders());
 
@@ -90,7 +104,6 @@ class Feed extends BaseFeed
                 throw $e;
             }
         }
-
         return $response->json();
     }
 }
