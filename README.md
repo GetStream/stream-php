@@ -1,9 +1,7 @@
 stream-php
 ==========
 
-[![image](https://secure.travis-ci.org/GetStream/stream-php.png?branch=master)](http://travis-ci.org/GetStream/stream-php)
-
-[![Coverage Status](https://coveralls.io/repos/GetStream/stream-php/badge.png?branch=master)](https://coveralls.io/r/GetStream/stream-php?branch=master)
+[![image](https://secure.travis-ci.org/GetStream/stream-php.png?branch=master)](http://travis-ci.org/GetStream/stream-php) [![Coverage Status](https://coveralls.io/repos/GetStream/stream-php/badge.png?branch=master)](https://coveralls.io/r/GetStream/stream-php?branch=master) [![PHP version](https://badge.fury.io/ph/get-stream%2Fstream.svg)](http://badge.fury.io/ph/get-stream%2Fstream)
 
 **Users of versions < 2.0.0, Feed constructor signature and other methods has changed. Please read this before upgrading:** [Breaking Changes](http://github.com/GetStream/stream-php/blob/master/upgrading.txt)
 
