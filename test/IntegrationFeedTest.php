@@ -195,9 +195,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($activities[0]['id'], $second_id);
     }
 
-    public function testFutureGet()
+    public function testVerifyOff()
     {
-        $this->user1->setGuzzleDefaultOption('future', true);
+        $this->user1->setGuzzleDefaultOption('verify', true);
         $activities = $this->user1->getActivities(0, 2);
     }
 
