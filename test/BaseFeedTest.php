@@ -25,6 +25,22 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($uri, 'feed/feed/1/');
     }
 
+    /**
+     * @expectedException GetStream\Stream\StreamFeedException
+     */
+    public function testValidateSlug()
+    {
+        new _BaseFeed(null, 'feed-ko', '1', 'api', 'token');
+    }
+
+    /**
+     * @expectedException GetStream\Stream\StreamFeedException
+     */
+    public function testValidateUserId()
+    {
+        new _BaseFeed(null, 'feed_ko', 'ko-1', 'api', 'token');
+    }
+
     public function testGetToken()
     {
         $feed = new _BaseFeed(null, 'feed', '1', 'api', 'token');

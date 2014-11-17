@@ -1,5 +1,4 @@
 <?php
-
 namespace GetStream\Stream;
 
 class BaseFeed
@@ -49,6 +48,14 @@ class BaseFeed
      */
     public function __construct($client, $feed_slug, $user_id, $api_key, $token)
     {
+        if (!$this->validFeedSlug($feed_slug)) {
+            throw new StreamFeedException('feed_slug can only contain alphanumeric characters or underscores');
+        }
+
+        if (!$this->validUserId($user_id)) {
+            throw new StreamFeedException('user_id can only contain alphanumeric characters or underscores');
+        }
+
         $this->slug = $feed_slug;
         $this->user_id = $user_id;
         $this->id = "$feed_slug:$user_id";
@@ -60,6 +67,22 @@ class BaseFeed
         if ($client instanceof Client) {
             $this->client  = $client;
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function validFeedSlug($feed_slug)
+    {
+        return (preg_match('/^\w+$/', $feed_slug) === 1);
+    }
+
+    /**
+     * @return string
+     */
+    public function validUserId($user_id)
+    {
+        return (preg_match('/^\w+$/', $user_id) === 1);
     }
 
     /**
