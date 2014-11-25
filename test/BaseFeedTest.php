@@ -38,6 +38,11 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateUserId()
     {
+        new _BaseFeed(null, 'feed_ko', 'ko:1', 'api', 'token');
+    }
+
+    public function testDashIsOkUserId()
+    {
         new _BaseFeed(null, 'feed_ko', 'ko-1', 'api', 'token');
     }
 

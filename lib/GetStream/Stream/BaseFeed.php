@@ -82,7 +82,7 @@ class BaseFeed
      */
     public function validUserId($user_id)
     {
-        return (preg_match('/^\w+$/', $user_id) === 1);
+        return (preg_match('/^[-\w]+$/', $user_id) === 1);
     }
 
     /**
