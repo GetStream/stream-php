@@ -53,7 +53,7 @@ class BaseFeed
         }
 
         if (!$this->validUserId($user_id)) {
-            throw new StreamFeedException('user_id can only contain alphanumeric characters or underscores');
+            throw new StreamFeedException('user_id can only contain alphanumeric characters, underscores or dashes');
         }
 
         $this->slug = $feed_slug;
