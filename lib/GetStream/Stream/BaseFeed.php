@@ -3,7 +3,7 @@ namespace GetStream\Stream;
 
 class BaseFeed
 {
-    const API_ENDPOINT = 'https://getstream.io/api';
+    const API_ENDPOINT = 'https://api.getstream.io/api';
 
     /**
      * @var string
