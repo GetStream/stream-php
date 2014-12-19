@@ -17,7 +17,7 @@ class HerokuIntegrationTest extends IntegrationTest
     {
         $client = $this->client = Client::herokuConnect("https://key:secret@getstream.io/?app_id=1");
         $url = $client->buildRequestUrl('x');
-        $this->assertSame($url, 'http://api.getstream.io/api/v1.0/x');
+        $this->assertSame($url, 'https://api.getstream.io/api/v1.0/x');
     }
 
 }
