@@ -37,22 +37,6 @@ class Feed extends BaseFeed
     }
 
     /**
-     * @param  string $uri
-     * @return string
-     */
-    protected function buildRequestUrl($uri)
-    {
-        if (null === $this->baseUrl) {
-            if (getenv('LOCAL')) {
-                $this->baseUrl = 'http://localhost:8000/api';
-            } else {
-                $this->baseUrl = static::API_ENDPOINT;
-            }
-        }
-        return "{$this->baseUrl}/{$this->client->api_version}/{$uri}";
-    }
-
-    /**
      * @return array
      */
     protected function getHttpRequestHeaders()
@@ -84,7 +68,7 @@ class Feed extends BaseFeed
         foreach ($this->guzzleOptions as $key => $value) {
             $client->setDefaultOption($key, $value);
         }
-        $request = $client->createRequest($method, $this->buildRequestUrl($uri), ['timeout' => $this->client->timeout]);
+        $request = $client->createRequest($method, $this->client->buildRequestUrl($uri), ['timeout' => $this->client->timeout]);
         $request->setHeaders($this->getHttpRequestHeaders());
 
         $query = $request->getQuery();
