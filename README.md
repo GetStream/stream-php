@@ -29,9 +29,11 @@ the `vendor/autoload.php`, you're good to go.
 ### Usage
 
 ```php
-// Instantiate a new client
+// Instantiate a new client, find your API keys here https://getstream.io/dashboard/
 $client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
-// Find your API keys here https://getstream.io/dashboard/
+
+// Set API endpoint location
+$client->setLocation('us-east');
 
 // Instantiate a feed object
 $user_feed_1 = $client->feed('user', '1');
