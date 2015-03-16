@@ -76,8 +76,10 @@ class Feed extends BaseFeed
             $query[$key] = $value;
         }
 
-        $json_data = json_encode($data);
-        $request->setBody(Stream::factory($json_data));
+        if ($method === 'POST' || $method === 'POST') {
+            $json_data = json_encode($data);
+            $request->setBody(Stream::factory($json_data));
+        }
 
         try {
             $response = $client->send($request);
