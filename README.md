@@ -3,7 +3,7 @@ stream-php
 
 [![image](https://secure.travis-ci.org/GetStream/stream-php.png?branch=master)](http://travis-ci.org/GetStream/stream-php) [![Coverage Status](https://coveralls.io/repos/GetStream/stream-php/badge.png?branch=master)](https://coveralls.io/r/GetStream/stream-php?branch=master) [![PHP version](https://badge.fury.io/ph/get-stream%2Fstream.svg)](http://badge.fury.io/ph/get-stream%2Fstream)
 
-stream-php is a PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams. 
+stream-php is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams. 
 The full documentation is available on [GetStream.io/docs](http://getstream.io/docs/).
 
 ### Installation
