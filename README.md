@@ -30,6 +30,10 @@ the `vendor/autoload.php`, you're good to go.
 ### Usage
 
 ```php
+<?php
+
+require_once __DIR__ . '/vendor/autoload.php';
+
 // Instantiate a new client, find your API keys here https://getstream.io/dashboard/
 $client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
 
@@ -66,7 +70,7 @@ $user_feed_1->addActivity($data);
 $user_feed_1->removeActivity("e561de8f-00f1-11e4-b400-0cc47a024be0");
 
 // Remove activities by their foreign_id
-$user_feed_1.remove('post:42', true)
+$user_feed_1->removeActivity('post:42', true);
 
 // Let user 1 start following user 42's flat feed
 $user_feed_1->followFeed('flat', '42');
