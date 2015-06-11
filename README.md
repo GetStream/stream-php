@@ -103,6 +103,12 @@ $token = $user_feed_1->getToken();
 // Javascript client side feed initialization
 // user1 = client.feed('user', '1', "$token");
 
+// Generating read-only tokens for client side usage
+$readonlyToken = $user_feed_1->getReadonlyToken();
+
+// Javascript client side feed initialization (readonly)
+// user1 = client.feed('user', '1', "$readonlyToken");
+
 // Retrieve first 10 followers of a feed
 $user_feed_1->followers(0, 10);
 
