@@ -37,18 +37,18 @@ class Feed extends BaseFeed
     }
 
     /**
+     * @param  string $resource
+     * @param  string $action
      * @return array
      */
-    protected function getHttpRequestHeaders()
+    protected function getHttpRequestHeaders($resource, $action)
     {
-        if (empty($this->httpRequestHeaders)) {
-            $this->httpRequestHeaders = [
-                'Authorization' => "{$this->slug}{$this->user_id} {$this->token}",
-                'Content-Type'  => 'application/json',
-            ];
-        }
-
-        return $this->httpRequestHeaders;
+        $token = $this->client->createFeedJWTToken($this, $resource, $action);
+        return [
+            'Authorization'     => $token,
+            'Content-Type'      => 'application/json',
+            'stream-auth-type'  => 'jwt'
+        ];
     }
 
     /**
@@ -56,10 +56,12 @@ class Feed extends BaseFeed
      * @param  string $method
      * @param  array $data
      * @param  array $query_params
+     * @param  string $resource
+     * @param  string $action
      * @return mixed
      * @throws StreamFeedException
      */
-    public function makeHttpRequest($uri, $method, $data = [], $query_params = [])
+    public function makeHttpRequest($uri, $method, $data = [], $query_params = [], $resource = '', $action = '')
     {
         $query_params['api_key'] = $this->api_key;
 
@@ -69,7 +71,7 @@ class Feed extends BaseFeed
             $client->setDefaultOption($key, $value);
         }
         $request = $client->createRequest($method, $this->client->buildRequestUrl($uri), ['timeout' => $this->client->timeout]);
-        $request->setHeaders($this->getHttpRequestHeaders());
+        $request->setHeaders($this->getHttpRequestHeaders($resource, $action));
 
         $query = $request->getQuery();
         foreach ($query_params as $key => $value) {

@@ -87,6 +87,14 @@ class BaseFeed
     /**
      * @return string
      */
+    public function getReadonlyToken()
+    {
+        return $this->client->createFeedJWTToken($this, '*', 'read');
+    }
+
+    /**
+     * @return string
+     */
     public function getToken()
     {
         return $this->token;
@@ -141,7 +149,7 @@ class BaseFeed
         if (array_key_exists('to', $activity_data)) {
             $activity_data['to'] = $this->signToField($activity_data['to']);
         }
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity_data);
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity_data, null, 'feed', 'write');
     }
 
     /**
@@ -156,7 +164,7 @@ class BaseFeed
             }
         }
         $data = ['activities' => $activities_data];
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $data);
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $data, null, 'feed', 'write');
     }
 
     /**
@@ -170,7 +178,7 @@ class BaseFeed
         if ($foreign_id === true) {
             $query_params['foreign_id'] = 1;
         }
-        return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', null, $query_params);
+        return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', null, $query_params, 'feed', 'delete');
     }
 
     /**
@@ -187,7 +195,7 @@ class BaseFeed
         }
         $query_params = array_merge($query_params, $options);
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'GET', null, $query_params);
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'GET', null, $query_params, 'feed', 'read');
     }
 
     /**
@@ -203,7 +211,7 @@ class BaseFeed
             $data['target_token'] = $target_feed->getToken();
         }
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data);
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, null, 'follower', 'write');
     }
 
     /**
@@ -218,7 +226,7 @@ class BaseFeed
             'offset' => $offset,
         ];
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/followers/", 'GET', null, $query_params);
+        return $this->makeHttpRequest("{$this->base_feed_url}/followers/", 'GET', null, $query_params, 'follower', 'read');
     }
 
     /**
@@ -235,7 +243,7 @@ class BaseFeed
             'filter' => implode(',', $filter),
         ];
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'GET', null, $query_params);
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'GET', null, $query_params, 'follower', 'read');
     }
 
     /**
@@ -245,7 +253,7 @@ class BaseFeed
     public function unfollowFeed($target_feed_slug, $target_user_id)
     {
         $target_feed_id = "$target_feed_slug:$target_user_id";
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE', null, null, 'follower', 'delete');
     }
 
     /**
@@ -253,6 +261,6 @@ class BaseFeed
      */
     public function delete()
     {
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'DELETE');
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'DELETE', null, null, 'feed', 'delete');
     }
 }

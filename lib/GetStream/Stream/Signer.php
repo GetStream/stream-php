@@ -35,4 +35,21 @@ class Signer
         $digest = $this->hashFunction->digest($value, $this->key);
         return $this->urlSafeB64encode($digest);
     }
+
+    /**
+     * @param  string $feedId
+     * @param  string $resource
+     * @param  string $action
+     * @return string
+     */
+    public function jwtScopeToken($feedId, $resource, $action)
+    {
+        $payload = [
+            'action'   => $action,
+            'feed_id'  => $feedId,
+            'resource' => $resource
+        ];
+        return \JWT::encode($payload, $this->key, 'HS256');
+    }
+
 }

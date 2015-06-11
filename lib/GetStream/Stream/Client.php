@@ -87,6 +87,18 @@ class Client
     }
 
     /**
+     * @param  BaseFeed $feed
+     * @param  string $resource
+     * @param  string $action
+     * @return string
+     */
+    public function createFeedJWTToken($feed, $resource, $action)
+    {
+        $feedId = "{$feed->getSlug()}{$feed->getUserId()}";
+        return $this->signer->jwtScopeToken($feedId, $resource, $action);
+    }
+
+    /**
      * @param  string $feed_slug
      * @param  string $user_id
      * @param  string|null $token

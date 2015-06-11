@@ -25,6 +25,12 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->flat3 = $this->client->feed('flat', '33');
     }
 
+    public function testReadonlyToken()
+    {
+        $token = $this->user1->getReadonlyToken();
+        $this->assertSame($token, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkIiwiZmVlZF9pZCI6InVzZXIxMSIsInJlc291cmNlIjoiKiJ9.3TVyF2nOiVd_KbOZzJYHabuMxnXy2HFSI--aFAXPMkk");
+    }
+
     public function testAddActivity()
     {
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
