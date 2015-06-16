@@ -124,6 +124,18 @@ $user_feed_1->following(10, 20);
 // Check if $user_feed_1 follows specific feeds
 $user_feed_1->following(0, 2, ['user:42', 'user:43']);
 
+// Batch operations (batch activity add, batch follow)
+$batcher = $client->batcher();
+
+// Add one activity to many feeds
+$activity = array('actor' => '1', 'verb' => 'tweet', 'object' => '1');
+$feeds = ['flat:user1', 'flat:user2'];
+$batcher->addToMany($activity, $feeds);
+
+// Create many follow
+$activity = array('actor' => '1', 'verb' => 'tweet', 'object' => '1');
+$feeds = ['flat:user1', 'flat:user2'];
+$batcher->addToMany($activity, $feeds);
 ```
 
 ### Contributing
