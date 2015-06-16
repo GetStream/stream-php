@@ -47,7 +47,7 @@ class Client
     {
         $this->api_key = $api_key;
         $this->api_secret = $api_secret;
-        $this->signer = new Signer($api_secret);
+        $this->signer = new Signer($api_key, $api_secret);
         $this->api_version = $api_version;
         $this->location = $location;
         $this->timeout = $timeout;
@@ -110,6 +110,14 @@ class Client
             $token = $this->signer->signature($feed_slug . $user_id);
         }
         return new Feed($this, $feed_slug, $user_id, $this->api_key, $token);
+    }
+
+    /**
+     * @return Batcher
+     */
+    public function batcher()
+    {
+        return new Batcher($this, $this->signer->context, $this->api_key);
     }
 
     /**

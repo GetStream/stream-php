@@ -18,7 +18,9 @@
     "require": {
         "php": ">=5.4",
         "guzzlehttp/guzzle": ">=4.0 <6.0",
-        "firebase/php-jwt": "2.1.*"
+        "firebase/php-jwt": "2.1.*",
+        "99designs/http-signatures": ">=1.1.0 <3.0.0",
+        "99designs/http-signatures-guzzlehttp": "1.0.*"
     },
     "autoload": {
         "psr-0" : {

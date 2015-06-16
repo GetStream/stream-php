@@ -26,7 +26,7 @@ class Feed extends BaseFeed
     /**
      * @return \GuzzleHttp\Client
      */
-    public static function getHttpClient()
+    public function getHttpClient()
     {
         return new GuzzleHttp\Client();
     }
@@ -65,7 +65,7 @@ class Feed extends BaseFeed
     {
         $query_params['api_key'] = $this->api_key;
 
-        $client = static::getHttpClient();
+        $client = $this->getHttpClient();
 
         foreach ($this->guzzleOptions as $key => $value) {
             $client->setDefaultOption($key, $value);

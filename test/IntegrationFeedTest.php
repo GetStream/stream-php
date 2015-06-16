@@ -25,6 +25,18 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->flat3 = $this->client->feed('flat', '33');
     }
 
+    public function testSignedGetHttp()
+    {
+        $batcher = $this->client->batcher();
+        $batcher->test('GET');
+    }
+
+    public function testSignedPostHttp()
+    {
+        $batcher = $this->client->batcher();
+        $batcher->test('POST');
+    }
+
     public function testReadonlyToken()
     {
         $token = $this->user1->getReadonlyToken();

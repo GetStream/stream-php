@@ -19,7 +19,7 @@ class _Feed extends Feed
         return _Feed::$history;
     }
 
-    public static function getHttpClient()
+    public function getHttpClient()
     {
         $client = parent::getHttpClient();
         $mock = new Mock([
