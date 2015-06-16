@@ -25,6 +25,38 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->flat3 = $this->client->feed('flat', '33');
     }
 
+    public function testAddToMany()
+    {
+        $batcher = $this->client->batcher();
+        $activityData = [
+            'actor' => 1,
+            'verb' => 'tweet',
+            'object' => 1,
+            'foreign_id' => 'batch1'
+        ];
+        $feeds = ['flat:ba1', 'user:ba1'];
+
+        $batcher->addToMany($activityData, $feeds);
+        sleep(3);
+        $b1 = $this->client->feed('flat', 'ba1');
+        $response = $b1->getActivities();
+        $this->assertSame('batch1', $response['results'][0]['foreign_id']);
+    }
+
+    public function testFollowMany()
+    {
+        $batcher = $this->client->batcher();
+        $follows = [
+            ['source' => 'flat:b1', 'target' => 'user:b1'],
+            ['source' => 'flat:b1', 'target' => 'user:b3']
+        ];
+        $batcher->followMany($follows);
+
+        $b1 = $this->client->feed('flat', 'b1');
+        $response = $b1->following();
+        $this->assertCount(2, $response['results']);
+    }
+
     public function testSignedGetHttp()
     {
         $batcher = $this->client->batcher();
