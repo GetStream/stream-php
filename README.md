@@ -134,7 +134,10 @@ $batcher->addToMany($activity, $feeds);
 
 // Create many follow
 $activity = array('actor' => '1', 'verb' => 'tweet', 'object' => '1');
-$feeds = ['flat:user1', 'flat:user2'];
+$follows = [
+    ['source' => 'flat:1', 'target' => 'user:1'],
+    ['source' => 'flat:1', 'target' => 'user:2']
+];
 $batcher->addToMany($activity, $feeds);
 ```
 
