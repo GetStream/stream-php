@@ -80,6 +80,9 @@ class Feed extends BaseFeed
 
         if ($method === 'POST' || $method === 'POST') {
             $json_data = json_encode($data);
+            if (!$json_data) {
+                throw new StreamWrongInputException("json_encode failed:".json_last_error());
+            }
             $request->setBody(Stream::factory($json_data));
         }
 
