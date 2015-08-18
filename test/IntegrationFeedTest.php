@@ -19,6 +19,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             'gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy'
         );
         $this->client->setLocation('us-east');
+        $this->client->timeout = 10000;
         $this->user1 = $this->client->feed('user', '11');
         $this->aggregated2 = $this->client->feed('aggregated', '22');
         $this->aggregated3 = $this->client->feed('aggregated', '33');

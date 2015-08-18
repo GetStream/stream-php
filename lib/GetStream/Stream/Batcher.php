@@ -4,7 +4,9 @@ namespace GetStream\Stream;
 use Exception;
 use GuzzleHttp;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Handler\CurlHandler;
+
 
 class Batcher extends Feed
 {
@@ -14,14 +16,16 @@ class Batcher extends Feed
      */
     private $ctx;
 
+
     /**
-     * @return \GuzzleHttp\Client
+     * @return \GuzzleHttp\HandlerStack
      */
-    public function getHttpClient()
+    public function getHandlerStack()
     {
-        $client = new GuzzleHttp\Client();
-        $client->getEmitter()->attach(new SignRequestSubscriber($this->ctx));
-        return $client;
+        $stack = HandlerStack::create();
+        $stack->setHandler(new CurlHandler());
+        $stack->push(signature_middleware_factory($this->ctx));
+        return $stack;
     }
 
     /**
