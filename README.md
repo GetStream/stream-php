@@ -8,6 +8,12 @@ The full documentation is available on [GetStream.io/docs](http://getstream.io/d
 
 ### Installation
 
+#### PHP 5.4 support
+
+Current release branch 2.3 requires PHP 5.5 and Guzzle 6.
+
+If you need to use the client with PHP 5.4 or Guzzle < 6, you can grab the latest version of the 2.2.x branch
+
 #### Install with Composer
 
 If you're using [Composer](https://getcomposer.org/) to manage
