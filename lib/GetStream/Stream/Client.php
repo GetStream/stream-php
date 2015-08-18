@@ -23,6 +23,11 @@ class Client
     protected $location;
 
     /**
+     * @var string
+     */
+    protected $protocol;
+
+    /**
      * @var Signer
      */
     public $signer;
@@ -51,6 +56,7 @@ class Client
         $this->api_version = $api_version;
         $this->location = $location;
         $this->timeout = $timeout;
+        $this->protocol = 'https';
     }
 
     /**
@@ -76,6 +82,14 @@ class Client
         $location = str_replace('.', '', $location);
         $client->setLocation($location);
         return $client;
+    }
+
+    /**
+     * @param  string $protocol
+     */
+    public function setProtocol($protocol)
+    {
+        $this->protocol = $protocol;
     }
 
     /**
@@ -121,10 +135,9 @@ class Client
     }
 
     /**
-     * @param  string $uri
      * @return string
      */
-    public function buildRequestUrl($uri)
+    public function getBaseUrl()
     {
         if (getenv('LOCAL')) {
             $baseUrl = 'http://localhost:8000/api';
@@ -134,8 +147,18 @@ class Client
             } else {
                 $subdomain = 'api';
             }
-            $baseUrl = "https://{$subdomain}." . static::API_ENDPOINT;
+            $baseUrl = "{$this->protocol}://{$subdomain}." . static::API_ENDPOINT;
         }
+        return $baseUrl;
+    }
+
+    /**
+     * @param  string $uri
+     * @return string
+     */
+    public function buildRequestUrl($uri)
+    {
+        $baseUrl = $this->getBaseUrl();
         return "{$baseUrl}/{$this->api_version}/{$uri}";
     }
 }

@@ -2,9 +2,11 @@
 namespace GetStream\Stream;
 
 use Exception;
-use GuzzleHttp;
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\Stream\Stream;
+use GuzzleHttp\HandlerStack;
 
 class Feed extends BaseFeed
 {
@@ -24,11 +26,24 @@ class Feed extends BaseFeed
     protected $httpRequestHeaders = [];
 
     /**
+     * @return \GuzzleHttp\HandlerStack
+     */
+    public function getHandlerStack()
+    {
+        return HandlerStack::create();
+    }
+
+    /**
      * @return \GuzzleHttp\Client
      */
     public function getHttpClient()
     {
-        return new GuzzleHttp\Client();
+        $handler = $this->getHandlerStack();
+        return new Client([
+            'base_uri' => $this->client->getBaseUrl(),
+            'timeout' => $this->client->timeout,
+            'handler' => $handler
+        ]);
     }
 
     public function setGuzzleDefaultOption($option, $value)
@@ -64,23 +79,19 @@ class Feed extends BaseFeed
     public function makeHttpRequest($uri, $method, $data = [], $query_params = [], $resource = '', $action = '')
     {
         $query_params['api_key'] = $this->api_key;
-
         $client = $this->getHttpClient();
+        $headers = $this->getHttpRequestHeaders($resource, $action);
 
-        foreach ($this->guzzleOptions as $key => $value) {
-            $client->setDefaultOption($key, $value);
-        }
-        $request = $client->createRequest($method, $this->client->buildRequestUrl($uri), ['timeout' => $this->client->timeout]);
-        $request->setHeaders($this->getHttpRequestHeaders($resource, $action));
+        $Uri = new Psr7\Uri($this->client->buildRequestUrl($uri));
+        $Uri = $Uri->withQuery(http_build_query($query_params));
 
-        $query = $request->getQuery();
-        foreach ($query_params as $key => $value) {
-            $query[$key] = $value;
-        }
+        $request = new Request(
+            $method, $Uri, $headers, null, $this->guzzleOptions
+        );
 
         if ($method === 'POST' || $method === 'POST') {
             $json_data = json_encode($data);
-            $request->setBody(Stream::factory($json_data));
+            $request = $request->withBody(Psr7\stream_for($json_data));
         }
 
         try {
@@ -92,6 +103,8 @@ class Feed extends BaseFeed
                 throw $e;
             }
         }
-        return $response->json();
+        $body = $response->getBody()->getContents();
+        $json_body = json_decode($body, true);
+        return $json_body;
     }
 }
