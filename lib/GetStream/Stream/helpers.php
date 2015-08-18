@@ -62,7 +62,7 @@ class MessageHeaders
 
 function signature_middleware_factory(Context $context)
 {
-    return function (callable $handler) use ($header, $context) {
+    return function (callable $handler) use ($context) {
         return function (RequestInterface $request, array $options) use ($handler, $context) {
             $message = new Message($request);
             $context->signer()->sign($message);
