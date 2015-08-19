@@ -2,7 +2,7 @@
 namespace GetStream\Stream;
 
 use Exception;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\ClientException;
@@ -39,7 +39,7 @@ class Feed extends BaseFeed
     public function getHttpClient()
     {
         $handler = $this->getHandlerStack();
-        return new Client([
+        return new GuzzleClient([
             'base_uri' => $this->client->getBaseUrl(),
             'timeout' => $this->client->timeout,
             'handler' => $handler
