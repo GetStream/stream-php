@@ -3,6 +3,8 @@ namespace GetStream\Stream;
 
 use Exception;
 
+const VERSION = '2.2.2';
+
 class Client
 {
     const API_ENDPOINT = 'getstream.io/api';

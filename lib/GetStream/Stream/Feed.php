@@ -62,7 +62,8 @@ class Feed extends BaseFeed
         return [
             'Authorization'     => $token,
             'Content-Type'      => 'application/json',
-            'stream-auth-type'  => 'jwt'
+            'stream-auth-type'  => 'jwt',
+            'X-Stream-Client'   => 'stream-php-client-' + VERSION
         ];
     }
 
