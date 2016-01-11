@@ -20,7 +20,7 @@ class Signer
     private $api_secret;
 
     /**
-     * @var HttpSignatures\Context
+     * @var \HttpSignatures\Context
      */
     public $context;
 
