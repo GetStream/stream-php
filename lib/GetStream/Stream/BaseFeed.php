@@ -201,7 +201,7 @@ class BaseFeed
 
     /**
      * @param  string $target_feed_slug
-     * $param  string $target_user_id
+     * @param  string $target_user_id
      * @return mixed
      */
     public function followFeed($target_feed_slug, $target_user_id)
