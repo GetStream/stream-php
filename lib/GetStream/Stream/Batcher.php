@@ -1,9 +1,7 @@
 <?php
 namespace GetStream\Stream;
 
-use Exception;
 use GuzzleHttp;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\CurlHandler;
 
@@ -12,7 +10,7 @@ class Batcher extends Feed
 {
 
     /**
-     * @var HttpSignatures\Context
+     * @var \HttpSignatures\Context
      */
     private $ctx;
 
@@ -43,7 +41,7 @@ class Batcher extends Feed
     }
 
     /**
-     * @var HttpSignatures\Context
+     * @var \HttpSignatures\Context
      */
     public function __construct($client, $context, $api_key)
     {
@@ -81,7 +79,8 @@ class Batcher extends Feed
     }
 
     /**
-     * @param  string $method
+     * @param string $method
+     * @return mixed
      */
     public function test($method)
     {

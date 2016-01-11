@@ -41,7 +41,8 @@ class BaseFeed
 
     /**
      * @param Client $client
-     * @param string $feed
+     * @param string $feed_slug
+     * @param string $user_id
      * @param string $api_key
      * @param string $token
      */
@@ -199,7 +200,8 @@ class BaseFeed
     }
 
     /**
-     * @param  string $feed
+     * @param  string $target_feed_slug
+     * $param  string $target_user_id
      * @return mixed
      */
     public function followFeed($target_feed_slug, $target_user_id)
@@ -247,7 +249,8 @@ class BaseFeed
     }
 
     /**
-     * @param  string $feed
+     * @param  string $target_feed_slug
+     * @param  string $target_user_id
      * @return mixed
      */
     public function unfollowFeed($target_feed_slug, $target_user_id)
