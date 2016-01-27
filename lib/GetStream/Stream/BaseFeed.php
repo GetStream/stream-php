@@ -193,6 +193,9 @@ class BaseFeed
         if (array_key_exists('mark_read', $options) && is_array($options['mark_read'])) {
             $options['mark_read'] = implode(',', $options['mark_read']);
         }
+        if (array_key_exists('mark_seen', $options) && is_array($options['mark_seen'])) {
+            $options['mark_seen'] = implode(',', $options['mark_seen']);
+        }
         $query_params = array_merge($query_params, $options);
 
         return $this->makeHttpRequest("{$this->base_feed_url}/", 'GET', null, $query_params, 'feed', 'read');
