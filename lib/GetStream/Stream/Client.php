@@ -163,4 +163,16 @@ class Client
         $baseUrl = $this->getBaseUrl();
         return "{$baseUrl}/{$this->api_version}/{$uri}";
     }
+
+    public function updateActivities($activities)
+    {
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        return $activityUpdateOp->updateActivities($activities);
+    }
+
+    public function updateActivity($activity)
+    {
+        return $this->updateActivities([$activity]);
+    }
 }

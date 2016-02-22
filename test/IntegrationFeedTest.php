@@ -26,6 +26,27 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->flat3 = $this->client->feed('flat', '33');
     }
 
+    public function testUpdateActivity()
+    {
+        $client = new Client(
+            'q56mdvdzreye',
+            'spmf6x2b2v2tqg93sfp5t393wfcxru58zm7jr3ynf7dmmndw5y8chux25hs63znf'
+        );
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $activity = [
+            'actor' => 1,
+            'verb' => 'tweet',
+            'object' => 1,
+            'time' => $now->format(DateTime::ISO8601),
+            'foreign_id' => 'batch1',
+            'popularity' => 100
+        ];
+
+        $client->updateActivity($activity);
+        $activity['popularity'] = 10;
+        $client->updateActivity($activity);
+    }
+
     public function testAddToMany()
     {
         $batcher = $this->client->batcher();
