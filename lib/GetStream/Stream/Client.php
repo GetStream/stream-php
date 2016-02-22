@@ -141,7 +141,7 @@ class Client
      */
     public function getBaseUrl()
     {
-        $localPort = getenv('GET_STREAM_LOCAL_PORT');
+        $localPort = getenv('STREAM_LOCAL_API_PORT');
         if ($localPort) {
             $baseUrl = "http://localhost:$localPort/api";
         } else {
