@@ -141,8 +141,9 @@ class Client
      */
     public function getBaseUrl()
     {
-        if (getenv('LOCAL')) {
-            $baseUrl = 'http://localhost:8000/api';
+        $localPort = getenv('GET_STREAM_LOCAL_PORT');
+        if ($localPort) {
+            $baseUrl = "http://localhost:$localPort/api";
         } else {
             if ($this->location) {
                 $subdomain = "{$this->location}-api";
