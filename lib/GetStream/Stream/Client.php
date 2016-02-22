@@ -141,7 +141,7 @@ class Client
      */
     public function getBaseUrl()
     {
-        if (getenv('LOCAL')) {
+        if (getenv('STREAM_LOCAL_API')) {
             $baseUrl = 'http://localhost:8000/api';
         } else {
             if ($this->location) {
