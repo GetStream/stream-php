@@ -26,6 +26,31 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->flat3 = $this->client->feed('flat', '33');
     }
 
+    public function testRedirectUrl()
+    {
+        $client = new Client(
+            'q56mdvdzreye',
+            'spmf6x2b2v2tqg93sfp5t393wfcxru58zm7jr3ynf7dmmndw5y8chux25hs63znf'
+        );
+        $targetUrl = 'http://google.com/?a=1';
+        $impression = [
+          'content_list' => ['tweet:34349698', 'tweet:34349699', 'tweet:34349697'],
+          'feed_id'      => 'flat:tommaso',
+          'location'     => 'profile_page',
+          'user_data'    => ['id' => 'bubbles'],
+          'label'        => 'impression'
+        ];
+        $engagement = [
+          'content'      => 'tweet:34349698',
+          'feed_id'      => 'flat:tommaso',
+          'location'     => 'profile_page',
+          'user_data'    => ['id' => 'frank'],
+          'label'        => 'click'
+        ];
+        $events = [$impression, $engagement];
+        $finalUrl = $client->createRedirectUrl($targetUrl, $events);
+    }
+
     public function testUpdateActivity()
     {
         $client = new Client(

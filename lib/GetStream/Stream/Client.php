@@ -176,4 +176,20 @@ class Client
     {
         return $this->updateActivities([$activity]);
     }
+
+
+    /**
+     * Creates a redirect url for tracking the given events in the context of
+     * getstream.io/personalization
+     * @param  string $targetUrl
+     * @param  array $events
+     * @return string
+     */
+    public function createRedirectUrl($targetUrl, $events)
+    {
+        $token = $this->signer->jwtScopeToken('*', 'redirect_and_track', '*');
+        $analytics = new Analytics($this, $this->api_key, $token);
+        return $analytics->createRedirectUrl($targetUrl, $events);
+    }
+
 }
