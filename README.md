@@ -81,8 +81,14 @@ $user_feed_1->removeActivity('post:42', true);
 // Let user 1 start following user 42's flat feed
 $user_feed_1->followFeed('flat', '42');
 
+// Let user 1 start following user 42's flat feed but only copy 10 activities to target feed
+$user_feed_1->followFeed('flat', '42', 10);
+
 // Let user 1 stop following user 42's flat feed
 $user_feed_1->unfollowFeed('flat', '42');
+
+// Let user 1 stop following user 42's flat feed but keep the history in its feed
+$user_feed_1->unfollowFeed('flat', '42', true);
 
 // Batch adding activities
 $activities = array(
