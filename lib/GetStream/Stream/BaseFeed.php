@@ -261,7 +261,7 @@ class BaseFeed
             $query_params['keep_history'] = 'true';
         }
         $target_feed_id = "$target_feed_slug:$target_user_id";
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE', $query_params, null, 'follower', 'delete');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE', null, $query_params, 'follower', 'delete');
     }
 
     /**

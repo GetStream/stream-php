@@ -244,7 +244,23 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFlatFollowUnfollowKeepHistory()
     {
-        $this->user1->unfollowFeed('flat', '33', true);
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $activity = [
+            'actor' => 1,
+            'verb' => 'tweet',
+            'object' => 1,
+            'time' => $now->format(DateTime::ISO8601),
+        ];
+        $feed = $this->client->feed('user', 'keephistory');
+        $this->flat3->addActivity($activity);
+        $feed->followFeed('flat', '33');
+        sleep(5);
+        $activities = $feed->getActivities(0, 1)['results'];
+        $this->assertCount(1, $activities);
+        $feed->unfollowFeed('flat', '33', true);
+        sleep(5);
+        $activities = $feed->getActivities(0, 1)['results'];
+        $this->assertCount(1, $activities);
     }
 
     public function testFlatFollowUnfollowPrivate()
