@@ -205,16 +205,18 @@ class BaseFeed
      * @param  string $feed
      * @return mixed
      */
-    public function followFeed($target_feed_slug, $target_user_id)
+    public function followFeed($target_feed_slug, $target_user_id, $activityCopyLimit = 300)
     {
         $target_feed_id = "$target_feed_slug:$target_user_id";
         $data = ['target' => $target_feed_id];
+        $query_params = [
+            'activity_copy_limit' => $activityCopyLimit
+        ];
         if (null !== $this->client) {
             $target_feed = $this->client->feed($target_feed_slug, $target_user_id);
             $data['target_token'] = $target_feed->getToken();
         }
-
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, null, 'follower', 'write');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, $query_params, 'follower', 'write');
     }
 
     /**
@@ -245,7 +247,6 @@ class BaseFeed
             'offset' => $offset,
             'filter' => implode(',', $filter),
         ];
-
         return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'GET', null, $query_params, 'follower', 'read');
     }
 
@@ -253,10 +254,14 @@ class BaseFeed
      * @param  string $feed
      * @return mixed
      */
-    public function unfollowFeed($target_feed_slug, $target_user_id)
+    public function unfollowFeed($target_feed_slug, $target_user_id, $keepHistory = false)
     {
+        $query_params = [];
+        if ($keepHistory) {
+            $query_params['keep_history'] = 'true';
+        }
         $target_feed_id = "$target_feed_slug:$target_user_id";
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE', null, null, 'follower', 'delete');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE', $query_params, null, 'follower', 'delete');
     }
 
     /**

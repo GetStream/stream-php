@@ -242,6 +242,11 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($activities[0]['id'], $activity_id);
     }
 
+    public function testFlatFollowUnfollowKeepHistory()
+    {
+        $this->user1->unfollowFeed('flat', '33', true);
+    }
+
     public function testFlatFollowUnfollowPrivate()
     {
         $secret = $this->client->feed('secret', '33');
