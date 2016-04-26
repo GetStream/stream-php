@@ -31,7 +31,7 @@ class Analytics extends Feed
     public function createRedirectUrl($targetUrl, $events)
     {
         $parsed_url = parse_url($targetUrl);
-        $query_params = $this->getHttpRequestHeaders($resource, $action);
+        $query_params = $this->getHttpRequestHeaders('analytics', '*');
         $query_params['api_key'] = $this->api_key;
         $query_params['url'] = $targetUrl;
         $query_params['auth_type'] = 'jwt';
