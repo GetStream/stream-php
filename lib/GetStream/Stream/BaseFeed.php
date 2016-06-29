@@ -208,15 +208,15 @@ class BaseFeed
     public function followFeed($target_feed_slug, $target_user_id, $activityCopyLimit = 300)
     {
         $target_feed_id = "$target_feed_slug:$target_user_id";
-        $data = ['target' => $target_feed_id];
-        $query_params = [
+        $data = [
+            'target' => $target_feed_id,
             'activity_copy_limit' => $activityCopyLimit
         ];
         if (null !== $this->client) {
             $target_feed = $this->client->feed($target_feed_slug, $target_user_id);
             $data['target_token'] = $target_feed->getToken();
         }
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, $query_params, 'follower', 'write');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, null, 'follower', 'write');
     }
 
     /**
