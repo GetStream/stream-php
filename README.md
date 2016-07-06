@@ -8,6 +8,10 @@ The full documentation is available on [GetStream.io/docs](http://getstream.io/d
 
 ### Installation
 
+#### PHP 7 compatible
+
+The current release is compatible with PHP 7.
+
 #### PHP 5.4 support
 
 Current release branch 2.2 requires PHP 5.5 and Guzzle 6.
