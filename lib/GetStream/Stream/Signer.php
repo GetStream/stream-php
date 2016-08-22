@@ -72,7 +72,7 @@ class Signer
             'feed_id'  => $feedId,
             'resource' => $resource
         ];
-        return JWT::encode($payload, $this->api_secret, 'HS256');
+        return Firebase\JWT\JWT::encode($payload, $this->api_secret, 'HS256');
     }
 
 }
