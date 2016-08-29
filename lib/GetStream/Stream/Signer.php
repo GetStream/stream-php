@@ -1,6 +1,8 @@
 <?php
 namespace GetStream\Stream;
+
 use HttpSignatures\Context;
+use \Firebase\JWT\JWT
 
 class Signer
 {
@@ -72,7 +74,7 @@ class Signer
             'feed_id'  => $feedId,
             'resource' => $resource
         ];
-        return \Firebase\JWT::encode($payload, $this->api_secret, 'HS256');
+        return JWT::encode($payload, $this->api_secret, 'HS256');
     }
 
 }
