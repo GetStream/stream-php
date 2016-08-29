@@ -2,7 +2,7 @@
 namespace GetStream\Stream;
 
 use HttpSignatures\Context;
-use \Firebase\JWT\JWT
+use \Firebase\JWT\JWT;
 
 class Signer
 {
