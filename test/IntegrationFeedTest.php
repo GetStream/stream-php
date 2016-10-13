@@ -119,8 +119,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testReadonlyToken()
     {
         $token = $this->user1->getReadonlyToken();
-        $this->assertSame($token, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkIiwiZmVlZF9pZCI6InVzZXIxMSIsInJlc291cmNlIjoiKiJ9.mlBxtn7Ta5muS40HZhJbMHcvwlWuxpKecqz4WQyoErw");
-        //"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkIiwiZmVlZF9pZCI6InVzZXIxMSIsInJlc291cmNlIjoiKiJ9.3TVyF2nOiVd_KbOZzJYHabuMxnXy2HFSI--aFAXPMkk");
+        $this->assertSame($token, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkIiwiZmVlZF9pZCI6InVzZXIxMSIsInJlc291cmNlIjoiKiJ9.EphGCclsRbaT3DCvzBAAnXIAIfo_RlR8eyEKb6mHWDo");
     }
 
     public function testAddActivity()
