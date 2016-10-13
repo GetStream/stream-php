@@ -85,7 +85,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $feeds = ['flat:ba1', 'user:ba1'];
 
         $batcher->addToMany($activityData, $feeds);
-        sleep(3);
         $b1 = $this->client->feed('flat', 'ba1');
         $response = $b1->getActivities();
         $this->assertSame('batch1', $response['results'][0]['foreign_id']);
@@ -129,7 +128,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $response = $this->user1->addActivity($activity_data);
         $activity_id = $response['id'];
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
@@ -142,7 +140,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
             ['actor' => 'multi2', 'verb' => 'tweet', 'object' => 2],
         ];
         $response = $this->user1->addActivities($activities);
-        sleep(3);
         $activities = $this->user1->getActivities(0, 2)['results'];
         $this->assertCount(2, $activities);
         $actors = [$activities[0]['actor'], $activities[1]['actor']];
@@ -158,7 +155,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $time = $now->format(DateTime::ISO8601);
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1, 'time' => $time];
         $response = $this->user1->addActivity($activity_data);
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $utc_time = new DateTime($activities[0]['time'], new DateTimeZone('UTC'));
@@ -171,7 +167,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1, 'complex' => $complex];
         $response = $this->user1->addActivity($activity_data);
         $activity_id = $response['id'];
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
@@ -186,7 +181,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1, 'complex' => $complex];
         $response = $this->user1->addActivity($activity_data);
         $activity_id = $response['id'];
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
@@ -200,12 +194,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $response = $this->user1->addActivity($activity_data);
         $activity_id = $response['id'];
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
         $this->user1->removeActivity($activity_id);
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(0, $activities);
     }
@@ -216,13 +208,11 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1, 'foreign_id' => $fid];
         $response = $this->user1->addActivity($activity_data);
         $activity_id = $response['id'];
-        sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
         $this->assertSame($activities[0]['foreign_id'], $fid);
         $this->user1->removeActivity($fid, true);
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(0, $activities);
     }
@@ -231,7 +221,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1, 'new_field' => '42'];
         $response = $this->user1->addActivity($activity_data);
-        sleep(3);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertNotSame($activities[0]['new_field'], 42);
     }
@@ -239,17 +228,14 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testFlatFollowUnfollow()
     {
         $this->user1->unfollowFeed('flat', '33');
-        sleep(3);
         $activity_data = ['actor' => 1, 'verb' => 'FlatFollowUnfollow', 'object' => 1];
         $response = $this->flat3->addActivity($activity_data);
         $activity_id = $response['id'];
         $this->user1->followFeed('flat', '33');
-        sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
         $this->user1->unfollowFeed('flat', '33');
-        sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(0, $activities);
     }
@@ -266,11 +252,9 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $feed = $this->client->feed('user', 'keephistory');
         $this->flat3->addActivity($activity);
         $feed->followFeed('flat', '33');
-        sleep(5);
         $activities = $feed->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $feed->unfollowFeed('flat', '33', true);
-        sleep(5);
         $activities = $feed->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
     }
@@ -279,12 +263,10 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     {
         $secret = $this->client->feed('secret', '33');
         $this->user1->unfollowFeed('secret', '33');
-        sleep(3);
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $response = $secret->addActivity($activity_data);
         $activity_id = $response['id'];
         $this->user1->followFeed('secret', '33');
-        sleep(5);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activities[0]['id'], $activity_id);
