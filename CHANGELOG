@@ -5,6 +5,18 @@
 Upcoming release
 ================
 
+2.3.0
+=====
+:release-date: 2016-10-15
+:by: Ian Douglas
+
+* Updates to testing, support for more versions
+
+2.2.8
+=====
+:release-date: 2016-06-29
+:by: Tommaso Barbugli
+
 * Update to php-jwt 3.0
 
 2.0.1

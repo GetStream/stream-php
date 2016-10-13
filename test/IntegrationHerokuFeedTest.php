@@ -5,7 +5,7 @@ class HerokuIntegrationTest extends IntegrationTest
 {
     protected function setUp()
     {
-        putenv('STREAM_URL=https://ahj2ndz7gsan:gthc2t9gh7pzq52f6cky8w4r4up9dr6rju9w3fjgmkv6cdvvav2ufe5fv7e2r9qy@us-east.getstream.io/?app_id=1');
+        putenv('STREAM_URL=https://' . getenv('STREAM_API_KEY') . ':'  .getenv('STREAM_API_SECRET') . '@us-east.getstream.io/?app_id=1');
         $this->client = Client::herokuConnect();
         $this->user1 = $this->client->feed('user', '11');
         $this->aggregated2 = $this->client->feed('aggregated', '22');
@@ -20,4 +20,12 @@ class HerokuIntegrationTest extends IntegrationTest
         $this->assertSame($url, 'https://api.getstream.io/api/v1.0/x');
     }
 
+    /**
+     * @expectedException        Exception
+     * @expectedExceptionMessage url malformed
+     */
+    public function testExceptionThrow()
+    {
+        Client::herokuConnect("https://api_key:@getstream.io/?app_id=1");
+    }
 }

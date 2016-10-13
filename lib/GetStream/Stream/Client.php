@@ -56,9 +56,12 @@ class Client
         $this->api_secret = $api_secret;
         $this->signer = new Signer($api_key, $api_secret);
         $this->api_version = $api_version;
-        $this->location = $location;
         $this->timeout = $timeout;
+        $this->location = $location;
         $this->protocol = 'https';
+        if ($location == 'qa') {
+            $this->protocol = 'http';
+        }
     }
 
     /**
@@ -141,16 +144,21 @@ class Client
      */
     public function getBaseUrl()
     {
+        $api_endpoint = static::API_ENDPOINT;
         $localPort = getenv('STREAM_LOCAL_API_PORT');
         if ($localPort) {
             $baseUrl = "http://localhost:$localPort/api";
         } else {
             if ($this->location) {
                 $subdomain = "{$this->location}-api";
+                if ($this->location == 'qa') {
+                    $api_endpoint = 'getstream.io:82/api';
+                    $this->setProtocol('http');
+                }
             } else {
                 $subdomain = 'api';
             }
-            $baseUrl = "{$this->protocol}://{$subdomain}." . static::API_ENDPOINT;
+            $baseUrl = "{$this->protocol}://{$subdomain}." . $api_endpoint;
         }
         return $baseUrl;
     }
