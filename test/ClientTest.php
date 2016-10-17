@@ -17,7 +17,7 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client = new Client('key', 'secret');
         $client->setLocation('qa');
         $url = $client->buildRequestUrl('x');
-        $this->assertSame($url, 'http://qa-api.getstream.io:82/api/v1.0/x');
+        $this->assertSame($url, 'http://qa-api.getstream.io/api/v1.0/x');
 
         $client = new Client('key', 'secret', $api_version='1234', $location='asdfg');
         $url = $client->buildRequestUrl('y');

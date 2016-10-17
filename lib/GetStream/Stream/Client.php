@@ -152,7 +152,7 @@ class Client
             if ($this->location) {
                 $subdomain = "{$this->location}-api";
                 if ($this->location == 'qa') {
-                    $api_endpoint = 'getstream.io:82/api';
+                    $api_endpoint = 'getstream.io/api';
                     $this->setProtocol('http');
                 }
             } else {
