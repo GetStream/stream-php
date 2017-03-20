@@ -3,7 +3,7 @@ stream-php
 
 [![Build Status](https://travis-ci.org/GetStream/stream-php.svg?branch=master)](https://travis-ci.org/GetStream/stream-php) [![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-php/badge.svg?branch=master)](https://coveralls.io/github/GetStream/stream-php?branch=master) [![PHP version](https://badge.fury.io/ph/get-stream%2Fstream.svg)](http://badge.fury.io/ph/get-stream%2Fstream)
 
-stream-php is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams. 
+stream-php is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
 The full documentation is available on [GetStream.io/docs/?language=php](http://getstream.io/docs/?language=php). Note that there is also a [higher level Laravel integration](https://github.com/getstream/stream-laravel) which hooks into your ORM.
 
 ### Installation
@@ -69,7 +69,7 @@ $data = [
 $user_feed_1->addActivity($data);
 // Create a bit more complex activity
 $now = new \DateTime("now", new \DateTimeZone('Pacific/Nauru'));
-$data = ['actor' => 1, 'verb' => 'run', 'object' => 1, 'foreign_id' => 'run:1', 
+$data = ['actor' => 1, 'verb' => 'run', 'object' => 1, 'foreign_id' => 'run:1',
 	'course' => ['name'=> 'Golden Gate park', 'distance'=> 10],
 	'participants' => ['Thierry', 'Tommaso'],
 	'started_at' => $now
@@ -154,6 +154,9 @@ $follows = [
     ['source' => 'flat:b1', 'target' => 'user:b3']
 ];
 $batcher->followMany($follows);
+
+// Create many follows without copying activities
+$batcher->followMany($follows, 0);
 ```
 
 ### Contributing
