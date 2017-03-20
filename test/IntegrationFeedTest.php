@@ -106,9 +106,6 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $b11 = $this->client->feed('flat', 'b11');
         $response = $b11->following();
         $this->assertCount(2, $response['results']);
-        // make sure history was not copied
-        $activities = $b11->getActivities(0, 3)['results'];
-        $this->assertCount(0, $activities);
     }
 
     public function testFollowMany()
