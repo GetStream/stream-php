@@ -2,8 +2,12 @@
  Change history
 ================
 
-Upcoming release
-================
+2.3.0
+=====
+:release-date: 2017-03-20
+:by: Tommaso Barbugli
+
+* Add support for activity_copy_limit parameter (follow_many)
 
 2.2.9
 =====
@@ -33,4 +37,3 @@ Upcoming release
 :by: Tommaso Barbugli
 
 * Add support for mark read (notifications feeds)
-

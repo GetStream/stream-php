@@ -75,9 +75,13 @@ class Batcher extends Feed
      *   ['source' => 'flat:1', 'target' => 'user:3']
      * ]
      */
-    public function followMany($follows)
+    public function followMany($follows, $activity_copy_limit = null)
     {
-        return $this->makeHttpRequest('follow_many/', 'POST', $follows);
+        $query_params = [];
+        if ($activity_copy_limit !== null) {
+          $query_params["activity_copy_limit"] = $activity_copy_limit;
+        }
+        return $this->makeHttpRequest('follow_many/', 'POST', $follows, $query_params);
     }
 
     /**

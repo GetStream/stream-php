@@ -92,6 +92,22 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertSame('batch1', $response['results'][0]['foreign_id']);
     }
 
+    public function testFollowManyWithActivityCopyLimitZero()
+    {
+        $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
+        $response = $this->client->feed('user', 'b11')->addActivity($activity_data);
+        $batcher = $this->client->batcher();
+        $follows = [
+            ['source' => 'flat:b11', 'target' => 'user:b11'],
+            ['source' => 'flat:b11', 'target' => 'user:b33']
+        ];
+        $batcher->followMany($follows, 0);
+        sleep(5);
+        $b11 = $this->client->feed('flat', 'b11');
+        $response = $b11->following();
+        $this->assertCount(2, $response['results']);
+    }
+
     public function testFollowMany()
     {
         $batcher = $this->client->batcher();
