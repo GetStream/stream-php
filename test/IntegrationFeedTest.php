@@ -98,16 +98,16 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $response = $this->client->feed('user', 'b11')->addActivity($activity_data);
         $batcher = $this->client->batcher();
         $follows = [
-            ['source' => 'flat:b1', 'target' => 'user:b11'],
-            ['source' => 'flat:b1', 'target' => 'user:b33']
+            ['source' => 'flat:b11', 'target' => 'user:b11'],
+            ['source' => 'flat:b11', 'target' => 'user:b33']
         ];
         $batcher->followMany($follows, 0);
         sleep(5);
-        $b1 = $this->client->feed('flat', 'b1');
-        $response = $b1->following();
+        $b1 = $this->client->feed('flat', 'b11');
+        $response = $b11->following();
         $this->assertCount(2, $response['results']);
         // make sure history was not copied
-        $activities = $b1->getActivities(0, 3)['results'];
+        $activities = $b11->getActivities(0, 3)['results'];
         $this->assertCount(0, $activities);
     }
 
