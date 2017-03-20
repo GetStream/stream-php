@@ -103,7 +103,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         ];
         $batcher->followMany($follows, 0);
         sleep(5);
-        $b1 = $this->client->feed('flat', 'b11');
+        $b11 = $this->client->feed('flat', 'b11');
         $response = $b11->following();
         $this->assertCount(2, $response['results']);
         // make sure history was not copied
