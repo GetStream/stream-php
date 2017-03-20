@@ -94,16 +94,21 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
 
     public function testFollowManyWithActivityCopyLimitZero()
     {
+        $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
+        $response = $this->client->feed('user', 'b11')->addActivity($activity_data);
         $batcher = $this->client->batcher();
         $follows = [
-            ['source' => 'flat:b1', 'target' => 'user:b1'],
-            ['source' => 'flat:b1', 'target' => 'user:b3']
+            ['source' => 'flat:b1', 'target' => 'user:b11'],
+            ['source' => 'flat:b1', 'target' => 'user:b33']
         ];
         $batcher->followMany($follows, 0);
-
+        sleep(5);
         $b1 = $this->client->feed('flat', 'b1');
         $response = $b1->following();
         $this->assertCount(2, $response['results']);
+        // make sure history was not copied
+        $activities = $b1->getActivities(0, 3)['results'];
+        $this->assertCount(0, $activities);
     }
 
     public function testFollowMany()
