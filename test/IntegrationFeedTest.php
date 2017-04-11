@@ -122,17 +122,17 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $response['results']);
     }
 
-    public function testSignedGetHttp()
-    {
-        $batcher = $this->client->batcher();
-        $batcher->test('GET');
-    }
+    // public function testSignedGetHttp()
+    // {
+    //     $batcher = $this->client->batcher();
+    //     $batcher->test('GET');
+    // }
 
-    public function testSignedPostHttp()
-    {
-        $batcher = $this->client->batcher();
-        $batcher->test('POST');
-    }
+    // public function testSignedPostHttp()
+    // {
+    //     $batcher = $this->client->batcher();
+    //     $batcher->test('POST');
+    // }
 
     public function testReadonlyToken()
     {
