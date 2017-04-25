@@ -3,8 +3,11 @@ stream-php
 
 [![Build Status](https://travis-ci.org/GetStream/stream-php.svg?branch=master)](https://travis-ci.org/GetStream/stream-php) [![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-php/badge.svg?branch=master)](https://coveralls.io/github/GetStream/stream-php?branch=master) [![PHP version](https://badge.fury.io/ph/get-stream%2Fstream.svg)](http://badge.fury.io/ph/get-stream%2Fstream)
 
-stream-php is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
-The full documentation is available on [GetStream.io/docs/?language=php](http://getstream.io/docs/?language=php). Note that there is also a [higher level Laravel integration](https://github.com/getstream/stream-laravel) which hooks into your ORM.
+[stream-php](https://github.com/GetStream/stream-php) is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
+
+Note that there is also a [higher level Laravel - Stream integration](https://github.com/getstream/stream-laravel) which hooks into the Laravel ORM.
+
+You can sign up for a Stream account at https://getstream.io/get_started.
 
 ### Installation
 
@@ -36,6 +39,10 @@ dependencies, you can add Stream with it.
 
 Composer will take care of the autoloading for you, so if you require
 the `vendor/autoload.php`, you're good to go.
+
+### Full documentatation
+
+Documentation for this PHP client are available at the [Stream website](https://getstream.io/docs/?language=php).
 
 ### Usage
 
