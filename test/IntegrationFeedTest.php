@@ -4,6 +4,28 @@ namespace GetStream\Stream;
 use DateTime;
 use DateTimeZone;
 
+function gen_uuid() {
+    return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+        // 32 bits for "time_low"
+        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
+
+        // 16 bits for "time_mid"
+        mt_rand( 0, 0xffff ),
+
+        // 16 bits for "time_hi_and_version",
+        // four most significant bits holds version number 4
+        mt_rand( 0, 0x0fff ) | 0x4000,
+
+        // 16 bits, 8 bits for "clk_seq_hi_res",
+        // 8 bits for "clk_seq_low",
+        // two most significant bits holds zero and one for variant DCE1.1
+        mt_rand( 0, 0x3fff ) | 0x8000,
+
+        // 48 bits for "node"
+        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
+    );
+}
+
 class IntegrationTest extends \PHPUnit_Framework_TestCase
 {
     protected $client;
@@ -469,4 +491,104 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $response = $this->client->feed('flat', 'remotefeed2')->getActivities(0, 2);
         $this->assertSame($response['results'][0]['actor'], 'many2');
     }
+
+    public function testUpdateActivitiesToRemoveTarget()
+    {
+        $feed = $this->client->feed('user', gen_uuid());
+        $target = gen_uuid();
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $time = $now->format(DateTime::ISO8601);
+        $activities = [
+            [
+                'actor' => 'actor', 'verb' => 'tweet', 'object' => 1,
+                'to'    => ["flat:${target}"], 'time' => $time,
+                'foreign_id' => 'fid1',
+            ],
+        ];
+        $feed->addActivities($activities);
+        $response = $this->client->feed('flat', $target)->getActivities();
+        $this->assertCount(1, $response['results']);
+
+        $feed->updateActivityToTargets('fid1', $time, [], [], ["flat:${target}"]);
+
+        $response = $this->client->feed('flat', $target)->getActivities();
+        $this->assertCount(0, $response['results']);
+    }
+
+    public function testUpdateActivitiesToAddTarget()
+    {
+        $feed = $this->client->feed('user', gen_uuid());
+        $target = gen_uuid();
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $time = $now->format(DateTime::ISO8601);
+        $activities = [
+            [
+                'actor' => 'actor', 'verb' => 'tweet', 'object' => 1,
+                'time' => $time, 'foreign_id' => 'fid1',
+            ],
+        ];
+        $feed->addActivities($activities);
+        $response = $this->client->feed('flat', $target)->getActivities();
+        $this->assertCount(0, $response['results']);
+
+        $feed->updateActivityToTargets('fid1', $time, [], ["flat:${target}"], []);
+
+        $response = $this->client->feed('flat', $target)->getActivities();
+        $this->assertCount(1, $response['results']);
+    }
+
+    public function testUpdateActivitiesToAddRemoveTarget()
+    {
+        $feed = $this->client->feed('user', gen_uuid());
+        $target1 = gen_uuid();
+        $target2 = gen_uuid();
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $time = $now->format(DateTime::ISO8601);
+        $activities = [
+            [
+                'actor' => 'actor', 'verb' => 'tweet', 'object' => 1,
+                'to'    => ["flat:${target1}"], 'time' => $time,
+                'foreign_id' => 'fid1',
+            ],
+        ];
+        $feed->addActivities($activities);
+        $response = $this->client->feed('flat', $target1)->getActivities();
+        $this->assertCount(1, $response['results']);
+
+        $feed->updateActivityToTargets('fid1', $time, [], ["flat:${target2}"], ["flat:${target1}"]);
+
+        $response = $this->client->feed('flat', $target1)->getActivities();
+        $this->assertCount(0, $response['results']);
+
+        $response = $this->client->feed('flat', $target2)->getActivities();
+        $this->assertCount(1, $response['results']);
+    }
+
+    public function testUpdateActivitiesToReplaceTargets()
+    {
+        $feed = $this->client->feed('user', gen_uuid());
+        $target1 = gen_uuid();
+        $target2 = gen_uuid();
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $time = $now->format(DateTime::ISO8601);
+        $activities = [
+            [
+                'actor' => 'actor', 'verb' => 'tweet', 'object' => 1,
+                'to'    => ["flat:${target1}"], 'time' => $time,
+                'foreign_id' => 'fid1',
+            ],
+        ];
+        $feed->addActivities($activities);
+        $response = $this->client->feed('flat', $target1)->getActivities();
+        $this->assertCount(1, $response['results']);
+
+        $feed->updateActivityToTargets('fid1', $time, ["flat:${target2}"]);
+
+        $response = $this->client->feed('flat', $target1)->getActivities();
+        $this->assertCount(0, $response['results']);
+
+        $response = $this->client->feed('flat', $target2)->getActivities();
+        $this->assertCount(1, $response['results']);
+    }
+
 }

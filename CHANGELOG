@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.4.0
+=====
+:release-date: 2017-08-31
+:by: Tommaso Barbugli
+
+* Add support for update to target
+
 2.3.0
 =====
 :release-date: 2017-03-20

@@ -271,4 +271,33 @@ class BaseFeed
     {
         return $this->makeHttpRequest("{$this->base_feed_url}/", 'DELETE', null, null, 'feed', 'delete');
     }
+
+    /**
+     * @param  string $foreign_id
+     * @param  string $time
+     * @param  array $new_targets
+     * @param  array $added_targets
+     * @param  array $removed_targets
+     * @return mixed
+     */
+    public function updateActivityToTargets($foreign_id, $time, $new_targets = [], $added_targets = [], $removed_targets = [])
+    {
+        $data = [
+            'foreign_id' => $foreign_id,
+            'time'       => $time,
+        ];
+
+        if ($new_targets) {
+            $data['new_targets'] = $new_targets;
+        }
+        
+        if ($added_targets) {
+            $data['added_targets'] = $added_targets;           
+        }
+        
+        if ($removed_targets) {
+            $data['removed_targets'] = $removed_targets;           
+        }
+        return $this->makeHttpRequest("feed_targets/{$this->slug}/{$this->user_id}/activity_to_targets/", 'POST', $data, null, 'feed_targets', 'write');
+    }
 }
