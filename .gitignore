@@ -1,9 +1,2 @@
-*.lock
-package.xml
+/composer.lock
 /vendor
-.idea
-bin/phpunit
-.DS_Store
-/nbproject
-test.sh
-
