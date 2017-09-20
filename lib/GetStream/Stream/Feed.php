@@ -90,7 +90,7 @@ class Feed extends BaseFeed
             $method, $Uri, $headers, null, $this->guzzleOptions
         );
 
-        if ($method === 'POST' || $method === 'POST') {
+        if ($method === 'POST') {
             $json_data = json_encode($data);
             $request = $request->withBody(Psr7\stream_for($json_data));
         }
