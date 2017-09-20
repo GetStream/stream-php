@@ -1,6 +1,5 @@
 {
     "name": "get-stream/stream",
-    "type": "package",
     "description": "A PHP client for Stream (https://getstream.io)",
     "keywords": ["stream", "newsfeed", "feedly"],
     "homepage": "https://getstream.io",
