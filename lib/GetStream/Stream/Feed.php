@@ -86,9 +86,7 @@ class Feed extends BaseFeed
         $Uri = new Psr7\Uri($this->client->buildRequestUrl($uri));
         $Uri = $Uri->withQuery(http_build_query($query_params));
 
-        $request = new Request(
-            $method, $Uri, $headers, null, $this->guzzleOptions
-        );
+        $request = new Request($method, $Uri, $headers, null);
 
         if ($method === 'POST') {
             $json_data = json_encode($data);
@@ -96,7 +94,7 @@ class Feed extends BaseFeed
         }
 
         try {
-            $response = $client->send($request);
+            $response = $client->send($request, $this->guzzleOptions);
         } catch (Exception $e) {
             if ($e instanceof ClientException) {
                 throw new StreamFeedException($e->getResponse()->getBody());
