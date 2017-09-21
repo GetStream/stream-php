@@ -1,15 +1,18 @@
 <?php
 
-namespace GetStream\Stream;
+namespace GetStream\Unit;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+use GetStream\Stream\Client;
+use PHPUnit\Framework\TestCase;
+
+class ClientTest extends TestCase
 {
     public function testClientSetProtocol()
     {
         $client = new Client('key', 'secret');
         $client->setProtocol('asdfg');
         $url = $client->buildRequestUrl('x');
-        $this->assertSame($url, 'asdfg://api.getstream.io/api/v1.0/x');
+        $this->assertSame('asdfg://api.getstream.io/api/v1.0/x', $url);
     }
 
     public function testClientHostnames()
@@ -17,16 +20,16 @@ class ClientTest extends \PHPUnit_Framework_TestCase
         $client = new Client('key', 'secret');
         $client->setLocation('qa');
         $url = $client->buildRequestUrl('x');
-        $this->assertSame($url, 'http://qa-api.getstream.io/api/v1.0/x');
+        $this->assertSame('http://qa-api.getstream.io/api/v1.0/x', $url);
 
-        $client = new Client('key', 'secret', $api_version='1234', $location='asdfg');
+        $client = new Client('key', 'secret', $api_version = '1234', $location = 'asdfg');
         $url = $client->buildRequestUrl('y');
-        $this->assertSame($url, 'https://asdfg-api.getstream.io/api/1234/y');
+        $this->assertSame('https://asdfg-api.getstream.io/api/1234/y', $url);
 
         $client = new Client('key', 'secret');
         $client->setLocation('us-east');
         $url = $client->buildRequestUrl('z');
-        $this->assertSame($url, 'https://us-east-api.getstream.io/api/v1.0/z');
+        $this->assertSame('https://us-east-api.getstream.io/api/v1.0/z', $url);
     }
 
     public function testClientSigning()
