@@ -1,8 +1,11 @@
 <?php
-namespace GetStream\Stream;
+
+namespace GetStream\Integration;
 
 use DateTime;
 use DateTimeZone;
+use GetStream\Stream\Client;
+use PHPUnit\Framework\TestCase;
 
 function gen_uuid() {
     return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
@@ -26,7 +29,7 @@ function gen_uuid() {
     );
 }
 
-class IntegrationTest extends \PHPUnit_Framework_TestCase
+class FeedTest extends TestCase
 {
     protected $client;
     protected $user1;
@@ -159,7 +162,7 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
     public function testReadonlyToken()
     {
         $token = $this->user1->getReadonlyToken();
-        $this->assertSame($token, "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkIiwiZmVlZF9pZCI6InVzZXIxMSIsInJlc291cmNlIjoiKiJ9.4Ynt_2KZTGNS3H_fcmVgLnZDzjRYj0vUm6hZ4PY2VPE");
+        $this->assertSame('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkIiwiZmVlZF9pZCI6InVzZXIxMSIsInJlc291cmNlIjoiKiJ9.', mb_substr($token, 0, 106));
     }
 
     public function testAddActivity()
@@ -590,5 +593,4 @@ class IntegrationTest extends \PHPUnit_Framework_TestCase
         $response = $this->client->feed('flat', $target2)->getActivities();
         $this->assertCount(1, $response['results']);
     }
-
 }

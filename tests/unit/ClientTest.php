@@ -1,8 +1,11 @@
 <?php
 
-namespace GetStream\Stream;
+namespace GetStream\Unit;
 
-class ClientTest extends \PHPUnit_Framework_TestCase
+use GetStream\Stream\Client;
+use PHPUnit\Framework\TestCase;
+
+class ClientTest extends TestCase
 {
     public function testClientSetProtocol()
     {

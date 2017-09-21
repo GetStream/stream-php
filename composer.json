@@ -21,9 +21,16 @@
         "satooshi/php-coveralls": "^1.0"
     },
     "autoload": {
-        "psr-0" : {
+        "psr-0": {
             "GetStream\\Stream" : "lib/"
         },
-        "files": ["lib/GetStream/Stream/helpers.php"]
+        "psr-4": {
+            "GetStream\\Stubs\\" : "tests/stubs/",
+            "GetStream\\Unit\\" : "tests/unit/",
+            "GetStream\\Integration\\" : "tests/integration/"
+        },
+        "files": [
+            "lib/GetStream/Stream/helpers.php"
+        ]
     }
 }

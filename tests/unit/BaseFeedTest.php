@@ -1,25 +1,15 @@
 <?php
 
-namespace GetStream\Stream;
+namespace GetStream\Unit;
 
-class _BaseFeed extends BaseFeed
-{
-    public function makeHttpRequest($uri, $method, $data = null, $query_params = null)
-    {
-        return [
-            'uri'          => $uri,
-            'method'       => $method,
-            'data'         => $data,
-            'query_params' => $query_params,
-        ];
-    }
-}
+use GetStream\Stubs\BaseFeedStub;
+use PHPUnit\Framework\TestCase;
 
-class BaseFeedTest extends \PHPUnit_Framework_TestCase
+class BaseFeedTest extends TestCase
 {
     public function testClientFeedAddActivity()
     {
-        $feed = new _BaseFeed(null, 'feed', '1', 'api', 'token');
+        $feed = new BaseFeedStub(null, 'feed', '1', 'api', 'token');
         $data = ['name' => 'php client'];
         extract($feed->addActivity($data));
         $this->assertSame($uri, 'feed/feed/1/');
@@ -30,7 +20,7 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateSlug()
     {
-        new _BaseFeed(null, 'feed-ko', '1', 'api', 'token');
+        new BaseFeedStub(null, 'feed-ko', '1', 'api', 'token');
     }
 
     /**
@@ -38,23 +28,23 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
      */
     public function testValidateUserId()
     {
-        new _BaseFeed(null, 'feed_ko', 'ko:1', 'api', 'token');
+        new BaseFeedStub(null, 'feed_ko', 'ko:1', 'api', 'token');
     }
 
     public function testDashIsOkUserId()
     {
-        new _BaseFeed(null, 'feed_ko', 'ko-1', 'api', 'token');
+        new BaseFeedStub(null, 'feed_ko', 'ko-1', 'api', 'token');
     }
 
     public function testGetToken()
     {
-        $feed = new _BaseFeed(null, 'feed', '1', 'api', 'token');
+        $feed = new BaseFeedStub(null, 'feed', '1', 'api', 'token');
         $this->assertSame($feed->getToken(), 'token');
     }
 
     public function testClientFeedGetActivities()
     {
-        $feed = new _BaseFeed(null, 'feed', '1', 'api', 'token');
+        $feed = new BaseFeedStub(null, 'feed', '1', 'api', 'token');
 
         $limit = 1;
         $offset = 3;
@@ -71,7 +61,7 @@ class BaseFeedTest extends \PHPUnit_Framework_TestCase
 
     public function testClientRemoveActivity()
     {
-        $feed = new _BaseFeed(null, 'feed', '1', 'api', 'token');
+        $feed = new BaseFeedStub(null, 'feed', '1', 'api', 'token');
         $aid = '123';
         extract($feed->removeActivity($aid));
         $this->assertSame($uri, 'feed/feed/1/123/');
