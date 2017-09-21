@@ -5,8 +5,6 @@ stream-php
 
 [stream-php](https://github.com/GetStream/stream-php) is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
 
-Note that there is also a [higher level Laravel - Stream integration](https://github.com/getstream/stream-laravel) which hooks into the Laravel ORM.
-
 You can sign up for a Stream account at https://getstream.io/get_started.
 
 ### Installation
@@ -165,6 +163,13 @@ $batcher->followMany($follows);
 // Create many follows without copying activities
 $batcher->followMany($follows, 0);
 ```
+
+### Framework integration
+
+#### Laravel
+
+There's a higher level integration with [Laravel](https://laravel.com) called [`get-stream/stream-laravel`](https://github.com/getstream/stream-laravel).
+The `stream-laravel` integration helps you to hook into the Laravel's Eloquent ORM to sync data to Stream.
 
 ### Contributing
 
