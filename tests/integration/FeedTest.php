@@ -256,7 +256,7 @@ class FeedTest extends TestCase
         $this->assertSame($activities[0]['id'], $activity_id);
         $this->assertSame($activities[0]['foreign_id'], $fid);
         $this->user1->removeActivity($fid, true);
-        sleep(1);
+        sleep(2);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(0, $activities);
     }
@@ -555,10 +555,12 @@ class FeedTest extends TestCase
             ],
         ];
         $feed->addActivities($activities);
+        sleep(2);
         $response = $this->client->feed('flat', $target1)->getActivities();
         $this->assertCount(1, $response['results']);
 
         $feed->updateActivityToTargets('fid1', $time, [], ["flat:${target2}"], ["flat:${target1}"]);
+        sleep(2);
 
         $response = $this->client->feed('flat', $target1)->getActivities();
         $this->assertCount(0, $response['results']);
@@ -582,6 +584,7 @@ class FeedTest extends TestCase
             ],
         ];
         $feed->addActivities($activities);
+        sleep(2);
         $response = $this->client->feed('flat', $target1)->getActivities();
         $this->assertCount(1, $response['results']);
 
