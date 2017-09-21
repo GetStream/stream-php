@@ -11,12 +11,12 @@ class BaseFeedTest extends TestCase
     {
         $feed = new BaseFeedStub(null, 'feed', '1', 'api', 'token');
         $data = ['name' => 'php client'];
-        extract($feed->addActivity($data));
-        $this->assertSame($uri, 'feed/feed/1/');
+        $response = $feed->addActivity($data);
+        $this->assertSame('feed/feed/1/', $response['uri']);
     }
 
     /**
-     * @expectedException GetStream\Stream\StreamFeedException
+     * @expectedException \GetStream\Stream\StreamFeedException
      */
     public function testValidateSlug()
     {
@@ -24,7 +24,7 @@ class BaseFeedTest extends TestCase
     }
 
     /**
-     * @expectedException GetStream\Stream\StreamFeedException
+     * @expectedException \GetStream\Stream\StreamFeedException
      */
     public function testValidateUserId()
     {
@@ -39,7 +39,7 @@ class BaseFeedTest extends TestCase
     public function testGetToken()
     {
         $feed = new BaseFeedStub(null, 'feed', '1', 'api', 'token');
-        $this->assertSame($feed->getToken(), 'token');
+        $this->assertSame('token', $feed->getToken());
     }
 
     public function testClientFeedGetActivities()
@@ -49,21 +49,21 @@ class BaseFeedTest extends TestCase
         $limit = 1;
         $offset = 3;
 
-        extract($feed->getActivities($offset, $limit));
-        $this->assertSame($uri, 'feed/feed/1/');
+        $response = $feed->getActivities($offset, $limit);
+        $this->assertSame('feed/feed/1/', $response['uri']);
 
-        extract($feed->getActivities($offset));
-        $this->assertSame($uri, 'feed/feed/1/');
+        $response = $feed->getActivities($offset);
+        $this->assertSame('feed/feed/1/', $response['uri']);
 
-        extract($feed->getActivities());
-        $this->assertSame($uri, 'feed/feed/1/');
+        $response = $feed->getActivities();
+        $this->assertSame('feed/feed/1/', $response['uri']);
     }
 
     public function testClientRemoveActivity()
     {
         $feed = new BaseFeedStub(null, 'feed', '1', 'api', 'token');
         $aid = '123';
-        extract($feed->removeActivity($aid));
-        $this->assertSame($uri, 'feed/feed/1/123/');
+        $response = $feed->removeActivity($aid);
+        $this->assertSame('feed/feed/1/123/', $response['uri']);
     }
 }

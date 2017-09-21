@@ -172,7 +172,7 @@ class FeedTest extends TestCase
         $activity_id = $response['id'];
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
-        $this->assertSame($activities[0]['id'], $activity_id);
+        $this->assertSame($activity_id, $activities[0]['id']);
     }
 
     public function testAddActivities()
@@ -188,7 +188,7 @@ class FeedTest extends TestCase
         $expected = ['multi1', 'multi2'];
         sort($expected);
         sort($actors);
-        $this->assertSame($actors, $expected);
+        $this->assertSame($expected, $actors);
     }
 
     public function testAddActivityWithTime()
@@ -211,10 +211,10 @@ class FeedTest extends TestCase
         $activity_id = $response['id'];
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
-        $this->assertSame($activities[0]['id'], $activity_id);
+        $this->assertSame($activity_id, $activities[0]['id']);
         sort($activities[0]['complex']);
         sort($complex);
-        $this->assertSame($activities[0]['complex'], $complex);
+        $this->assertSame($complex, $activities[0]['complex']);
     }
 
     public function testAddActivityWithAssocArray()
@@ -225,10 +225,10 @@ class FeedTest extends TestCase
         $activity_id = $response['id'];
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
-        $this->assertSame($activities[0]['id'], $activity_id);
+        $this->assertSame($activity_id, $activities[0]['id']);
         sort($activities[0]['complex']);
         sort($complex);
-        $this->assertSame($activities[0]['complex'], $complex);
+        $this->assertSame($complex, $activities[0]['complex']);
     }
 
     public function testRemoveActivity()
@@ -238,7 +238,7 @@ class FeedTest extends TestCase
         $activity_id = $response['id'];
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
-        $this->assertSame($activities[0]['id'], $activity_id);
+        $this->assertSame($activity_id, $activities[0]['id']);
         $this->user1->removeActivity($activity_id);
         sleep(2);
         $activities = $this->user1->getActivities(0, 1)['results'];
@@ -266,7 +266,7 @@ class FeedTest extends TestCase
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1, 'new_field' => '42'];
         $response = $this->user1->addActivity($activity_data);
         $activities = $this->user1->getActivities(0, 1)['results'];
-        $this->assertNotSame($activities[0]['new_field'], 42);
+        $this->assertNotSame(42, $activities[0]['new_field']);
     }
 
     public function testFlatFollowUnfollow()
@@ -278,7 +278,7 @@ class FeedTest extends TestCase
         $this->user1->followFeed('flat', '33');
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
-        $this->assertSame($activities[0]['id'], $activity_id);
+        $this->assertSame($activity_id, $activities[0]['id']);
         $this->user1->unfollowFeed('flat', '33');
         sleep(2);
         $activities = $this->user1->getActivities(0, 10)['results'];
@@ -316,7 +316,7 @@ class FeedTest extends TestCase
         sleep(2);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
-        $this->assertSame($activities[0]['id'], $activity_id);
+        $this->assertSame($activity_id, $activities[0]['id']);
         $this->user1->unfollowFeed('secret', '33');
     }
 
@@ -345,15 +345,15 @@ class FeedTest extends TestCase
 
         $activities = $this->user1->getActivities(0, 2)['results'];
         $this->assertCount(2, $activities);
-        $this->assertSame($activities[0]['id'], $third_id);
-        $this->assertSame($activities[1]['id'], $second_id);
+        $this->assertSame($third_id, $activities[0]['id']);
+        $this->assertSame($second_id, $activities[1]['id']);
 
         $activities = $this->user1->getActivities(1, 2)['results'];
-        $this->assertSame($activities[0]['id'], $second_id);
+        $this->assertSame($second_id, $activities[0]['id']);
 
         $id_offset =  ['id_lt' => $third_id];
         $activities = $this->user1->getActivities(0, 2, $id_offset)['results'];
-        $this->assertSame($activities[0]['id'], $second_id);
+        $this->assertSame($second_id, $activities[0]['id']);
     }
 
     public function testVerifyOff()
@@ -418,7 +418,7 @@ class FeedTest extends TestCase
         $lonely = $this->client->feed('flat', 'lonely');
         $response = $lonely->followers();
         $this->assertCount(0, $response['results']);
-        $this->assertSame($response['results'], []);
+        $this->assertSame([], $response['results']);
     }
 
     public function testFollowersWithLimit()
@@ -427,8 +427,8 @@ class FeedTest extends TestCase
         $this->client->feed('flat', 'php44')->followFeed('flat', 'php42');
         $response = $this->client->feed('flat', 'php42')->followers(0, 2);
         $this->assertCount(2, $response['results']);
-        $this->assertSame($response['results'][0]['feed_id'], 'flat:php44');
-        $this->assertSame($response['results'][0]['target_id'], 'flat:php42');
+        $this->assertSame('flat:php44', $response['results'][0]['feed_id']);
+        $this->assertSame('flat:php42', $response['results'][0]['target_id']);
     }
 
     public function testFollowingEmpty()
@@ -436,7 +436,7 @@ class FeedTest extends TestCase
         $lonely = $this->client->feed('flat', 'lonely');
         $response = $lonely->following();
         $this->assertCount(0, $response['results']);
-        $this->assertSame($response['results'], []);
+        $this->assertSame([], $response['results']);
     }
 
     public function testFollowingsWithLimit()
@@ -445,8 +445,8 @@ class FeedTest extends TestCase
         $this->client->feed('flat', 'php43')->followFeed('flat','php44');
         $response = $this->client->feed('flat', 'php43')->following(0, 2);
         $this->assertCount(2, $response['results']);
-        $this->assertSame($response['results'][0]['feed_id'], 'flat:php43');
-        $this->assertSame($response['results'][0]['target_id'], 'flat:php44');
+        $this->assertSame('flat:php43', $response['results'][0]['feed_id']);
+        $this->assertSame('flat:php44', $response['results'][0]['target_id']);
     }
 
     public function testDoIFollowEmpty()
@@ -454,7 +454,7 @@ class FeedTest extends TestCase
         $lonely = $this->client->feed('flat', 'lonely');
         $response = $lonely->following(0, 10, ['flat:asocial']);
         $this->assertCount(0, $response['results']);
-        $this->assertSame($response['results'], []);
+        $this->assertSame([], $response['results']);
     }
 
     public function testDoIFollow()
@@ -463,8 +463,8 @@ class FeedTest extends TestCase
         $this->client->feed('flat', 'php43')->followFeed('flat', 'php44');
         $response = $this->client->feed('flat', 'php43')->following(0, 10, ['flat:php42']);
         $this->assertCount(1, $response['results']);
-        $this->assertSame($response['results'][0]['feed_id'], 'flat:php43');
-        $this->assertSame($response['results'][0]['target_id'], 'flat:php42');
+        $this->assertSame('flat:php43', $response['results'][0]['feed_id']);
+        $this->assertSame('flat:php42', $response['results'][0]['target_id']);
     }
 
     public function testAddActivityTo()
@@ -475,7 +475,7 @@ class FeedTest extends TestCase
         ];
         $this->user1->addActivity($activity);
         $response = $this->client->feed('flat', 'remotefeed1')->getActivities(0, 2);
-        $this->assertSame($response['results'][0]['actor'], 'multi1');
+        $this->assertSame('multi1', $response['results'][0]['actor']);
     }
 
     public function testAddActivitiesTo()
@@ -492,7 +492,7 @@ class FeedTest extends TestCase
         ];
         $this->user1->addActivities($activities);
         $response = $this->client->feed('flat', 'remotefeed2')->getActivities(0, 2);
-        $this->assertSame($response['results'][0]['actor'], 'many2');
+        $this->assertSame('many2', $response['results'][0]['actor']);
     }
 
     public function testUpdateActivitiesToRemoveTarget()
