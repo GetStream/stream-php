@@ -11,51 +11,35 @@ You can sign up for a Stream account at https://getstream.io/get_started.
 
 ### Installation
 
-#### PHP compatibility
+#### Composer
 
-The current release is compatible with and tested against PHP 5.5, 5.6, 7.0 and 7.1.
-
-#### PHP 5.4 support
-
-Current release branch 2.2 requires PHP 5.5 and Guzzle 6.
-
-If you need to use the client with PHP 5.4 or Guzzle < 6, you can grab the latest version of the 2.1.x branch
-
-#### Install with Composer
-
-If you're using [Composer](https://getcomposer.org/) to manage
-dependencies, you can add Stream with it.
-
-```javascript
-{
-    "require": {
-        "get-stream/stream": "$VERSION"
-    }
-}
+```
+composer require get-stream/stream
 ```
 
-(replace `$VERSION` with one of the available versions on
-[Packagist](https://packagist.org/packages/get-stream/stream))
+Composer will install our latest version automatically.
 
-Composer will take care of the autoloading for you, so if you require
-the `vendor/autoload.php`, you're good to go.
+#### PHP compatibility
+
+Current releases require PHP `>5.5` and depend on Guzzle version 6.
+
+If you need to use the client with PHP 5.4 or earlier versions of Guzzle, you can grab an earlier version of this package:
+
+```
+composer require get-stream/stream:"~2.1.0"
+```
 
 ### Full documentatation
 
-Documentation for this PHP client are available at the [Stream website](https://getstream.io/docs/?language=php).
+Our full documentation for this package is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
 
-### Usage
+### Quick start
+
+First, [signup here](https://getstream.io/dashboard/) for a free account and grab your API key and secret.
 
 ```php
-<?php
-
-require_once __DIR__ . '/vendor/autoload.php';
-
-// Instantiate a new client, find your API keys here https://getstream.io/dashboard/
-$client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
-
-// Set API endpoint location
-$client->setLocation('us-east');
+// Instantiate a new client, find your API keys in the dashboard.
+$client = new GetStream\Stream\Client('YOUR_API_KEY', 'YOUR_API_SECRET');
 
 // Instantiate a feed object
 $user_feed_1 = $client->feed('user', '1');
@@ -175,14 +159,11 @@ The `stream-laravel` integration helps you to hook into the Laravel's Eloquent O
 
 ### Contributing
 
-First, make sure you can run the test suite. Install development
-dependencies :
+We love contributions. We love contributions with tests even more! To run the test-suite to ensure everything still works, run phpunit:
 
-    $ composer install
-
-You may now use phpunit :
-
-    $ vendor/bin/phpunit
+```
+vendor/bin/phpunit --testsuite "Unit Test Suite"
+```
 
 ### Copyright and License Information
 
