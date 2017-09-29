@@ -48,7 +48,8 @@ class Client
      * @param string $api_key
      * @param string $api_secret
      * @param string $api_version
-     * @param string $timeout
+     * @param string $location
+     * @param float $timeout
      */
     public function __construct($api_key, $api_secret, $api_version='v1.0', $location='', $timeout=3.0)
     {
