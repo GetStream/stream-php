@@ -1,4 +1,5 @@
 <?php
+
 namespace GetStream\Stream;
 
 use Exception;
@@ -7,10 +8,8 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Handler\CurlHandler;
 
-
 class ActivityUpdateOperation extends Feed
 {
-
     protected $token;
 
     public function __construct($client, $api_key, $token)
