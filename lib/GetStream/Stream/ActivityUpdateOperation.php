@@ -29,6 +29,10 @@ class ActivityUpdateOperation extends Feed
 
     public function updateActivities($activities)
     {
+        if (empty($activities)) {
+            return;
+        }
+
         $data = [
             'activities' => $activities
         ];
