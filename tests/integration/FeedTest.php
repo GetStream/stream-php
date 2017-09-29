@@ -31,6 +31,9 @@ function gen_uuid() {
 
 class FeedTest extends TestCase
 {
+    /**
+     * @var Client
+     */
     protected $client;
     protected $user1;
     protected $aggregated2;
@@ -595,5 +598,10 @@ class FeedTest extends TestCase
 
         $response = $this->client->feed('flat', $target2)->getActivities();
         $this->assertCount(1, $response['results']);
+    }
+
+    public function testUpdateActivitiesWithZeroActivitiesShouldNotFail()
+    {
+        $this->client->updateActivities([]);
     }
 }
