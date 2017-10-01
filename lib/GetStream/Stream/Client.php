@@ -175,6 +175,10 @@ class Client
 
     public function updateActivities($activities)
     {
+        if (empty($activities)) {
+            return;
+        }
+
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
         $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
         return $activityUpdateOp->updateActivities($activities);
