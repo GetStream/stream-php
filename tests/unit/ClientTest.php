@@ -12,7 +12,7 @@ class ClientTest extends TestCase
         $client = new Client('key', 'secret');
         $client->setProtocol('asdfg');
         $url = $client->buildRequestUrl('x');
-        $this->assertSame('asdfg://api.getstream.io/api/v1.0/x', $url);
+        $this->assertSame('asdfg://api.stream-io-api.com/api/v1.0/x', $url);
     }
 
     public function testClientHostnames()
@@ -20,16 +20,16 @@ class ClientTest extends TestCase
         $client = new Client('key', 'secret');
         $client->setLocation('qa');
         $url = $client->buildRequestUrl('x');
-        $this->assertSame('http://qa-api.getstream.io/api/v1.0/x', $url);
+        $this->assertSame('https://qa-api.stream-io-api.com/api/v1.0/x', $url);
 
         $client = new Client('key', 'secret', $api_version = '1234', $location = 'asdfg');
         $url = $client->buildRequestUrl('y');
-        $this->assertSame('https://asdfg-api.getstream.io/api/1234/y', $url);
+        $this->assertSame('https://asdfg-api.stream-io-api.com/api/1234/y', $url);
 
         $client = new Client('key', 'secret');
         $client->setLocation('us-east');
         $url = $client->buildRequestUrl('z');
-        $this->assertSame('https://us-east-api.getstream.io/api/v1.0/z', $url);
+        $this->assertSame('https://us-east-api.stream-io-api.com/api/v1.0/z', $url);
     }
 
     public function testClientSigning()
