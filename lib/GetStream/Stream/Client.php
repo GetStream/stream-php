@@ -141,17 +141,20 @@ class Client
      */
     public function getBaseUrl()
     {
-        $api_endpoint = static::API_ENDPOINT;
-        $localPort = getenv('STREAM_LOCAL_API_PORT');
-        if ($localPort) {
-            $baseUrl = "http://localhost:$localPort/api";
-        } else {
-            if ($this->location) {
-                $subdomain = "{$this->location}-api";
+        $baseUrl = getenv('STREAM_BASE_URL');
+        if (!$baseUrl) {
+            $api_endpoint = static::API_ENDPOINT;
+            $localPort = getenv('STREAM_LOCAL_API_PORT');
+            if ($localPort) {
+                $baseUrl = "http://localhost:$localPort/api";
             } else {
-                $subdomain = 'api';
+                if ($this->location) {
+                    $subdomain = "{$this->location}-api";
+                } else {
+                    $subdomain = 'api';
+                }
+                $baseUrl = "{$this->protocol}://{$subdomain}." . $api_endpoint;
             }
-            $baseUrl = "{$this->protocol}://{$subdomain}." . $api_endpoint;
         }
         return $baseUrl;
     }
