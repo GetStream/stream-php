@@ -11,15 +11,11 @@ You can sign up for a Stream account at https://getstream.io/get_started.
 
 ### Installation
 
-#### PHP compatibility
+#### PHP version requirements
 
-The current release is compatible with and tested against PHP 5.5, 5.6, 7.0 and 7.1.
+This API Client project requires PHP 5.5 at a minimum.
 
-#### PHP 5.4 support
-
-Current release branch 2.2 requires PHP 5.5 and Guzzle 6.
-
-If you need to use the client with PHP 5.4 or Guzzle < 6, you can grab the latest version of the 2.1.x branch
+See the [Travis configuration](.travis.yml) for details of how it is built, tested and packaged.
 
 #### Install with Composer
 
