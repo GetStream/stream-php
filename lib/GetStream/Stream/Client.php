@@ -7,7 +7,7 @@ const VERSION = '2.2.2';
 
 class Client
 {
-    const API_ENDPOINT = 'getstream.io/api';
+    const API_ENDPOINT = 'stream-io-api.com/api';
 
     /**
      * @var string
@@ -59,9 +59,6 @@ class Client
         $this->timeout = $timeout;
         $this->location = $location;
         $this->protocol = 'https';
-        if ($location == 'qa') {
-            $this->protocol = 'http';
-        }
     }
 
     /**
@@ -83,7 +80,7 @@ class Client
             throw new Exception('url malformed');
         }
         $client = new static($api_key, $api_secret);
-        $location = explode('getstream.io', $parsed_url['host'])[0];
+        $location = explode('stream-io-api.com', $parsed_url['host'])[0];
         $location = str_replace('.', '', $location);
         $client->setLocation($location);
         return $client;
@@ -144,21 +141,20 @@ class Client
      */
     public function getBaseUrl()
     {
-        $api_endpoint = static::API_ENDPOINT;
-        $localPort = getenv('STREAM_LOCAL_API_PORT');
-        if ($localPort) {
-            $baseUrl = "http://localhost:$localPort/api";
-        } else {
-            if ($this->location) {
-                $subdomain = "{$this->location}-api";
-                if ($this->location == 'qa') {
-                    $api_endpoint = 'getstream.io/api';
-                    $this->setProtocol('http');
-                }
+        $baseUrl = getenv('STREAM_BASE_URL');
+        if (!$baseUrl) {
+            $api_endpoint = static::API_ENDPOINT;
+            $localPort = getenv('STREAM_LOCAL_API_PORT');
+            if ($localPort) {
+                $baseUrl = "http://localhost:$localPort/api";
             } else {
-                $subdomain = 'api';
+                if ($this->location) {
+                    $subdomain = "{$this->location}-api";
+                } else {
+                    $subdomain = 'api';
+                }
+                $baseUrl = "{$this->protocol}://{$subdomain}." . $api_endpoint;
             }
-            $baseUrl = "{$this->protocol}://{$subdomain}." . $api_endpoint;
         }
         return $baseUrl;
     }
