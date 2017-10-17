@@ -1,177 +1,193 @@
 stream-php
 ==========
 
-[![Build Status](https://travis-ci.org/GetStream/stream-php.svg?branch=master)](https://travis-ci.org/GetStream/stream-php) [![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-php/badge.svg?branch=master)](https://coveralls.io/github/GetStream/stream-php?branch=master) [![PHP version](https://badge.fury.io/ph/get-stream%2Fstream.svg)](http://badge.fury.io/ph/get-stream%2Fstream)
+[![Build Status](https://travis-ci.org/GetStream/stream-php.svg?branch=master)](https://travis-ci.org/GetStream/stream-php)
+[![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-php/badge.svg?branch=master)](https://coveralls.io/github/GetStream/stream-php?branch=master)
+[![Latest Stable Version](https://poser.pugx.org/get-stream/stream/v/stable)](https://packagist.org/packages/get-stream/stream)
 
 [stream-php](https://github.com/GetStream/stream-php) is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
 
-Note that there is also a [higher level Laravel - Stream integration](https://github.com/getstream/stream-laravel) which hooks into the Laravel ORM.
+Note that there is also a higher level [Laravel](https://github.com/getstream/stream-laravel) integration which hooks into the Eloquent ORM.
 
 You can sign up for a Stream account at https://getstream.io/get_started.
 
 ### Installation
 
-#### PHP version requirements
+#### Composer
 
-This API Client project requires PHP 5.5 at a minimum.
-
-See the [Travis configuration](.travis.yml) for details of how it is built, tested and packaged.
-
-#### Install with Composer
-
-If you're using [Composer](https://getcomposer.org/) to manage
-dependencies, you can add Stream with it.
-
-```javascript
-{
-    "require": {
-        "get-stream/stream": "$VERSION"
-    }
-}
+```
+composer require get-stream/stream
 ```
 
-(replace `$VERSION` with one of the available versions on
-[Packagist](https://packagist.org/packages/get-stream/stream))
+Composer will install our latest version automatically.
 
-Composer will take care of the autoloading for you, so if you require
-the `vendor/autoload.php`, you're good to go.
+#### PHP compatibility
 
-### Full documentatation
+Current releases require PHP `5.5` or higher, and depends on Guzzle version 6.
 
-Documentation for this PHP client are available at the [Stream website](https://getstream.io/docs/?language=php).
+If you need to use the client with PHP 5.4 or earlier versions of Guzzle, you can grab an earlier version of this package:
 
-### Usage
+```
+composer require get-stream/stream:"~2.1.0"
+```
+
+See the [Travis configuration](.travis.yml) for details of how it is built and tested against different PHP versions.
+
+### Documentatation
+
+Our full documentation for this package is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
+
+#### Quick start
+
+First, [signup here](https://getstream.io/dashboard/) for a free account and grab your API key and secret.
+
+Initiating a Client and a Feed object:
 
 ```php
-<?php
-
-require_once __DIR__ . '/vendor/autoload.php';
-
-// Instantiate a new client, find your API keys here https://getstream.io/dashboard/
-$client = new GetStream\Stream\Client('YOUR_API_KEY', 'API_KEY_SECRET');
-
-// Set API endpoint location
-$client->setLocation('us-east');
+// Instantiate a new client, find your API keys in the dashboard.
+$client = new GetStream\Stream\Client('YOUR_API_KEY', 'YOUR_API_SECRET');
 
 // Instantiate a feed object
-$user_feed_1 = $client->feed('user', '1');
+$userFeed = $client->feed('user', '1');
 
-// Get 20 activities starting from activity with id $last_id (fast id offset pagination)
-$results = $user_feed_1->getActivities(0, 20, $last_id);
+```
 
-// Get 10 activities starting from the 5th (slow offset pagination)
-$results = $user_feed_1->getActivities(5, 10);
+Activities in a feed:
 
+```php
 // Create a new activity
 $data = [
-    "actor"=>"1",
-    "verb"=>"like",
-    "object"=>"3",
-    "foreign_id"=>"post:42"
+    'actor' => '1',
+    'verb' => 'like',
+    'object' => '3',
+    'foreign_id' => 'like:42',
 ];
-$user_feed_1->addActivity($data);
-// Create a bit more complex activity
-$now = new \DateTime("now", new \DateTimeZone('Pacific/Nauru'));
-$data = ['actor' => 1, 'verb' => 'run', 'object' => 1, 'foreign_id' => 'run:1',
-	'course' => ['name'=> 'Golden Gate park', 'distance'=> 10],
-	'participants' => ['Thierry', 'Tommaso'],
-	'started_at' => $now
+
+$response = $userFeed->addActivity($data);
+
+// The response will include Stream's internal ID:
+// {"id": "e561...", "actor": "1", ...}
+
+// Get the latest activities for this user's personal feed, based on who they are following.
+$response = $userFeed->getActivities();
+
+// The response will be the json decoded API response.
+// {"duration": 45ms, "next": "/api/v1.0/feed/...", "results": [...]}
+
+// Remove an activity by its ID
+$userFeed->removeActivity('e561de8f-00f1-11e4-b400-0cc47a024be0');
+
+// To remove activities by their foreign_id, set the "foreign id" flag to true.
+$userFeed->removeActivity('like:42', true);
+```
+
+Following/follower relations of a feed:
+
+```php
+// When user 1 starts following user 37's activities
+$userFeed->followFeed('user', '37');
+
+// When user 1 stops following user 37's activities
+$userFeed->unfollowFeed('user', '37');
+
+// Retrieve followers of a feed
+$userFeed->followers();
+
+// Retrieve feeds followed by $userFeed
+$userFeed->following();
+```
+
+Advanced activity operations:
+
+```php
+// Create a bit more complex activity with custom fields
+$data = [
+    'actor' => 1,
+    'verb' => 'run',
+    'object' => 1,
+    'foreign_id' => 'run:42',
+
+    // Custom fields:
+    'course' => [
+        'name'=> 'Golden Gate park',
+        'distance'=> 10,
+    ],
+    'participants' => ['Thierry', 'Tommaso'],
+    'started_at' => new DateTime('now', new DateTimeZone('Pacific/Nauru'),
 ];
-$user_feed_1->addActivity($data);
-
-// Remove an activity by its id
-$user_feed_1->removeActivity("e561de8f-00f1-11e4-b400-0cc47a024be0");
-
-// Remove activities by their foreign_id
-$user_feed_1->removeActivity('post:42', true);
-
-// Let user 1 start following user 42's flat feed
-$user_feed_1->followFeed('flat', '42');
-
-// Let user 1 start following user 42's flat feed but only copy 10 activities to target feed
-$user_feed_1->followFeed('flat', '42', 10);
-
-// Let user 1 stop following user 42's flat feed
-$user_feed_1->unfollowFeed('flat', '42');
-
-// Let user 1 stop following user 42's flat feed but keep the history in its feed
-$user_feed_1->unfollowFeed('flat', '42', true);
-
-// Batch adding activities
-$activities = array(
-    array('actor' => '1', 'verb' => 'tweet', 'object' => '1'),
-    array('actor' => '2', 'verb' => 'like', 'object' => '3')
-);
-$user_feed_1->addActivities($activities);
 
 // Add an activity and push it to other feeds too using the `to` field
 $data = [
-    "actor"=>"1",
-    "verb"=>"like",
-    "object"=>"3",
-    "to"=>["user:44", "user:45"]
+    'actor' => '1',
+    'verb' => 'like',
+    'object' => '3',
+    'to' => [
+        'user:44',
+        'user:45',
+    ],
 ];
-$user_feed_1->addActivity($data);
 
-// Delete a feed (and its content)
-$user_feed_1->delete();
+$userFeed->addActivity($data);
 
-// Generating tokens for client side usage
-$token = $user_feed_1->getToken();
+// Batch adding activities
+$activities = [
+    ['actor' => '1', 'verb' => 'tweet', 'object' => '1'],
+    ['actor' => '2', 'verb' => 'like', 'object' => '3'],
+];
 
-// Javascript client side feed initialization
-// user1 = client.feed('user', '1', "$token");
+$userFeed->addActivities($activities);
 
-// Generating read-only tokens for client side usage
-$readonlyToken = $user_feed_1->getReadonlyToken();
+// Delete an entire feed and its content
+$userFeed->delete();
+```
 
-// Javascript client side feed initialization (readonly)
-// user1 = client.feed('user', '1', "$readonlyToken");
+Advanced batching:
 
-// Retrieve first 10 followers of a feed
-$user_feed_1->followers(0, 10);
-
-// Retrieve 2 to 10 followers
-$user_feed_1->followers(2, 10);
-
-// Retrieve 10 feeds followed by $user_feed_1
-$user_feed_1->following(0, 10);
-
-// Retrieve 10 feeds followed by $user_feed_1 starting from the 10th (2nd page)
-$user_feed_1->following(10, 20);
-
-// Check if $user_feed_1 follows specific feeds
-$user_feed_1->following(0, 2, ['user:42', 'user:43']);
-
+```php
 // Batch operations (batch activity add, batch follow)
 $batcher = $client->batcher();
 
 // Add one activity to many feeds
-$activity = array('actor' => '1', 'verb' => 'tweet', 'object' => '1');
-$feeds = ['flat:user1', 'flat:user2'];
+$activity = ['actor' => '1', 'verb' => 'tweet', 'object' => '1'];
+$feeds = ['user:1', 'user:2'];
+
 $batcher->addToMany($activity, $feeds);
 
-// Create many follow
+// Create many follow relations
 $follows = [
-    ['source' => 'flat:b1', 'target' => 'user:b1'],
-    ['source' => 'flat:b1', 'target' => 'user:b3']
+    ['source' => 'user:b1', 'target' => 'user:b2'],
+    ['source' => 'user:b1', 'target' => 'user:b3'],
 ];
-$batcher->followMany($follows);
 
-// Create many follows without copying activities
-$batcher->followMany($follows, 0);
+$batcher->followMany($follows);
 ```
+
+Generating tokens for client-side usage:
+
+```php
+// Generating a client side token
+$token = $userFeed->getToken();
+
+// Generating a read-only client side token
+$readonlyToken = $userFeed->getReadonlyToken();
+```
+
+Again, our full documentation with all options and methods, is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
+
+### Framework integration
+
+#### Laravel
+
+There's a higher level integration with [Laravel](https://laravel.com) called [`get-stream/stream-laravel`](https://github.com/getstream/stream-laravel).
+The `stream-laravel` integration helps you to hook into the Laravel's Eloquent ORM to sync data to Stream.
 
 ### Contributing
 
-First, make sure you can run the test suite. Install development
-dependencies :
+We love contributions. We love contributions with tests even more! To run the test-suite to ensure everything still works, run phpunit:
 
-    $ composer install
-
-You may now use phpunit :
-
-    $ vendor/bin/phpunit
+```
+vendor/bin/phpunit --testsuite "Unit Test Suite"
+```
 
 ### Copyright and License Information
 
