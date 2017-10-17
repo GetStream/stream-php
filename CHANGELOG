@@ -2,6 +2,22 @@
  Change history
 ================
 
+2.4.2
+=====
+:release-date: 2017-10-03
+:by: Hannes Van De Vreken
+
+* Silently return nothing when meaningless input is given on `Client::updateActivities` method.
+
+2.4.1
+=====
+:release-date: 2017-09-26
+:by: Hannes Van De Vreken
+
+* Cleaned up test suite and separated integration tests from unit tests in test builds
+* Fixed guzzle request options
+* Fixed json encoding errors by letting guzzle handle it
+
 2.4.0
 =====
 :release-date: 2017-08-31

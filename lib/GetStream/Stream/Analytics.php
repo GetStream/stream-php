@@ -10,7 +10,7 @@ use GuzzleHttp\Handler\CurlHandler;
 
 class Analytics extends Feed
 {
-    const API_ENDPOINT = 'https://analytics.getstream.io/analytics/';
+    const API_ENDPOINT = 'https://analytics.stream-io-api.com/analytics/';
 
     protected $token;
 

@@ -31,6 +31,8 @@ If you need to use the client with PHP 5.4 or earlier versions of Guzzle, you ca
 composer require get-stream/stream:"~2.1.0"
 ```
 
+See the [Travis configuration](.travis.yml) for details of how it is built and tested against different PHP versions.
+
 ### Documentatation
 
 Our full documentation for this package is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
