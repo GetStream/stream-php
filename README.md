@@ -7,6 +7,8 @@ stream-php
 
 [stream-php](https://github.com/GetStream/stream-php) is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
 
+Note that there is also a higher level [Laravel](https://github.com/getstream/stream-laravel) integration which hooks into the Eloquent ORM.
+
 You can sign up for a Stream account at https://getstream.io/get_started.
 
 ### Installation
