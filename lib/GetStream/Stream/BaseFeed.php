@@ -35,15 +35,18 @@ class BaseFeed
     protected $api_key;
 
     /**
-     * @var string
+     * @var Client
      */
     protected $client;
 
     /**
      * @param Client $client
-     * @param string $feed
+     * @param string $feed_slug
+     * @param string $user_id
      * @param string $api_key
      * @param string $token
+     *
+     * @throws StreamFeedException
      */
     public function __construct($client, $feed_slug, $user_id, $api_key, $token)
     {
@@ -69,7 +72,9 @@ class BaseFeed
     }
 
     /**
-     * @return string
+     * @param $feed_slug
+     *
+     * @return bool
      */
     public function validFeedSlug($feed_slug)
     {
@@ -77,7 +82,9 @@ class BaseFeed
     }
 
     /**
-     * @return string
+     * @param $user_id
+     *
+     * @return bool
      */
     public function validUserId($user_id)
     {
