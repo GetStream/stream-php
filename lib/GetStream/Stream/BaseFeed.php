@@ -202,21 +202,38 @@ class BaseFeed
     }
 
     /**
-     * @param  string $feed
+     * @param string $targetFeedSlug
+     * @param string $targetUserId
+     * @param int $activityCopyLimit
+     *
      * @return mixed
      */
-    public function followFeed($target_feed_slug, $target_user_id, $activityCopyLimit = 300)
+    public function follow($targetFeedSlug, $targetUserId, $activityCopyLimit = 300)
     {
-        $target_feed_id = "$target_feed_slug:$target_user_id";
         $data = [
-            'target' => $target_feed_id,
+            'target' => "$targetFeedSlug:$targetUserId",
             'activity_copy_limit' => $activityCopyLimit
         ];
         if (null !== $this->client) {
-            $target_feed = $this->client->feed($target_feed_slug, $target_user_id);
+            $target_feed = $this->client->feed($targetFeedSlug, $targetUserId);
             $data['target_token'] = $target_feed->getToken();
         }
+
         return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, null, 'follower', 'write');
+    }
+
+    /**
+     * @deprecated Will be removed in version 3.0.0
+     *
+     * @param string $targetFeedSlug
+     * @param string $targetUserId
+     * @param int $activityCopyLimit
+     *
+     * @return mixed
+     */
+    public function followFeed($targetFeedSlug, $targetUserId, $activityCopyLimit = 300)
+    {
+        return $this->follow($targetFeedSlug, $targetUserId, $activityCopyLimit);
     }
 
     /**
@@ -251,17 +268,34 @@ class BaseFeed
     }
 
     /**
-     * @param  string $feed
+     * @param string $targetFeedSlug
+     * @param string $targetUserId
+     * @param bool $keepHistory
+     *
      * @return mixed
      */
-    public function unfollowFeed($target_feed_slug, $target_user_id, $keepHistory = false)
+    public function unfollow($targetFeedSlug, $targetUserId, $keepHistory = false)
     {
-        $query_params = [];
+        $queryParams = [];
         if ($keepHistory) {
-            $query_params['keep_history'] = 'true';
+            $queryParams['keep_history'] = 'true';
         }
-        $target_feed_id = "$target_feed_slug:$target_user_id";
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$target_feed_id}/", 'DELETE', null, $query_params, 'follower', 'delete');
+        $targetFeedId = "$targetFeedSlug:$targetUserId";
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$targetFeedId}/", 'DELETE', null, $queryParams, 'follower', 'delete');
+    }
+
+    /**
+     * @deprecated Will be removed in version 3.0.0
+     *
+     * @param string $targetFeedSlug
+     * @param string $targetUserId
+     * @param bool $keepHistory
+     *
+     * @return mixed
+     */
+    public function unfollowFeed($targetFeedSlug, $targetUserId, $keepHistory = false)
+    {
+        return $this->unfollow($targetFeedSlug, $targetUserId, $keepHistory);
     }
 
     /**
