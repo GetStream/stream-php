@@ -148,7 +148,7 @@ class FeedTest extends TestCase
     public function testReadonlyToken()
     {
         $token = $this->user1->getReadonlyToken();
-        $this->assertSame('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkIiwiZmVlZF9pZCI6InVzZXIxMSIsInJlc291cmNlIjoiKiJ9.', mb_substr($token, 0, 106));
+        $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkI', $token);
     }
 
     public function testAddActivity()
