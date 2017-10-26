@@ -5,6 +5,7 @@ namespace GetStream\Integration;
 use DateTime;
 use DateTimeZone;
 use GetStream\Stream\Client;
+use GetStream\Stream\Feed;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 
@@ -14,9 +15,25 @@ class FeedTest extends TestCase
      * @var Client
      */
     protected $client;
+
+    /**
+     * @var Feed
+     */
     protected $user1;
+
+    /**
+     * @var Feed
+     */
     protected $aggregated2;
+
+    /**
+     * @var Feed
+     */
     protected $aggregated3;
+
+    /**
+     * @var Feed
+     */
     protected $flat3;
 
     protected function setUp()
