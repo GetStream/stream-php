@@ -314,18 +314,6 @@ class FeedTest extends TestCase
         $this->user1->unfollowFeed('secret', '33');
     }
 
-    public function testDelete()
-    {
-        $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
-        $this->user1->addActivity($activity_data);
-        $activities = $this->user1->getActivities(0,1)['results'];
-        $this->assertCount(1, $activities);
-        $this->user1->delete();
-        sleep(2);
-        $activities = $this->user1->getActivities(0,1)['results'];
-        $this->assertCount(0, $activities);
-    }
-
     public function testGet()
     {
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
