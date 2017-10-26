@@ -145,18 +145,6 @@ class FeedTest extends TestCase
         $this->assertCount(2, $response['results']);
     }
 
-    // public function testSignedGetHttp()
-    // {
-    //     $batcher = $this->client->batcher();
-    //     $batcher->test('GET');
-    // }
-
-    // public function testSignedPostHttp()
-    // {
-    //     $batcher = $this->client->batcher();
-    //     $batcher->test('POST');
-    // }
-
     public function testReadonlyToken()
     {
         $token = $this->user1->getReadonlyToken();
