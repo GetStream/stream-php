@@ -18,7 +18,8 @@
     },
     "require-dev": {
         "phpunit/phpunit": "^4.3",
-        "satooshi/php-coveralls": "^1.0"
+        "satooshi/php-coveralls": "^1.0",
+        "ramsey/uuid": "^3.7"
     },
     "autoload": {
         "psr-0": {

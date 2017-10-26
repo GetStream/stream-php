@@ -6,28 +6,7 @@ use DateTime;
 use DateTimeZone;
 use GetStream\Stream\Client;
 use PHPUnit\Framework\TestCase;
-
-function gen_uuid() {
-    return sprintf( '%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
-        // 32 bits for "time_low"
-        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ),
-
-        // 16 bits for "time_mid"
-        mt_rand( 0, 0xffff ),
-
-        // 16 bits for "time_hi_and_version",
-        // four most significant bits holds version number 4
-        mt_rand( 0, 0x0fff ) | 0x4000,
-
-        // 16 bits, 8 bits for "clk_seq_hi_res",
-        // 8 bits for "clk_seq_low",
-        // two most significant bits holds zero and one for variant DCE1.1
-        mt_rand( 0, 0x3fff ) | 0x8000,
-
-        // 48 bits for "node"
-        mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff ), mt_rand( 0, 0xffff )
-    );
-}
+use Ramsey\Uuid\Uuid;
 
 class FeedTest extends TestCase
 {
@@ -50,10 +29,10 @@ class FeedTest extends TestCase
         );
         $this->client->setLocation('qa');
         $this->client->timeout = 10000;
-        $this->user1 = $this->client->feed('user', '11');
-        $this->aggregated2 = $this->client->feed('aggregated', '22');
-        $this->aggregated3 = $this->client->feed('aggregated', '33');
-        $this->flat3 = $this->client->feed('flat', '33');
+        $this->user1 = $this->client->feed('user', Uuid::uuid4());
+        $this->aggregated2 = $this->client->feed('aggregated', Uuid::uuid4());
+        $this->aggregated3 = $this->client->feed('aggregated', Uuid::uuid4());
+        $this->flat3 = $this->client->feed('flat', Uuid::uuid4());
     }
 
     public function testRedirectUrl()
@@ -96,6 +75,8 @@ class FeedTest extends TestCase
 
     public function testAddToMany()
     {
+        $id = Uuid::uuid4();
+
         $batcher = $this->client->batcher();
         $activityData = [
             'actor' => 1,
@@ -103,40 +84,46 @@ class FeedTest extends TestCase
             'object' => 1,
             'foreign_id' => 'batch1'
         ];
-        $feeds = ['flat:ba1', 'user:ba1'];
+        $feeds = ['flat:'.$id, 'user:'.$id];
 
         $batcher->addToMany($activityData, $feeds);
-        $b1 = $this->client->feed('flat', 'ba1');
+        $b1 = $this->client->feed('flat', $id);
         $response = $b1->getActivities();
         $this->assertSame('batch1', $response['results'][0]['foreign_id']);
     }
 
     public function testFollowManyWithActivityCopyLimitZero()
     {
+        $id1 = Uuid::uuid4();
+        $id2 = Uuid::uuid4();
+
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
-        $response = $this->client->feed('user', 'b11')->addActivity($activity_data);
+        $response = $this->client->feed('user', $id1)->addActivity($activity_data);
         $batcher = $this->client->batcher();
         $follows = [
-            ['source' => 'flat:b11', 'target' => 'user:b11'],
-            ['source' => 'flat:b11', 'target' => 'user:b33']
+            ['source' => 'flat:'.$id1, 'target' => 'user:'.$id1],
+            ['source' => 'flat:'.$id1, 'target' => 'user:'.$id2]
         ];
         $batcher->followMany($follows, 0);
         sleep(5);
-        $b11 = $this->client->feed('flat', 'b11');
+        $b11 = $this->client->feed('flat', $id1);
         $response = $b11->following();
         $this->assertCount(2, $response['results']);
     }
 
     public function testFollowMany()
     {
+        $id1 = Uuid::uuid4();
+        $id2 = Uuid::uuid4();
+
         $batcher = $this->client->batcher();
         $follows = [
-            ['source' => 'flat:b1', 'target' => 'user:b1'],
-            ['source' => 'flat:b1', 'target' => 'user:b3']
+            ['source' => 'flat:'.$id1, 'target' => 'user:'.$id1],
+            ['source' => 'flat:'.$id1, 'target' => 'user:'.$id2]
         ];
         $batcher->followMany($follows);
 
-        $b1 = $this->client->feed('flat', 'b1');
+        $b1 = $this->client->feed('flat', $id1);
         $response = $b1->following();
         $this->assertCount(2, $response['results']);
     }
@@ -269,18 +256,20 @@ class FeedTest extends TestCase
         $activity_data = ['actor' => 1, 'verb' => 'FlatFollowUnfollow', 'object' => 1];
         $response = $this->flat3->addActivity($activity_data);
         $activity_id = $response['id'];
-        $this->user1->followFeed('flat', '33');
-        $activities = $this->user1->getActivities(0, 1)['results'];
+        $this->user1->follow('flat', $this->flat3->getUserId());
+        sleep(2);
+        $activities = $this->user1->getActivities()['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activity_id, $activities[0]['id']);
-        $this->user1->unfollowFeed('flat', '33');
+        $this->user1->unfollow('flat', $this->flat3->getUserId());
         sleep(2);
-        $activities = $this->user1->getActivities(0, 10)['results'];
+        $activities = $this->user1->getActivities()['results'];
         $this->assertCount(0, $activities);
     }
 
     public function testFlatFollowUnfollowKeepHistory()
     {
+        $id = Uuid::uuid4();
         $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
         $activity = [
             'actor' => 1,
@@ -290,10 +279,10 @@ class FeedTest extends TestCase
         ];
         $feed = $this->client->feed('user', 'keephistory');
         $this->flat3->addActivity($activity);
-        $feed->followFeed('flat', '33');
+        $feed->follow('flat', $id);
         $activities = $feed->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
-        $feed->unfollowFeed('flat', '33', true);
+        $feed->unfollow('flat', $id, true);
         sleep(2);
         $activities = $feed->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
@@ -301,17 +290,19 @@ class FeedTest extends TestCase
 
     public function testFlatFollowUnfollowPrivate()
     {
-        $secret = $this->client->feed('secret', '33');
-        $this->user1->unfollowFeed('secret', '33');
+        $id = Uuid::uuid4();
+
+        $secret = $this->client->feed('secret', $id);
+        $this->user1->unfollow('secret', $id);
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $response = $secret->addActivity($activity_data);
         $activity_id = $response['id'];
-        $this->user1->followFeed('secret', '33');
+        $this->user1->follow('secret', $id);
         sleep(2);
         $activities = $this->user1->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $this->assertSame($activity_id, $activities[0]['id']);
-        $this->user1->unfollowFeed('secret', '33');
+        $this->user1->unfollow('secret', $id);
     }
 
     public function testGet()
@@ -346,7 +337,7 @@ class FeedTest extends TestCase
 
     public function testMarkRead()
     {
-        $notification_feed = $this->client->feed('notification', 'php1');
+        $notification_feed = $this->client->feed('notification', Uuid::uuid4());
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $notification_feed->addActivity($activity_data);
 
@@ -370,7 +361,7 @@ class FeedTest extends TestCase
 
     public function testMarkReadByIds()
     {
-        $notification_feed = $this->client->feed('notification', 'php2');
+        $notification_feed = $this->client->feed('notification', Uuid::uuid4());
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $notification_feed->addActivity($activity_data);
 
@@ -397,7 +388,7 @@ class FeedTest extends TestCase
 
     public function testFollowersEmpty()
     {
-        $lonely = $this->client->feed('flat', 'lonely');
+        $lonely = $this->client->feed('flat', Uuid::uuid4());
         $response = $lonely->followers();
         $this->assertCount(0, $response['results']);
         $this->assertSame([], $response['results']);
@@ -405,17 +396,21 @@ class FeedTest extends TestCase
 
     public function testFollowersWithLimit()
     {
-        $this->client->feed('flat', 'php43')->followFeed('flat', 'php42');
-        $this->client->feed('flat', 'php44')->followFeed('flat', 'php42');
-        $response = $this->client->feed('flat', 'php42')->followers(0, 2);
+        $id1 = Uuid::uuid4();
+        $id2 = Uuid::uuid4();
+        $id3 = Uuid::uuid4();
+
+        $this->client->feed('flat', $id2)->follow('flat', $id1);
+        $this->client->feed('flat', $id3)->follow('flat', $id1);
+        $response = $this->client->feed('flat', $id1)->followers(0, 2);
         $this->assertCount(2, $response['results']);
-        $this->assertSame('flat:php44', $response['results'][0]['feed_id']);
-        $this->assertSame('flat:php42', $response['results'][0]['target_id']);
+        $this->assertSame('flat:'.$id3, $response['results'][0]['feed_id']);
+        $this->assertSame('flat:'.$id1, $response['results'][0]['target_id']);
     }
 
     public function testFollowingEmpty()
     {
-        $lonely = $this->client->feed('flat', 'lonely');
+        $lonely = $this->client->feed('flat', Uuid::uuid4());
         $response = $lonely->following();
         $this->assertCount(0, $response['results']);
         $this->assertSame([], $response['results']);
@@ -423,17 +418,21 @@ class FeedTest extends TestCase
 
     public function testFollowingsWithLimit()
     {
-        $this->client->feed('flat', 'php43')->followFeed('flat', 'php42');
-        $this->client->feed('flat', 'php43')->followFeed('flat','php44');
-        $response = $this->client->feed('flat', 'php43')->following(0, 2);
+        $id1 = Uuid::uuid4();
+        $id2 = Uuid::uuid4();
+        $id3 = Uuid::uuid4();
+
+        $this->client->feed('flat', $id2)->follow('flat', $id1);
+        $this->client->feed('flat', $id2)->follow('flat', $id3);
+        $response = $this->client->feed('flat', $id2)->following(0, 2);
         $this->assertCount(2, $response['results']);
-        $this->assertSame('flat:php43', $response['results'][0]['feed_id']);
-        $this->assertSame('flat:php44', $response['results'][0]['target_id']);
+        $this->assertSame('flat:'.$id2, $response['results'][0]['feed_id']);
+        $this->assertSame('flat:'.$id3, $response['results'][0]['target_id']);
     }
 
     public function testDoIFollowEmpty()
     {
-        $lonely = $this->client->feed('flat', 'lonely');
+        $lonely = $this->client->feed('flat', Uuid::uuid4());
         $response = $lonely->following(0, 10, ['flat:asocial']);
         $this->assertCount(0, $response['results']);
         $this->assertSame([], $response['results']);
@@ -441,46 +440,54 @@ class FeedTest extends TestCase
 
     public function testDoIFollow()
     {
-        $this->client->feed('flat', 'php43')->followFeed('flat', 'php42');
-        $this->client->feed('flat', 'php43')->followFeed('flat', 'php44');
-        $response = $this->client->feed('flat', 'php43')->following(0, 10, ['flat:php42']);
+        $id1 = Uuid::uuid4();
+        $id2 = Uuid::uuid4();
+        $id3 = Uuid::uuid4();
+
+        $this->client->feed('flat', $id2)->follow('flat', $id1);
+        $this->client->feed('flat', $id2)->follow('flat', $id3);
+        $response = $this->client->feed('flat', $id2)->following(0, 10, ['flat:'.$id1]);
         $this->assertCount(1, $response['results']);
-        $this->assertSame('flat:php43', $response['results'][0]['feed_id']);
-        $this->assertSame('flat:php42', $response['results'][0]['target_id']);
+        $this->assertSame('flat:'.$id2, $response['results'][0]['feed_id']);
+        $this->assertSame('flat:'.$id1, $response['results'][0]['target_id']);
     }
 
     public function testAddActivityTo()
     {
+        $to = Uuid::uuid4();
+
         $activity = [
             'actor' => 'multi1', 'verb' => 'tweet', 'object' => 1,
-            'to'    => ['flat:remotefeed1'],
+            'to' => ['flat:'.$to],
         ];
         $this->user1->addActivity($activity);
-        $response = $this->client->feed('flat', 'remotefeed1')->getActivities(0, 2);
+        $response = $this->client->feed('flat', $to)->getActivities(0, 2);
         $this->assertSame('multi1', $response['results'][0]['actor']);
     }
 
     public function testAddActivitiesTo()
     {
+        $to = Uuid::uuid4();
+
         $activities = [
             [
                 'actor' => 'many1', 'verb' => 'tweet', 'object' => 1,
-                'to'    => ['flat:remotefeed2'],
+                'to' => ['flat:'.$to],
             ],
             [
                 'actor' => 'many2', 'verb' => 'tweet', 'object' => 1,
-                'to'    => ['flat:remotefeed2'],
+                'to' => ['flat:'.$to],
             ],
         ];
         $this->user1->addActivities($activities);
-        $response = $this->client->feed('flat', 'remotefeed2')->getActivities(0, 2);
+        $response = $this->client->feed('flat', $to)->getActivities(0, 2);
         $this->assertSame('many2', $response['results'][0]['actor']);
     }
 
     public function testUpdateActivitiesToRemoveTarget()
     {
-        $feed = $this->client->feed('user', gen_uuid());
-        $target = gen_uuid();
+        $feed = $this->client->feed('user', Uuid::uuid4());
+        $target = Uuid::uuid4();
         $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
         $time = $now->format(DateTime::ISO8601);
         $activities = [
@@ -502,8 +509,8 @@ class FeedTest extends TestCase
 
     public function testUpdateActivitiesToAddTarget()
     {
-        $feed = $this->client->feed('user', gen_uuid());
-        $target = gen_uuid();
+        $feed = $this->client->feed('user', Uuid::uuid4());
+        $target = Uuid::uuid4();
         $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
         $time = $now->format(DateTime::ISO8601);
         $activities = [
@@ -524,9 +531,9 @@ class FeedTest extends TestCase
 
     public function testUpdateActivitiesToAddRemoveTarget()
     {
-        $feed = $this->client->feed('user', gen_uuid());
-        $target1 = gen_uuid();
-        $target2 = gen_uuid();
+        $feed = $this->client->feed('user', Uuid::uuid4());
+        $target1 = Uuid::uuid4();
+        $target2 = Uuid::uuid4();
         $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
         $time = $now->format(DateTime::ISO8601);
         $activities = [
@@ -553,9 +560,9 @@ class FeedTest extends TestCase
 
     public function testUpdateActivitiesToReplaceTargets()
     {
-        $feed = $this->client->feed('user', gen_uuid());
-        $target1 = gen_uuid();
-        $target2 = gen_uuid();
+        $feed = $this->client->feed('user', Uuid::uuid4());
+        $target1 = Uuid::uuid4();
+        $target2 = Uuid::uuid4();
         $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
         $time = $now->format(DateTime::ISO8601);
         $activities = [
