@@ -257,7 +257,6 @@ class FeedTest extends TestCase
 
     public function testFlatFollowUnfollow()
     {
-        $this->user1->unfollowFeed('flat', '33');
         $activity_data = ['actor' => 1, 'verb' => 'FlatFollowUnfollow', 'object' => 1];
         $response = $this->flat3->addActivity($activity_data);
         $activity_id = $response['id'];
