@@ -10,6 +10,11 @@
     <logging>
         <log type="coverage-clover" target="build/logs/clover.xml"/>
     </logging>
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">lib/</directory>
+        </whitelist>
+    </filter>
     <testsuites>
         <testsuite name="Unit Test Suite">
             <directory>tests/unit</directory>
