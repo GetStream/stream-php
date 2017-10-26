@@ -50,6 +50,7 @@ class ClientTest extends TestCase
     public function testEnvironmentVariable()
     {
         // Arrange
+        $previous = getenv('STREAM_BASE_URL');
         putenv('STREAM_BASE_URL=test.stream-api.com/api');
         $client = new Client('key', 'secret');
 
@@ -60,6 +61,11 @@ class ClientTest extends TestCase
         $this->assertSame('test.stream-api.com/api', $baseUrl);
 
         // Teardown
-        putenv('STREAM_BASE_URL=');
+        if ($previous === false) {
+            // Remove the environment variable.
+            putenv('STREAM_BASE_UR');
+        } else {
+            putenv('STREAM_BASE_URL='.$previous);
+        }
     }
 }
