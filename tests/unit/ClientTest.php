@@ -46,4 +46,26 @@ class ClientTest extends TestCase
         $client = new Client('key', 'secret', $location='qa');
         $feed1 = $client->feed('flat', '1');
     }
+
+    public function testEnvironmentVariable()
+    {
+        // Arrange
+        $previous = getenv('STREAM_BASE_URL');
+        putenv('STREAM_BASE_URL=test.stream-api.com/api');
+        $client = new Client('key', 'secret');
+
+        // Act
+        $baseUrl = $client->getBaseUrl();
+
+        // Assert
+        $this->assertSame('test.stream-api.com/api', $baseUrl);
+
+        // Teardown
+        if ($previous === false) {
+            // Remove the environment variable.
+            putenv('STREAM_BASE_UR');
+        } else {
+            putenv('STREAM_BASE_URL='.$previous);
+        }
+    }
 }

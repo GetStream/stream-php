@@ -49,8 +49,10 @@ $client = new GetStream\Stream\Client('YOUR_API_KEY', 'YOUR_API_SECRET');
 
 // Instantiate a feed object
 $userFeed = $client->feed('user', '1');
-
 ```
+
+By default, the Client will target the GetStream REST API at `stream-io-api.com/api`.
+If you want to change this for some reason you can set the `STREAM_BASE_URL` environment variable.
 
 Activities in a feed:
 
