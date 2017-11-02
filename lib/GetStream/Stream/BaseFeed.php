@@ -306,6 +306,10 @@ class BaseFeed
     }
 
     /**
+     * @deprecated Will be removed in version 3.0.0
+     *
+     * No need to clean up, one should just use different feed ids.
+     *
      * @return mixed
      */
     public function delete()
