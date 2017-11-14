@@ -66,9 +66,7 @@ class BaseFeed
         $this->token   = $token;
         $this->api_key = $api_key;
 
-        if ($client instanceof Client) {
-            $this->client = $client;
-        }
+        $this->client = $client;
     }
 
     /**
