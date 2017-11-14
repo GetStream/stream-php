@@ -1,9 +1,9 @@
 <?php
+
 namespace GetStream\Stream;
 
 class BaseFeed
 {
-
     /**
      * @var string
      */
@@ -48,7 +48,7 @@ class BaseFeed
      *
      * @throws StreamFeedException
      */
-    public function __construct($client, $feed_slug, $user_id, $api_key, $token)
+    public function __construct(Client $client, $feed_slug, $user_id, $api_key, $token)
     {
         if (!$this->validFeedSlug($feed_slug)) {
             throw new StreamFeedException('feed_slug can only contain alphanumeric characters or underscores');
@@ -72,7 +72,7 @@ class BaseFeed
     }
 
     /**
-     * @param $feed_slug
+     * @param string $feed_slug
      *
      * @return bool
      */
@@ -82,7 +82,7 @@ class BaseFeed
     }
 
     /**
-     * @param $user_id
+     * @param string $user_id
      *
      * @return bool
      */
@@ -132,7 +132,8 @@ class BaseFeed
     }
 
     /**
-     * @param  array $to
+     * @param array $to
+     *
      * @return array
      */
     public function signToField($to)
@@ -148,7 +149,7 @@ class BaseFeed
     }
 
     /**
-     * @param  array $activity_data
+     * @param array $activity_data
      * @return mixed
      */
     public function addActivity($activity_data)
@@ -156,11 +157,12 @@ class BaseFeed
         if (array_key_exists('to', $activity_data)) {
             $activity_data['to'] = $this->signToField($activity_data['to']);
         }
+
         return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity_data, null, 'feed', 'write');
     }
 
     /**
-     * @param  array $activities_data
+     * @param array $activities
      * @return mixed
      */
     public function addActivities($activities_data)
@@ -175,23 +177,25 @@ class BaseFeed
     }
 
     /**
-     * @param  int $activity_id
-     * @param  bool $foreign_id
+     * @param int $activity_id
+     * @param bool $foreign_id
      * @return mixed
      */
     public function removeActivity($activity_id, $foreign_id = false)
     {
         $query_params = [];
+
         if ($foreign_id === true) {
             $query_params['foreign_id'] = 1;
         }
+
         return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', null, $query_params, 'feed', 'delete');
     }
 
     /**
-     * @param  int $offset
-     * @param  int $limit
-     * @param  array $options
+     * @param int $offset
+     * @param int $limit
+     * @param array $options
      * @return mixed
      */
     public function getActivities($offset = 0, $limit = 20, $options = [])

@@ -12,8 +12,16 @@ class Analytics extends Feed
 {
     const API_ENDPOINT = 'https://analytics.stream-io-api.com/analytics/';
 
+    /**
+     * @var string
+     */
     protected $token;
 
+    /**
+     * @param Client $client
+     * @param string $api_key
+     * @param string $token
+     */
     public function __construct($client, $api_key, $token)
     {
         $this->client = $client;
@@ -21,13 +29,26 @@ class Analytics extends Feed
         $this->token = $token;
     }
 
+    /**
+     * @param string $resource
+     * @param string $action
+     *
+     * @return array
+     */
     protected function getHttpRequestHeaders($resource, $action)
     {
         $headers = parent::getHttpRequestHeaders($resource, $action);
         $headers['Authorization'] = $this->token;
+
         return $headers;
     }
 
+    /**
+     * @param string $targetUrl
+     * @param array $events
+     *
+     * @return string
+     */
     public function createRedirectUrl($targetUrl, $events)
     {
         $parsed_url = parse_url($targetUrl);

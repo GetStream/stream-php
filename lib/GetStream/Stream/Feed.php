@@ -1,4 +1,5 @@
 <?php
+
 namespace GetStream\Stream;
 
 use GuzzleHttp\Client as GuzzleClient;
