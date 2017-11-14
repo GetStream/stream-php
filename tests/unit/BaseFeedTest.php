@@ -10,7 +10,7 @@ class BaseFeedTest extends TestCase
 {
     public function testClientFeedAddActivity()
     {
-        $client = $this->createMock(Client::class);
+        $client = $this->createClientMock();
         $feed = new BaseFeedStub($client, 'feed', '1', 'api', 'token');
         $data = ['name' => 'php client'];
         $response = $feed->addActivity($data);
@@ -22,7 +22,7 @@ class BaseFeedTest extends TestCase
      */
     public function testValidateSlug()
     {
-        $client = $this->createMock(Client::class);
+        $client = $this->createClientMock();
         new BaseFeedStub($client, 'feed-ko', '1', 'api', 'token');
     }
 
@@ -31,26 +31,26 @@ class BaseFeedTest extends TestCase
      */
     public function testValidateUserId()
     {
-        $client = $this->createMock(Client::class);
+        $client = $this->createClientMock();
         new BaseFeedStub($client, 'feed_ko', 'ko:1', 'api', 'token');
     }
 
     public function testDashIsOkUserId()
     {
-        $client = $this->createMock(Client::class);
+        $client = $this->createClientMock();
         new BaseFeedStub($client, 'feed_ko', 'ko-1', 'api', 'token');
     }
 
     public function testGetToken()
     {
-        $client = $this->createMock(Client::class);
+        $client = $this->createClientMock();
         $feed = new BaseFeedStub($client, 'feed', '1', 'api', 'token');
         $this->assertSame('token', $feed->getToken());
     }
 
     public function testClientFeedGetActivities()
     {
-        $client = $this->createMock(Client::class);
+        $client = $this->createClientMock();
         $feed = new BaseFeedStub($client, 'feed', '1', 'api', 'token');
 
         $limit = 1;
@@ -68,10 +68,18 @@ class BaseFeedTest extends TestCase
 
     public function testClientRemoveActivity()
     {
-        $client = $this->createMock(Client::class);
+        $client = $this->createClientMock();
         $feed = new BaseFeedStub($client, 'feed', '1', 'api', 'token');
         $aid = '123';
         $response = $feed->removeActivity($aid);
         $this->assertSame('feed/feed/1/123/', $response['uri']);
+    }
+
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject|\GetStream\Stream\Client
+     */
+    private function createClientMock()
+    {
+        return $this->getMockBuilder(Client::class)->disableOriginalConstructor()->getMock();
     }
 }
