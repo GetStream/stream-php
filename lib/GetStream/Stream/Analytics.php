@@ -45,19 +45,20 @@ class Analytics extends Feed
      */
     public function createRedirectUrl($targetUrl, $events)
     {
-        $parsed_url = parse_url($targetUrl);
         $query_params = $this->getHttpRequestHeaders('analytics', '*');
         $query_params['api_key'] = $this->api_key;
         $query_params['url'] = $targetUrl;
         $query_params['auth_type'] = 'jwt';
         $query_params['authorization'] = $query_params['Authorization'];
-        unset($query_params['Authorization']);
-        unset($query_params['stream-auth-type']);
-        unset($query_params['Content-Type']);
-        unset($query_params['X-Stream-Client']);
         $query_params['events'] = json_encode($events);
-        $qString = http_build_query($query_params);
-        return static::API_ENDPOINT . 'redirect/' . "?{$qString}";
-    }
 
+        unset(
+            $query_params['Authorization'],
+            $query_params['stream-auth-type'],
+            $query_params['Content-Type'],
+            $query_params['X-Stream-Client']
+        );
+
+        return static::API_ENDPOINT . 'redirect/?' . http_build_query($query_params);
+    }
 }

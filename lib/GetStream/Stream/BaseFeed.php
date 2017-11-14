@@ -138,14 +138,13 @@ class BaseFeed
      */
     public function signToField($to)
     {
-        $recipients = [];
-        foreach ($to as $recipient) {
+        return array_map(function ($recipient) {
             $bits = explode(':', $recipient);
             $recipient_feed = $this->client->feed($bits[0], $bits[1]);
             $recipient_token = $recipient_feed->getToken();
-            $recipients[] = "$recipient $recipient_token";
-        }
-        return $recipients;
+
+            return "$recipient $recipient_token";
+        }, $to);
     }
 
     /**
@@ -165,15 +164,15 @@ class BaseFeed
      * @param array $activities
      * @return mixed
      */
-    public function addActivities($activities_data)
+    public function addActivities($activities)
     {
-        foreach ($activities_data as $i => $activity) {
+        foreach ($activities as &$activity) {
             if (array_key_exists('to', $activity)) {
-                $activities_data[$i]['to'] = $this->signToField($activity['to']);
+                $activities['to'] = $this->signToField($activity['to']);
             }
         }
-        $data = ['activities' => $activities_data];
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $data, null, 'feed', 'write');
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', compact('activities'), null, 'feed', 'write');
     }
 
     /**
