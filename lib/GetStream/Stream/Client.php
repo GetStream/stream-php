@@ -2,8 +2,7 @@
 namespace GetStream\Stream;
 
 use Exception;
-
-const VERSION = '2.5.2';
+use PackageVersions\Versions;
 
 class Client
 {
@@ -45,6 +44,11 @@ class Client
     public $timeout;
 
     /**
+     * @var string
+     */
+    private $version;
+
+    /**
      * @param string $api_key
      * @param string $api_secret
      * @param string $api_version
@@ -59,6 +63,16 @@ class Client
         $this->timeout = $timeout;
         $this->location = $location;
         $this->protocol = 'https';
+
+        // Get the currently installed version (something like 2.4.0@{commithash}). Only the first part is needed.
+        list($version,) = explode('@', Versions::getVersion('get-stream/stream'));
+
+        // In CI, use something else.
+        if ($version === '9999999-dev') {
+            $version = 'dev';
+        }
+
+        $this->version = $version;
     }
 
     /**
@@ -200,4 +214,11 @@ class Client
         return $analytics->createRedirectUrl($targetUrl, $events);
     }
 
+    /**
+     * @return string
+     */
+    public function getVersion()
+    {
+        return $this->version;
+    }
 }

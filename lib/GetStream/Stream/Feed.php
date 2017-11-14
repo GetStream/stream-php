@@ -57,11 +57,12 @@ class Feed extends BaseFeed
     protected function getHttpRequestHeaders($resource, $action)
     {
         $token = $this->client->createFeedJWTToken($this, $resource, $action);
+
         return [
             'Authorization'     => $token,
             'Content-Type'      => 'application/json',
             'stream-auth-type'  => 'jwt',
-            'X-Stream-Client'   => 'stream-php-client-' . VERSION
+            'X-Stream-Client'   => 'stream-php-client-' . $this->client->getVersion(),
         ];
     }
 
