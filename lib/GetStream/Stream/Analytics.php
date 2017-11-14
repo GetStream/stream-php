@@ -1,12 +1,6 @@
 <?php
+
 namespace GetStream\Stream;
-
-use Exception;
-use GuzzleHttp;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\CurlHandler;
-
 
 class Analytics extends Feed
 {
