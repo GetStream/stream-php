@@ -67,7 +67,7 @@ class Client
         // Get the currently installed version (something like 2.4.0@{commithash}). Only the first part is needed.
         list($version,) = explode('@', Versions::getVersion('get-stream/stream'));
 
-        // In CI, use something else.
+        // In CI or in development, use something else.
         if ($version === '9999999-dev') {
             $version = 'dev';
         }
