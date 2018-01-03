@@ -87,10 +87,10 @@ Following/follower relations of a feed:
 
 ```php
 // When user 1 starts following user 37's activities
-$userFeed->followFeed('user', '37');
+$userFeed->follow('user', '37');
 
 // When user 1 stops following user 37's activities
-$userFeed->unfollowFeed('user', '37');
+$userFeed->unfollow('user', '37');
 
 // Retrieve followers of a feed
 $userFeed->followers();
