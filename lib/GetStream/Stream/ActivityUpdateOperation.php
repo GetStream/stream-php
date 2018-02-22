@@ -2,16 +2,18 @@
 
 namespace GetStream\Stream;
 
-use Exception;
-use GuzzleHttp;
-use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\CurlHandler;
-
 class ActivityUpdateOperation extends Feed
 {
+    /**
+     * @var string
+     */
     protected $token;
 
+    /**
+     * @param Client $client
+     * @param string $api_key
+     * @param string $token
+     */
     public function __construct($client, $api_key, $token)
     {
         $this->client = $client;
@@ -19,10 +21,17 @@ class ActivityUpdateOperation extends Feed
         $this->token = $token;
     }
 
+    /**
+     * @param string $resource
+     * @param string $action
+     *
+     * @return array
+     */
     protected function getHttpRequestHeaders($resource, $action)
     {
         $headers = parent::getHttpRequestHeaders($resource, $action);
         $headers['Authorization'] = $this->token;
+
         return $headers;
     }
 
@@ -32,10 +41,6 @@ class ActivityUpdateOperation extends Feed
             return;
         }
 
-        $data = [
-            'activities' => $activities
-        ];
-        return $this->makeHttpRequest('activities/', 'POST', $data);
+        return $this->makeHttpRequest('activities/', 'POST', compact('activities'));
     }
-
 }

@@ -1,5 +1,7 @@
 <?php
+
 namespace GetStream\Stream;
+
 use HttpSignatures\Context;
 use \Firebase\JWT\JWT;
 
@@ -34,11 +36,11 @@ class Signer
         $this->api_key = $api_key;
         $this->api_secret = $api_secret;
         $this->hashFunction = new HMAC;
-        $this->context = new Context(array(
+        $this->context = new Context([
           'keys' => array($api_key =>$api_secret),
           'algorithm' => 'hmac-sha256',
           'headers' => array('(request-target)', 'Date'),
-        ));
+        ]);
     }
 
     /**
@@ -57,6 +59,7 @@ class Signer
     public function signature($value)
     {
         $digest = $this->hashFunction->digest($value, $this->api_secret);
+
         return $this->urlSafeB64encode($digest);
     }
 
@@ -71,9 +74,9 @@ class Signer
         $payload = [
             'action'   => $action,
             'feed_id'  => $feedId,
-            'resource' => $resource
+            'resource' => $resource,
         ];
+
         return JWT::encode($payload, $this->api_secret, 'HS256');
     }
-
 }

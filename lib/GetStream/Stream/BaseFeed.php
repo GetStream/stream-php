@@ -1,9 +1,9 @@
 <?php
+
 namespace GetStream\Stream;
 
 class BaseFeed
 {
-
     /**
      * @var string
      */
@@ -66,13 +66,11 @@ class BaseFeed
         $this->token   = $token;
         $this->api_key = $api_key;
 
-        if ($client instanceof Client) {
-            $this->client  = $client;
-        }
+        $this->client = $client;
     }
 
     /**
-     * @param $feed_slug
+     * @param string $feed_slug
      *
      * @return bool
      */
@@ -82,7 +80,7 @@ class BaseFeed
     }
 
     /**
-     * @param $user_id
+     * @param string $user_id
      *
      * @return bool
      */
@@ -132,66 +130,69 @@ class BaseFeed
     }
 
     /**
-     * @param  array $to
+     * @param array $to
+     *
      * @return array
      */
     public function signToField($to)
     {
-        $recipients = [];
-        foreach ($to as $recipient) {
+        return array_map(function ($recipient) {
             $bits = explode(':', $recipient);
             $recipient_feed = $this->client->feed($bits[0], $bits[1]);
             $recipient_token = $recipient_feed->getToken();
-            $recipients[] = "$recipient $recipient_token";
-        }
-        return $recipients;
+
+            return "$recipient $recipient_token";
+        }, $to);
     }
 
     /**
-     * @param  array $activity_data
+     * @param array $activity
      * @return mixed
      */
-    public function addActivity($activity_data)
+    public function addActivity($activity)
     {
-        if (array_key_exists('to', $activity_data)) {
-            $activity_data['to'] = $this->signToField($activity_data['to']);
+        if (array_key_exists('to', $activity)) {
+            $activity['to'] = $this->signToField($activity['to']);
         }
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity_data, null, 'feed', 'write');
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity, null, 'feed', 'write');
     }
 
     /**
-     * @param  array $activities_data
+     * @param array $activities
      * @return mixed
      */
-    public function addActivities($activities_data)
+    public function addActivities($activities)
     {
-        foreach ($activities_data as $i => $activity) {
+        foreach ($activities as &$activity) {
             if (array_key_exists('to', $activity)) {
-                $activities_data[$i]['to'] = $this->signToField($activity['to']);
+                $activity['to'] = $this->signToField($activity['to']);
             }
         }
-        $data = ['activities' => $activities_data];
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $data, null, 'feed', 'write');
+
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', compact('activities'), null, 'feed', 'write');
     }
 
     /**
-     * @param  int $activity_id
-     * @param  bool $foreign_id
+     * @param int $activity_id
+     * @param bool $foreign_id
      * @return mixed
      */
     public function removeActivity($activity_id, $foreign_id = false)
     {
         $query_params = [];
+
         if ($foreign_id === true) {
             $query_params['foreign_id'] = 1;
         }
+
         return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', null, $query_params, 'feed', 'delete');
     }
 
     /**
-     * @param  int $offset
-     * @param  int $limit
-     * @param  array $options
+     * @param int $offset
+     * @param int $limit
+     * @param array $options
      * @return mixed
      */
     public function getActivities($offset = 0, $limit = 20, $options = [])
