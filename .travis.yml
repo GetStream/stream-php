@@ -10,11 +10,13 @@ matrix:
     - php: 7.0
       env: TEST_SUITE="Unit Test Suite"
     - php: 7.1
+      env: TEST_SUITE="Unit Test Suite"
+    - php: 7.2
       env: TEST_SUITE="Unit Test Suite" COLLECT_COVERAGE=true
-    - php: 7.1
+    - php: 7.2
       env: TEST_SUITE="Integration Test Suite"
   allow_failures:
-    - php: 7.1
+    - php: 7.2
       env: TEST_SUITE="Integration Test Suite"
 
 before_script:
