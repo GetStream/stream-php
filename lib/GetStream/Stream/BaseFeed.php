@@ -48,7 +48,7 @@ class BaseFeed
      *
      * @throws StreamFeedException
      */
-    public function __construct(Client $client, $feed_slug, $user_id, $api_key, $token)
+    public function __construct($client, $feed_slug, $user_id, $api_key, $token)
     {
         if (!$this->validFeedSlug($feed_slug)) {
             throw new StreamFeedException('feed_slug can only contain alphanumeric characters or underscores');
@@ -146,16 +146,16 @@ class BaseFeed
     }
 
     /**
-     * @param array $activity_data
+     * @param array $activity
      * @return mixed
      */
-    public function addActivity($activity_data)
+    public function addActivity($activity)
     {
-        if (array_key_exists('to', $activity_data)) {
-            $activity_data['to'] = $this->signToField($activity_data['to']);
+        if (array_key_exists('to', $activity)) {
+            $activity['to'] = $this->signToField($activity['to']);
         }
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity_data, null, 'feed', 'write');
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity, null, 'feed', 'write');
     }
 
     /**
@@ -166,7 +166,7 @@ class BaseFeed
     {
         foreach ($activities as &$activity) {
             if (array_key_exists('to', $activity)) {
-                $activities['to'] = $this->signToField($activity['to']);
+                $activity['to'] = $this->signToField($activity['to']);
             }
         }
 
