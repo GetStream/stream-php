@@ -2,16 +2,11 @@
 
 namespace GetStream\Stream;
 
-use HttpSignatures\Context;
-use \Firebase\JWT\JWT;
+use Firebase\JWT\JWT;
+use Psr\Http\Message\RequestInterface;
 
 class Signer
 {
-    /**
-     * @var HMAC
-     */
-    public $hashFunction;
-
     /**
      * @var string
      */
@@ -23,11 +18,6 @@ class Signer
     private $api_secret;
 
     /**
-     * @var HttpSignatures\Context
-     */
-    public $context;
-
-    /**
      * @param string $api_key
      * @param string $api_secret
      */
@@ -35,21 +25,6 @@ class Signer
     {
         $this->api_key = $api_key;
         $this->api_secret = $api_secret;
-        $this->hashFunction = new HMAC;
-        $this->context = new Context([
-          'keys' => array($api_key =>$api_secret),
-          'algorithm' => 'hmac-sha256',
-          'headers' => array('(request-target)', 'Date'),
-        ]);
-    }
-
-    /**
-     * @param  string $value
-     * @return string
-     */
-    public function urlSafeB64encode($value)
-    {
-        return trim(strtr(base64_encode($value), '+/', '-_'), '=');
     }
 
     /**
@@ -58,9 +33,34 @@ class Signer
      */
     public function signature($value)
     {
-        $digest = $this->hashFunction->digest($value, $this->api_secret);
+        $digest = hash_hmac('sha1', $value, sha1($this->api_secret, true), true);
 
-        return $this->urlSafeB64encode($digest);
+        return trim(strtr(base64_encode($digest), '+/', '-_'), '=');
+    }
+
+    /**
+     * @param RequestInterface $request
+     *
+     * @return RequestInterface
+     */
+    public function signRequest(RequestInterface $request)
+    {
+        $signatureString = sprintf(
+            "(request-target): %s %s\ndate: %s",
+            mb_strtolower($request->getMethod()),
+            $request->getRequestTarget(),
+            $request->getHeaderLine('date')
+        );
+
+        $signature = base64_encode(hash_hmac('sha256', $signatureString, $this->api_secret, true));
+
+        $header = sprintf(
+            'Signature keyId="%s",algorithm="hmac-sha256",headers="(request-target) date",signature="%s"',
+            $this->api_key,
+            $signature
+        );
+
+        return $request->withHeader('Authorization', $header);
     }
 
     /**
