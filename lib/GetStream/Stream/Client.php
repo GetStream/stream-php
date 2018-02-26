@@ -135,13 +135,7 @@ class Client
      */
     public function batcher()
     {
-        $context = new Context([
-            'keys' => array($this->api_key => $this->api_secret),
-            'algorithm' => 'hmac-sha256',
-            'headers' => array('(request-target)', 'Date'),
-        ]);
-
-        return new Batcher($this, $context, $this->api_key);
+        return new Batcher($this, $this->signer, $this->api_key);
     }
 
     /**

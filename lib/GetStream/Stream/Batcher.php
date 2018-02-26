@@ -1,21 +1,27 @@
 <?php
 namespace GetStream\Stream;
 
-use Exception;
-use GuzzleHttp;
-use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
-use GuzzleHttp\Handler\CurlHandler;
-
+use Psr\Http\Message\RequestInterface;
 
 class Batcher extends Feed
 {
+    /**
+     * @var Signer
+     */
+    private $signer;
 
     /**
-     * @var HttpSignatures\Context
+     * @param Client $client
+     * @param Signer $signer
+     * @param string $api_key
      */
-    private $ctx;
-
+    public function __construct($client, Signer $signer, $api_key)
+    {
+        $this->client = $client;
+        $this->signer = $signer;
+        $this->api_key = $api_key;
+    }
 
     /**
      * @return \GuzzleHttp\HandlerStack
@@ -23,53 +29,55 @@ class Batcher extends Feed
     public function getHandlerStack()
     {
         $stack = HandlerStack::create();
-        $stack->setHandler(new CurlHandler());
-        $stack->push(signature_middleware_factory($this->ctx));
+        $stack->push(function (callable $handler) {
+            return function (RequestInterface $request, array $options) use ($handler) {
+                return $handler($this->signer->signRequest($request), $options);
+            };
+        });
+
         return $stack;
     }
 
     /**
-     * @param  string $resource
-     * @param  string $action
-     * @return array
-     */
-    protected function getHttpRequestHeaders($resource, $action)
-    {
-        return [
-            'Content-Type'      => 'application/json',
-            'Date'              =>  gmdate('D, d M Y H:i:s T'),
-            'X-Api-Key'         =>  $this->api_key
-        ];
-    }
-
-    /**
-     * @var HttpSignatures\Context
-     */
-    public function __construct($client, $context, $api_key)
-    {
-        $this->client = $client;
-        $this->ctx = $context;
-        $this->api_key = $api_key;
-    }
-
-    /**
-     * @param  array $activityData
-     * @param  array $feeds
+     * @param array $activityData
+     * @param array $feeds
+     *
+     * @throws StreamFeedException
+     *
      * @return array
      */
     public function addToMany($activityData, $feeds)
     {
         $data = [
             'feeds' => $feeds,
-            'activity' => $activityData
+            'activity' => $activityData,
         ];
+
         return $this->makeHttpRequest('feed/add_to_many/', 'POST', $data);
     }
 
     /**
-     * @param  array $follows
-     * @return array
+     * @param string $resource
+     * @param string $action
      *
+     * @return array
+     */
+    protected function getHttpRequestHeaders($resource, $action)
+    {
+        return [
+            'Content-Type' => 'application/json',
+            'Date' =>  gmdate('D, d M Y H:i:s T'),
+            'X-Api-Key' => $this->api_key,
+        ];
+    }
+
+    /**
+     * @param array $follows
+     * @param int $activity_copy_limit
+     *
+     * @throws StreamFeedException
+     *
+     * @return array
      * $follows = [
      *   ['source' => 'flat:1', 'target' => 'user:1'],
      *   ['source' => 'flat:1', 'target' => 'user:3']
@@ -85,7 +93,11 @@ class Batcher extends Feed
     }
 
     /**
-     * @param  string $method
+     * @param string $method
+     *
+     * @throws StreamFeedException
+     *
+     * @return mixed
      */
     public function test($method)
     {
