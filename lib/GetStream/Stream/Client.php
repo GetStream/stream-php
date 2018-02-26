@@ -2,6 +2,7 @@
 namespace GetStream\Stream;
 
 use Exception;
+use HttpSignatures\Context;
 
 const VERSION = '2.5.2';
 
@@ -134,7 +135,13 @@ class Client
      */
     public function batcher()
     {
-        return new Batcher($this, $this->signer->context, $this->api_key);
+        $context = new Context([
+            'keys' => array($this->api_key => $this->api_secret),
+            'algorithm' => 'hmac-sha256',
+            'headers' => array('(request-target)', 'Date'),
+        ]);
+
+        return new Batcher($this, $context, $this->api_key);
     }
 
     /**
