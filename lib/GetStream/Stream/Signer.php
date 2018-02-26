@@ -8,11 +8,6 @@ use \Firebase\JWT\JWT;
 class Signer
 {
     /**
-     * @var HMAC
-     */
-    public $hashFunction;
-
-    /**
      * @var string
      */
     private $api_key;
@@ -35,7 +30,6 @@ class Signer
     {
         $this->api_key = $api_key;
         $this->api_secret = $api_secret;
-        $this->hashFunction = new HMAC;
         $this->context = new Context([
           'keys' => array($api_key =>$api_secret),
           'algorithm' => 'hmac-sha256',
