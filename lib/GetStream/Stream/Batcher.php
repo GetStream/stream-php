@@ -57,21 +57,6 @@ class Batcher extends Feed
     }
 
     /**
-     * @param string $resource
-     * @param string $action
-     *
-     * @return array
-     */
-    protected function getHttpRequestHeaders($resource, $action)
-    {
-        return [
-            'Content-Type' => 'application/json',
-            'Date' =>  gmdate('D, d M Y H:i:s T'),
-            'X-Api-Key' => $this->api_key,
-        ];
-    }
-
-    /**
      * @param array $follows
      * @param int $activity_copy_limit
      *
@@ -102,5 +87,20 @@ class Batcher extends Feed
     public function test($method)
     {
         return $this->makeHttpRequest('test/auth/digest/', $method);
+    }
+
+    /**
+     * @param string $resource
+     * @param string $action
+     *
+     * @return array
+     */
+    protected function getHttpRequestHeaders($resource, $action)
+    {
+        return [
+            'Content-Type' => 'application/json',
+            'Date' =>  gmdate('D, d M Y H:i:s T'),
+            'X-Api-Key' => $this->api_key,
+        ];
     }
 }
