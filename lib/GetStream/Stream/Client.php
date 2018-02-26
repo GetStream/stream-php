@@ -3,7 +3,7 @@ namespace GetStream\Stream;
 
 use Exception;
 
-const VERSION = '2.5.2';
+const VERSION = '2.6.0';
 
 class Client
 {
