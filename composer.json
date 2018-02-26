@@ -28,9 +28,6 @@
             "GetStream\\Stubs\\" : "tests/stubs/",
             "GetStream\\Unit\\" : "tests/unit/",
             "GetStream\\Integration\\" : "tests/integration/"
-        },
-        "files": [
-            "lib/GetStream/Stream/helpers.php"
-        ]
+        }
     }
 }
