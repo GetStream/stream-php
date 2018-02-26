@@ -2,7 +2,6 @@
 namespace GetStream\Stream;
 
 use Exception;
-use HttpSignatures\Context;
 
 const VERSION = '2.5.2';
 
