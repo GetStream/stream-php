@@ -58,7 +58,7 @@ class Signer
      */
     public function signature($value)
     {
-        $digest = $this->hashFunction->digest($value, $this->api_secret);
+        $digest = hash_hmac('sha1', $value, sha1($this->api_secret, true), true);
 
         return $this->urlSafeB64encode($digest);
     }
