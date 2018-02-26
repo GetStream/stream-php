@@ -148,6 +148,8 @@ class BaseFeed
     /**
      * @param array $activity
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function addActivity($activity)
     {
@@ -161,6 +163,8 @@ class BaseFeed
     /**
      * @param array $activities
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function addActivities($activities)
     {
@@ -177,6 +181,8 @@ class BaseFeed
      * @param int $activity_id
      * @param bool $foreign_id
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function removeActivity($activity_id, $foreign_id = false)
     {
@@ -194,6 +200,8 @@ class BaseFeed
      * @param int $limit
      * @param array $options
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function getActivities($offset = 0, $limit = 20, $options = [])
     {
@@ -215,6 +223,8 @@ class BaseFeed
      * @param int $activityCopyLimit
      *
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function follow($targetFeedSlug, $targetUserId, $activityCopyLimit = 300)
     {
@@ -238,6 +248,8 @@ class BaseFeed
      * @param int $activityCopyLimit
      *
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function followFeed($targetFeedSlug, $targetUserId, $activityCopyLimit = 300)
     {
@@ -248,6 +260,8 @@ class BaseFeed
      * @param  int $offset
      * @param  int $limit
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function followers($offset = 0, $limit = 25)
     {
@@ -264,6 +278,8 @@ class BaseFeed
      * @param  int $limit
      * @param  array $filter
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function following($offset = 0, $limit = 25, $filter = [])
     {
@@ -281,6 +297,8 @@ class BaseFeed
      * @param bool $keepHistory
      *
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function unfollow($targetFeedSlug, $targetUserId, $keepHistory = false)
     {
@@ -300,6 +318,8 @@ class BaseFeed
      * @param bool $keepHistory
      *
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function unfollowFeed($targetFeedSlug, $targetUserId, $keepHistory = false)
     {
@@ -312,6 +332,8 @@ class BaseFeed
      * No need to clean up, one should just use different feed ids.
      *
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function delete()
     {
@@ -325,6 +347,8 @@ class BaseFeed
      * @param  array $added_targets
      * @param  array $removed_targets
      * @return mixed
+     *
+     * @throws StreamFeedException
      */
     public function updateActivityToTargets($foreign_id, $time, $new_targets = [], $added_targets = [], $removed_targets = [])
     {
