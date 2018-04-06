@@ -138,6 +138,22 @@ class Client
     }
 
     /**
+     * @return Personalization
+     */
+    public function personalization()
+    {
+        return new Personalization($this, $this->api_key, $this->api_secret);
+    }
+
+    /**
+     * @return Collections
+     */
+    public function collections()
+    {
+        return new Collections($this, $this->api_key, $this->api_secret);
+    }
+
+    /**
      * @return string
      */
     public function getBaseUrl()
