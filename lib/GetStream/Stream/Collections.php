@@ -4,7 +4,7 @@ namespace GetStream\Stream;
 
 use Firebase\JWT\JWT;
 use GetStream\Stream\Client as StreamClient;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
@@ -35,7 +35,7 @@ class Collections
     {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
-        $this->client = new Client([
+        $this->client = new GuzzleClient([
             'base_uri' => $streamClient->getBaseUrl().'/'.$streamClient->api_version.'/',
             'timeout' => $streamClient->timeout,
             'handler' => $this->handlerStack(),
@@ -76,6 +76,8 @@ class Collections
     public function upsert($collectionName, array $data)
     {
         $options = ['json' => ['data' => [$collectionName => $data]]];
+
+        var_dump($options); exit;
 
         try {
             $response = $this->client->request('POST', 'meta/', $options);
