@@ -89,7 +89,7 @@ class Personalization
         $queryParams = ['api_key' => $this->apiKey];
         $queryParams += $params;
 
-        $uri = $resource .'?'. http_build_query($queryParams);
+        $uri = $resource .'/?'. http_build_query($queryParams);
 
         try {
             $response = $this->client->request($method, $uri);
