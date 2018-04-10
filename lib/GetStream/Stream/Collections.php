@@ -36,7 +36,7 @@ class Collections
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
         $this->client = new Client([
-            'base_uri' => $streamClient->getBaseUrl(),
+            'base_uri' => $streamClient->getBaseUrl().'/'.$streamClient->api_version.'/',
             'timeout' => $streamClient->timeout,
             'handler' => $this->handlerStack(),
         ]);
@@ -57,7 +57,7 @@ class Collections
         $queryParams = ['foreign_ids' => join(',', $mappedIds)];
 
         try {
-            $response = $this->client->request('GET', '/meta?'.http_build_query($queryParams));
+            $response = $this->client->request('GET', 'meta/?'.http_build_query($queryParams));
         } catch (ClientException $e) {
             throw new StreamFeedException($e->getResponse()->getBody());
         }
@@ -78,7 +78,7 @@ class Collections
         $options = ['json' => ['data' => [$collectionName => $data]]];
 
         try {
-            $response = $this->client->request('POST', '/meta', $options);
+            $response = $this->client->request('POST', 'meta/', $options);
         } catch (ClientException $e) {
             throw new StreamFeedException($e->getResponse()->getBody());
         }
@@ -99,7 +99,7 @@ class Collections
         $options = ['json' => ['collection_name' => $collectionName, 'ids' => $ids]];
 
         try {
-            $response = $this->client->request('DELETE', '/meta', $options);
+            $response = $this->client->request('DELETE', 'meta/', $options);
         } catch (ClientException $e) {
             throw new StreamFeedException($e->getResponse()->getBody());
         }
