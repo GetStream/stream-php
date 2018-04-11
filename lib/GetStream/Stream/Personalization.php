@@ -4,7 +4,7 @@ namespace GetStream\Stream;
 
 use Firebase\JWT\JWT;
 use GetStream\Stream\Client as StreamClient;
-use GuzzleHttp\Client;
+use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
@@ -37,7 +37,7 @@ class Personalization
     {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
-        $this->client = new Client([
+        $this->client = new GuzzleClient([
             'base_uri' => self::API_ENDPOINT,
             'timeout' => $streamClient->timeout,
             'handler' => $this->handlerStack(),
