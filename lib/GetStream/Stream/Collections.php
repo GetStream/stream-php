@@ -77,8 +77,6 @@ class Collections
     {
         $options = ['json' => ['data' => [$collectionName => $data]]];
 
-        var_dump($options); exit;
-
         try {
             $response = $this->client->request('POST', 'meta/', $options);
         } catch (ClientException $e) {
@@ -98,10 +96,11 @@ class Collections
      */
     public function delete($collectionName, array $ids)
     {
-        $options = ['json' => ['collection_name' => $collectionName, 'ids' => $ids]];
+        $ids = join(',', $ids);
+        $queryParams = ['collection_name' => $collectionName, 'ids' => $ids];
 
         try {
-            $response = $this->client->request('DELETE', 'meta/', $options);
+            $response = $this->client->request('DELETE', 'meta/?'.http_build_query($queryParams));
         } catch (ClientException $e) {
             throw new StreamFeedException($e->getResponse()->getBody());
         }
