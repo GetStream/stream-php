@@ -41,7 +41,8 @@ class Feed extends BaseFeed
         return new GuzzleClient([
             'base_uri' => $this->client->getBaseUrl(),
             'timeout' => $this->client->timeout,
-            'handler' => $handler
+            'handler' => $handler,
+            'headers' => ['Accept-Encoding' => 'gzip'],
         ]);
     }
 
