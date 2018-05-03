@@ -145,6 +145,26 @@ class FeedTest extends TestCase
         $this->assertCount(2, $response['results']);
     }
 
+    public function testUnfollowMany()
+    {
+        $batcher = $this->client->batcher();
+        $follows = [
+            ['source' => 'flat:1', 'target' => 'user:1'],
+            ['source' => 'flat:2', 'target' => 'user:2']
+        ];
+        $batcher->followMany($follows);
+
+        $unfollows = [
+            ['source' => 'flat:1', 'target' => 'user:1'],
+            ['source' => 'flat:2', 'target' => 'user:2', 'keep_history' => true]
+        ];
+        $batcher->unfollowMany($unfollows);
+        $response = $this->client->feed('flat', '1')->following();
+        $this->assertCount(0, $response['results']);
+        $response = $this->client->feed('flat', '2')->following();
+        $this->assertCount(0, $response['results']);
+    }
+
     public function testReadonlyToken()
     {
         $token = $this->user1->getReadonlyToken();
