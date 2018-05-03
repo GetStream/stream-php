@@ -302,8 +302,8 @@ class FeedTest extends TestCase
             'time' => $now->format(DateTime::ISO8601),
         ];
         $feed = $this->client->feed('user', 'keephistory');
+        $feed->follow($this->flat3->getSlug(), $this->flat3->getUserID());
         $this->flat3->addActivity($activity);
-        $feed->follow('flat', $id);
         $activities = $feed->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $feed->unfollow('flat', $id, true);
