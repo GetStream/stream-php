@@ -63,7 +63,7 @@ class ClientTest extends TestCase
         // Teardown
         if ($previous === false) {
             // Remove the environment variable.
-            putenv('STREAM_BASE_UR');
+            putenv('STREAM_BASE_URL');
         } else {
             putenv('STREAM_BASE_URL='.$previous);
         }
