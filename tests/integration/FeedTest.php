@@ -147,22 +147,39 @@ class FeedTest extends TestCase
 
     public function testUnfollowMany()
     {
+        $u1 = $this->client->feed('user', Uuid::uuid4());
+        $u2 = $this->client->feed('user', Uuid::uuid4());
+        $f1 = $this->client->feed('flat', Uuid::uuid4());
+        $f2 = $this->client->feed('flat', Uuid::uuid4());
+
         $batcher = $this->client->batcher();
         $follows = [
-            ['source' => 'flat:1', 'target' => 'user:1'],
-            ['source' => 'flat:2', 'target' => 'user:2']
+            ['source' => $f1->getId(), 'target' => $u1->getId()],
+            ['source' => $f2->getId(), 'target' => $u2->getId()]
         ];
         $batcher->followMany($follows);
 
+        $activity = ['actor' => 'bob', 'verb' => 'does', 'object' => 'something'];
+        $u1->addActivity($activity);
+        $u2->addActivity($activity);
+
+        $this->assertCount(1, $f1->getActivities()['results']);
+        $this->assertCount(1, $f2->getActivities()['results']);
+
         $unfollows = [
-            ['source' => 'flat:1', 'target' => 'user:1'],
-            ['source' => 'flat:2', 'target' => 'user:2', 'keep_history' => true]
+            ['source' => $f1->getId(), 'target' => $u1->getId()],
+            ['source' => $f2->getId(), 'target' => $u2->getId(), 'keep_history' => true]
         ];
         $batcher->unfollowMany($unfollows);
-        $response = $this->client->feed('flat', '1')->following();
-        $this->assertCount(0, $response['results']);
-        $response = $this->client->feed('flat', '2')->following();
-        $this->assertCount(0, $response['results']);
+        
+        $resp = $f1->following();
+        $this->assertCount(0, $resp['results']);
+        $resp = $f2->following();
+        $this->assertCount(0, $resp['results']);
+
+        $this->assertCount(0, $f1->getActivities()['results']);
+        $this->assertCount(1, $f2->getActivities()['results']);
+        
     }
 
     public function testReadonlyToken()
