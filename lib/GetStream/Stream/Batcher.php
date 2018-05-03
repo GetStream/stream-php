@@ -78,6 +78,23 @@ class Batcher extends Feed
     }
 
     /**
+     * @param array $unfollows
+     *
+     * @throws StreamFeedException
+     *
+     * @return array
+     * $unfollows = [
+     *   ['source' => 'user:1', 'target' => 'timeline:1'],
+     *   ['source' => 'user:2', 'target' => 'timeline:2', 'keep_history' => true]
+     * ]
+     */
+    public function unfollowMany($unfollows)
+    {
+        $query_params = [];
+        return $this->makeHttpRequest('unfollow_many/', 'POST', $unfollows, $query_params);
+    }
+
+    /**
      * @param string $method
      *
      * @throws StreamFeedException

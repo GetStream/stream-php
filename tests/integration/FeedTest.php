@@ -145,6 +145,43 @@ class FeedTest extends TestCase
         $this->assertCount(2, $response['results']);
     }
 
+    public function testUnfollowMany()
+    {
+        $u1 = $this->client->feed('user', Uuid::uuid4());
+        $u2 = $this->client->feed('user', Uuid::uuid4());
+        $f1 = $this->client->feed('flat', Uuid::uuid4());
+        $f2 = $this->client->feed('flat', Uuid::uuid4());
+
+        $batcher = $this->client->batcher();
+        $follows = [
+            ['source' => $f1->getId(), 'target' => $u1->getId()],
+            ['source' => $f2->getId(), 'target' => $u2->getId()]
+        ];
+        $batcher->followMany($follows);
+
+        $activity = ['actor' => 'bob', 'verb' => 'does', 'object' => 'something'];
+        $u1->addActivity($activity);
+        $u2->addActivity($activity);
+
+        $this->assertCount(1, $f1->getActivities()['results']);
+        $this->assertCount(1, $f2->getActivities()['results']);
+
+        $unfollows = [
+            ['source' => $f1->getId(), 'target' => $u1->getId()],
+            ['source' => $f2->getId(), 'target' => $u2->getId(), 'keep_history' => true]
+        ];
+        $batcher->unfollowMany($unfollows);
+        
+        $resp = $f1->following();
+        $this->assertCount(0, $resp['results']);
+        $resp = $f2->following();
+        $this->assertCount(0, $resp['results']);
+
+        $this->assertCount(0, $f1->getActivities()['results']);
+        $this->assertCount(1, $f2->getActivities()['results']);
+        
+    }
+
     public function testReadonlyToken()
     {
         $token = $this->user1->getReadonlyToken();
@@ -282,8 +319,8 @@ class FeedTest extends TestCase
             'time' => $now->format(DateTime::ISO8601),
         ];
         $feed = $this->client->feed('user', 'keephistory');
+        $feed->follow($this->flat3->getSlug(), $this->flat3->getUserID());
         $this->flat3->addActivity($activity);
-        $feed->follow('flat', $id);
         $activities = $feed->getActivities(0, 1)['results'];
         $this->assertCount(1, $activities);
         $feed->unfollow('flat', $id, true);
