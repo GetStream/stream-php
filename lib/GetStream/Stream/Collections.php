@@ -42,6 +42,16 @@ class Collections
         ]);
     }
 
+    public function createReference($collectionName, $id)
+    {
+        return "SO:".$collectionName.":".$id;
+    }
+
+    public function createUserReference($id)
+    {
+        return $this->createReference("user", $id);
+    }
+
     /**
      * @param string $collectionName
      * @param array $ids
