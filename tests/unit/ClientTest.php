@@ -68,4 +68,12 @@ class ClientTest extends TestCase
             putenv('STREAM_BASE_URL='.$previous);
         }
     }
+
+    /**
+     * @expectedException \GetStream\Stream\StreamClientException
+     */
+    public function testGetActivitiesByForeignIdException() {
+        $client = new Client('key', 'secret');
+        $client->getActivitiesByForeignId([1, 2]);
+    }
 }
