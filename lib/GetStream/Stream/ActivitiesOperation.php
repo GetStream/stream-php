@@ -2,7 +2,7 @@
 
 namespace GetStream\Stream;
 
-class ActivityUpdateOperation extends Feed
+class ActivitiesOperation extends Feed
 {
     /**
      * @var string
@@ -42,5 +42,15 @@ class ActivityUpdateOperation extends Feed
         }
 
         return $this->makeHttpRequest('activities/', 'POST', compact('activities'));
+    }
+
+    public function getAppActivities($data = [])
+    {
+        $params = [];
+        foreach ($data as $key => $value) {
+            $params[$key] = implode(',', $value);
+        }
+
+        return $this->makeHttpRequest('activities/', 'GET', [], $params);
     }
 }

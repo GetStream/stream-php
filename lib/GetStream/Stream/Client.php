@@ -193,8 +193,8 @@ class Client
         }
 
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
-        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
-        return $activityUpdateOp->updateActivities($activities);
+        $op = new ActivitiesOperation($this, $this->api_key, $token);
+        return $op->updateActivities($activities);
     }
 
     public function updateActivity($activity)
@@ -204,8 +204,8 @@ class Client
 
     private function getAppActivities($data) {
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
-        $getAppActivitiesOp = new GetAppActivitiesOperation($this, $this->api_key, $token);
-        return $getAppActivitiesOp->getAppActivities($data);
+        $op = new ActivitiesOperation($this, $this->api_key, $token);
+        return $op->getAppActivities($data);
     }
 
     /**
