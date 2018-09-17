@@ -645,4 +645,36 @@ class FeedTest extends TestCase
         $this->assertCount(1, $resp['results']);
         $this->assertSame($resp['results'][0]['id'], $id);
     }
+
+    public function testActivityPartialUpdate()
+    {
+        $userId = Uuid::uuid4();
+        $feed = $this->client->feed('flat', $userId);
+        $activity = [
+            'actor'=>'bob',
+            'verb'=>'does',
+            'object'=>'something',
+            'foreign_id'=>Uuid::uuid4(),
+            'time'=>'2006-01-02T15:04:05.999999999',
+            'popularity'=>42,
+            'foo'=> [
+                'bar'=>'baz',
+                'qux'=>'waldo',
+            ],
+        ];
+        $resp = $feed->addActivity($activity);
+        $set = [
+            'popularity' => 23,
+            'foo.bar' => 999,
+        ];
+        $unset = [ 'foo.qux' ];
+        $this->client->activityPartialUpdateById($resp['id'], $set, $unset);
+        $resp = $this->client->getActivitiesById([$resp['id']]);
+        $this->assertCount(1, $resp['results']);
+        $activity = $resp['results'][0];
+        $expected = $activity;
+        $expected['popularity'] = 23;
+        $expected['foo']['bar'] = 999;
+        $this->assertSame($resp['results'][0], $expected);
+    }
 }

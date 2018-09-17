@@ -237,6 +237,36 @@ class Client
         return $this->getAppActivities(['foreign_ids' => $foreignIds, 'timestamps' => $timestamps]);
     }
 
+    private function activityPartialUpdate($data = []) {
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $op = new ActivitiesOperation($this, $this->api_key, $token);
+        return $op->activityPartialUpdate($data);
+    }
+
+    /**
+     * Performs an activity partial update by the given activity ID.
+     * @param string $id
+     * @param mixed $set
+     * @param array $unset
+     * @return mixed
+     */
+    public function activityPartialUpdateById($id, $set = [], $unset = [])
+    {
+        return $this->activityPartialUpdate(['id' => $id, 'set' => $set, 'unset' => $unset]);
+    }
+
+    /**
+     * Performs an activity partial update by the given foreign ID and time.
+     * @param string $foreign_id
+     * @param time time
+     * @param mixed $set
+     * @param array $unset
+     * @return mixed
+     */
+    public function activityPartialUpdateByForeignId($foreign_id, $time, $set = [], $unset = [])
+    {
+        return $this->activityPartialUpdate(['foreign_id' => $foreign_id, 'time' => $time, 'set' => $set, 'unset' => $unset]);
+    }
 
     /**
      * Creates a redirect url for tracking the given events in the context of

@@ -53,4 +53,9 @@ class ActivitiesOperation extends Feed
 
         return $this->makeHttpRequest('activities/', 'GET', [], $params);
     }
+
+    public function activityPartialUpdate($data = [])
+    {
+        return $this->makeHttpRequest('activity/', 'POST', $data);
+    }
 }
