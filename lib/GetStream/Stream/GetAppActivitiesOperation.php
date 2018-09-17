@@ -2,7 +2,7 @@
 
 namespace GetStream\Stream;
 
-class GetActivitiesOperation extends Feed
+class GetAppActivitiesOperation extends Feed
 {
     /**
      * @var string
@@ -35,17 +35,13 @@ class GetActivitiesOperation extends Feed
         return $headers;
     }
 
-    public function getActivities($data = [])
+    public function getAppActivities($data = [])
     {
-        if (empty($activities)) {
-            return;
-        }
-        
         $params = [];
-        foreach ($hash as $key => $value) {
-            array_push($params, implode(',', $value));
+        foreach ($data as $key => $value) {
+            $params[$key] = implode(',', $value);
         }
 
-        return $this->makeHttpRequest('activities/', 'GET', [], params);
+        return $this->makeHttpRequest('activities/', 'GET', [], $params);
     }
 }

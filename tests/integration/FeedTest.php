@@ -631,4 +631,18 @@ class FeedTest extends TestCase
     {
         $this->client->updateActivities([]);
     }
+
+    public function testGetAppActivities()
+    {
+        $fid = Uuid::uuid4();
+        $time = '2006-01-02T15:04:05.999999999';
+        $resp = $this->client->feed('flat', Uuid::uuid4())->addActivity(
+            ['actor'=>'bob', 'verb'=>'does', 'object'=>'something', 'foreign_id'=>$fid, 'time'=>$time]
+        );
+        $id = $resp['id'];
+        
+        $resp = $this->client->getActivitiesById([$id]);
+        $this->assertCount(1, $resp['results']);
+        $this->assertSame($resp['results'][0]['id'], $id);
+    }
 }

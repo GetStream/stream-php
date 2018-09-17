@@ -202,10 +202,10 @@ class Client
         return $this->updateActivities([$activity]);
     }
 
-    private function getActivities($data) {
+    private function getAppActivities($data) {
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
-        $getActivitiesOp = new GetActivitiesOperation($this, $this->api_key, $token);
-        return $getActivitiesOp->getActivities($data);
+        $getAppActivitiesOp = new GetAppActivitiesOperation($this, $this->api_key, $token);
+        return $getAppActivitiesOp->getAppActivities($data);
     }
 
     /**
@@ -219,13 +219,21 @@ class Client
     }
 
     /**
-     * Retrieves activities for the current app having the given foreign IDs and time combinations. The two arrays must have the same length.
-     * @param array $foreignIds
-     * @param array $timestamps
+     * Retrieves activities for the current app having the given list of [foreign ID, time] elements.
+     * @param array $foreignIdTimes
      * @return mixed
      */
-    public function getActivitiesByForeignId($foreignIds = [], $timestamps = [])
+    public function getActivitiesByForeignId($foreignIdTimes = [])
     {
+        $foreignIds = [];
+        $timestamps = [];
+        foreach ($foreignIdTimes as $fidTime) {
+            if (count($fidTime) != 2) {
+                throw new Exception('malformed foreign ID and time combination');
+            }
+            array_push($foreignIds, $fidTime[0]);
+            array_push($timestamps, $fidTime[1]);
+        }
         return $this->getAppActivities(['foreign_ids' => $foreignIds, 'timestamps' => $timestamps]);
     }
 
