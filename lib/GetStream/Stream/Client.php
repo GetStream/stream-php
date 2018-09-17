@@ -202,6 +202,33 @@ class Client
         return $this->updateActivities([$activity]);
     }
 
+    private function getActivities($data) {
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $getActivitiesOp = new GetActivitiesOperation($this, $this->api_key, $token);
+        return $getActivitiesOp->getActivities($data);
+    }
+
+    /**
+     * Retrieves activities for the current app having the given IDs.
+     * @param array $ids
+     * @return mixed
+     */
+    public function getActivitiesById($ids = [])
+    {
+        return $this->getAppActivities(['ids' => $ids]);
+    }
+
+    /**
+     * Retrieves activities for the current app having the given foreign IDs and time combinations. The two arrays must have the same length.
+     * @param array $foreignIds
+     * @param array $timestamps
+     * @return mixed
+     */
+    public function getActivitiesByForeignId($foreignIds = [], $timestamps = [])
+    {
+        return $this->getAppActivities(['foreign_ids' => $foreignIds, 'timestamps' => $timestamps]);
+    }
+
 
     /**
      * Creates a redirect url for tracking the given events in the context of
