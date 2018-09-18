@@ -73,6 +73,10 @@ $response = $userFeed->addActivity($data);
 // Get the latest activities for this user's personal feed, based on who they are following.
 $response = $userFeed->getActivities();
 
+// Get activities directly by their ID or combination of foreign ID and time.
+$response = $client->getActivitiesById(['74b9e88a-a684-4197-b30c-f5e568ef9ae2', '965f7ba5-8f1d-4fd1-a9ee-22d1a2832645']);
+$response = $client->getActivitiesByForeignId(['fid:123', '2006-01-02T15:04:05.000000000'], ['fid:456', '2006-01-02T16:05:06.000000000']);
+
 // The response will be the json decoded API response.
 // {"duration": 45ms, "next": "/api/v1.0/feed/...", "results": [...]}
 

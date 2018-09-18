@@ -644,6 +644,12 @@ class FeedTest extends TestCase
         $resp = $this->client->getActivitiesById([$id]);
         $this->assertCount(1, $resp['results']);
         $this->assertSame($resp['results'][0]['id'], $id);
+
+        $resp = $this->client->getActivitiesByForeignId([
+            [$fid, $resp['results'][0]['time']],
+        ]);
+        $this->assertCount(1, $resp['results']);
+        $this->assertSame($resp['results'][0]['id'], $id);
     }
 
     public function testActivityPartialUpdate()

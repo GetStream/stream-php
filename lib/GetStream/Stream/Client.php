@@ -228,8 +228,8 @@ class Client
         $foreignIds = [];
         $timestamps = [];
         foreach ($foreignIdTimes as $fidTime) {
-            if (count($fidTime) != 2) {
-                throw new Exception('malformed foreign ID and time combination');
+            if (!is_array($fidTime) || count($fidTime) != 2) {
+                throw new StreamClientException('malformed foreign ID and time combination');
             }
             array_push($foreignIds, $fidTime[0]);
             array_push($timestamps, $fidTime[1]);
