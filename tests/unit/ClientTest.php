@@ -72,8 +72,16 @@ class ClientTest extends TestCase
     /**
      * @expectedException \GetStream\Stream\StreamClientException
      */
-    public function testGetActivitiesByForeignIdException() {
+    public function testGetActivitiesByForeignIdExceptionNoArray() {
         $client = new Client('key', 'secret');
         $client->getActivitiesByForeignId([1, 2]);
+    }
+
+    /**
+     * @expectedException \GetStream\Stream\StreamClientException
+     */
+    public function testGetActivitiesByForeignIdExceptionMalformedArray() {
+        $client = new Client('key', 'secret');
+        $client->getActivitiesByForeignId([[1, 2], [2, 3, 4]]);
     }
 }
