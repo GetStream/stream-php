@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.9.0
+=====
+:release-date: 2018-10-08
+:by: Peter van Kampen
+
+* Added `Client::createUserSessionToken` method
+
 2.8.0
 =====
 :release-date: 2018-09-06
