@@ -4,7 +4,6 @@ namespace GetStream\Integration;
 
 use DateTime;
 use DateTimeZone;
-use Firebase\JWT\JWT;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
 use PHPUnit\Framework\TestCase;
@@ -187,18 +186,6 @@ class FeedTest extends TestCase
     {
         $token = $this->user1->getReadonlyToken();
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhY3Rpb24iOiJyZWFkI', $token);
-    }
-
-    public function testUserSessionToken()
-    {
-        $token = $this->client->createUserSessionToken('user');
-        $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
-        $this->assertSame($payload->user_id, 'user');
-        $token = $this->client->createUserSessionToken('user', array('client'=>'PHP'));
-        $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
-        $this->assertSame($payload->client, 'PHP');
     }
 
     public function testAddActivity()

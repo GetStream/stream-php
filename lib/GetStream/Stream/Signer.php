@@ -79,21 +79,4 @@ class Signer
 
         return JWT::encode($payload, $this->api_secret, 'HS256');
     }
-
-    /**
-     * @param  string $user_id
-     * @param  string $extra_data
-     * @return string
-     */
-    public function jwtUserSessionToken(string $user_id, array $extra_data)
-    {
-        $payload = [
-            'user_id'   => $user_id,
-        ];
-        foreach($extra_data as $name => $value){
-            $payload[$name] = $value;
-        }
-        return JWT::encode($payload, $this->api_secret, 'HS256');
-    }
-
 }
