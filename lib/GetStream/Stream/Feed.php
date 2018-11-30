@@ -97,7 +97,11 @@ class Feed extends BaseFeed
         try {
             $response = $client->request($method, $uri, $options);
         } catch (ClientException $e) {
-            throw new StreamFeedException($e->getResponse()->getBody());
+            $response = $e->getResponse();
+            $msg = $response->getBody();
+            $code = $response->getStatusCode();
+            $previous = $e;
+            throw new StreamFeedException($msg, $code, $previous);
         }
 
         $body = $response->getBody()->getContents();
