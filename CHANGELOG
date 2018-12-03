@@ -2,6 +2,13 @@
  Change history
 ================
 
+2.9.1
+=====
+:release-date: 2018-12-03
+:by: Peter van Kampen
+
+* Added RateLimit methods to StreamFeedException
+
 2.9.0
 =====
 :release-date: 2018-10-08
