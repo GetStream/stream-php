@@ -174,6 +174,23 @@ $token = $userFeed->getToken();
 $readonlyToken = $userFeed->getReadonlyToken();
 ```
 
+RateLimits:
+
+If your app hits a ratelimit, a StreamFeedException is thrown. You can
+get additional info by catching the exception and calling the
+following methods:
+
+```php
+
+try {
+    $client->updateActivity($activity);
+}catch(StreamFeedException $e){
+    $limit = $e->getRateLimitLimit();
+    $remaining = $e->getRateLimitRemaining();
+    $reset = $e->getRateLimitReset(); // a unix timestamp
+}
+```
+
 Again, our full documentation with all options and methods, is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
 
 ### Framework integration

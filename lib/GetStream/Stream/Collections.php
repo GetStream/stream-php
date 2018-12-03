@@ -69,7 +69,11 @@ class Collections
         try {
             $response = $this->client->request('GET', 'meta/?'.http_build_query($queryParams));
         } catch (ClientException $e) {
-            throw new StreamFeedException($e->getResponse()->getBody());
+            $response = $e->getResponse();
+            $msg = $response->getBody();
+            $code = $response->getStatusCode();
+            $previous = $e;
+            throw new StreamFeedException($msg, $code, $previous);
         }
 
         $body = $response->getBody()->getContents();
@@ -90,7 +94,11 @@ class Collections
         try {
             $response = $this->client->request('POST', 'meta/', $options);
         } catch (ClientException $e) {
-            throw new StreamFeedException($e->getResponse()->getBody());
+            $response = $e->getResponse();
+            $msg = $response->getBody();
+            $code = $response->getStatusCode();
+            $previous = $e;
+            throw new StreamFeedException($msg, $code, $previous);
         }
 
         $body = $response->getBody()->getContents();
@@ -112,7 +120,11 @@ class Collections
         try {
             $response = $this->client->request('DELETE', 'meta/?'.http_build_query($queryParams));
         } catch (ClientException $e) {
-            throw new StreamFeedException($e->getResponse()->getBody());
+            $response = $e->getResponse();
+            $msg = $response->getBody();
+            $code = $response->getStatusCode();
+            $previous = $e;
+            throw new StreamFeedException($msg, $code, $previous);
         }
 
         $body = $response->getBody()->getContents();

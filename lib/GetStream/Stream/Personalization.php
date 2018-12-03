@@ -94,7 +94,11 @@ class Personalization
         try {
             $response = $this->client->request($method, $uri);
         } catch (ClientException $e) {
-            throw new StreamFeedException($e->getResponse()->getBody());
+            $response = $e->getResponse();
+            $msg = $response->getBody();
+            $code = $response->getStatusCode();
+            $previous = $e;
+            throw new StreamFeedException($msg, $code, $previous);
         }
 
         $body = $response->getBody()->getContents();
