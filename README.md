@@ -195,12 +195,12 @@ Reactions:
 
 The reactions module has the following methods.
 
-    * add(string $kind, string $activityId, string $userId, array $data=null, array $targetFeeds=null)
-    * addChild(string $kind, string $parentId, string $userId, array $data=null, array $targetFeeds=null)
-    * delete(string $reactionId)
-    * filter(string $lookupField, string $lookupValue, string $kind=null, array $params=null)
-    * get(string $reactionId)
-    * update(string $reactionId, array $data=null, array $targetFeeds=null)
+    - add(string $kind, string $activityId, string $userId, array $data=null, array $targetFeeds=null)
+    - addChild(string $kind, string $parentId, string $userId, array $data=null, array $targetFeeds=null)
+    - delete(string $reactionId)
+    - filter(string $lookupField, string $lookupValue, string $kind=null, array $params=null)
+    - get(string $reactionId)
+    - update(string $reactionId, array $data=null, array $targetFeeds=null)
 
 Also see documention on the [reactions endpoint](https://getstream.io/docs_rest/#reactions)
 
