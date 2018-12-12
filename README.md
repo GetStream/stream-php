@@ -214,6 +214,28 @@ $client->reactions()->delete($reaction['id']);
 
 ```
 
+Users:
+
+The users module has the following methods.
+
+    - add(string $userId, array $data=null, bool $getOrCreate=false)
+    - createReference(string $userId)
+    - delete(string $userId)
+    - get(string $userId)
+    - update(string $userId, array $data=null)
+
+Also see documention on the [users endpoint](https://getstream.io/docs/php/#users_introduction)
+
+
+```php
+
+$user = $client->users()->add('42');
+
+$user =  $client->users()->update('42', array('name' => 'Arthur Dent');
+
+$client->users()->delete('42');
+
+```
 
 Again, our full documentation with all options and methods, is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
 

@@ -47,6 +47,20 @@ class ClientTest extends TestCase
         $feed1 = $client->feed('flat', '1');
     }
 
+    public function testCreateReference()
+    {
+        $client = new Client('key', 'secret', $location='qa');
+        $ref = $client->collections()->createReference("item", "42");
+        $this->assertEquals($ref, "SO:item:42");
+    }
+
+    public function testCreateUserReference()
+    {
+        $client = new Client('key', 'secret', $location='qa');
+        $ref = $client->users()->createReference("42");
+        $this->assertEquals($ref, "SU:42");
+    }
+
     public function testEnvironmentVariable()
     {
         // Arrange
