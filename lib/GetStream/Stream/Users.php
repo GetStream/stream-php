@@ -69,7 +69,7 @@ class Users
      *
      * @return array
      */
-    public function add(string $userId, array $data=null, bool $getOrCreate=null)
+    public function add($userId, array $data=null, $getOrCreate=null)
     {
         $endpoint = 'user/';
         $payload = [
@@ -91,7 +91,7 @@ class Users
      *
      * @return string
      */
-    public function createReference(string $userId)
+    public function createReference($userId)
     {
         $myUserId = $userId;
         if(is_array($userId) && in_array('id', $userId)){
@@ -105,7 +105,7 @@ class Users
      *
      * @return array
      */
-    public function delete(string $userId)
+    public function delete($userId)
     {
         $response = $this->doRequest('DELETE', 'user/' . $userId . '/');
         $body = $response->getBody()->getContents();
@@ -117,7 +117,7 @@ class Users
      *
      * @return array
      */
-    public function get(string $userId)
+    public function get($userId)
     {
         $response = $this->doRequest('GET', 'user/' . $userId . '/');
         $body = $response->getBody()->getContents();
@@ -130,7 +130,7 @@ class Users
 
      * @return array
      */
-    public function update(string $userId, array $data=null)
+    public function update($userId, array $data=null)
     {
         $payload = [];
         if( $data !== null ){

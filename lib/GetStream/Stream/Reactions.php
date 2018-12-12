@@ -71,7 +71,7 @@ class Reactions
      *
      * @return array
      */
-    public function add(string $kind, string $activityId, string $userId, array $data=null, array $targetFeeds=null)
+    public function add($kind, $activityId, $userId, array $data=null, array $targetFeeds=null)
     {
         $payload = [
             'kind' => $kind,
@@ -98,7 +98,7 @@ class Reactions
      *
      * @return array
      */
-    public function addChild(string $kind, string $parentId, string $userId, array $data=null, array $targetFeeds=null)
+    public function addChild($kind, $parentId, $userId, array $data=null, array $targetFeeds=null)
     {
         $payload = [
             'kind' => $kind,
@@ -121,7 +121,7 @@ class Reactions
      *
      * @return array
      */
-    public function delete(string $reactionId)
+    public function delete($reactionId)
     {
         $response = $this->doRequest('DELETE', 'reaction/' . $reactionId . '/');
         $body = $response->getBody()->getContents();
@@ -136,7 +136,7 @@ class Reactions
      *
      * @return array
      */
-    public function filter(string $lookupField, string $lookupValue, string $kind=null, array $params=null)
+    public function filter($lookupField, $lookupValue, $kind=null, array $params=null)
     {
         if(!in_array($lookupField, array("reaction_id", "activity_id", "user_id"))){
             throw StreamFeedException("Invalid request parameters");
@@ -156,7 +156,7 @@ class Reactions
      *
      * @return array
      */
-    public function get(string $reactionId)
+    public function get($reactionId)
     {
         $response = $this->doRequest('GET', 'reaction/' . $reactionId . '/');
         $body = $response->getBody()->getContents();
@@ -170,7 +170,7 @@ class Reactions
      *
      * @return array
      */
-    public function update(string $reactionId, array $data=null, array $targetFeeds=null)
+    public function update($reactionId, array $data=null, array $targetFeeds=null)
     {
         $payload = [];
         if( $data !== null ){

@@ -82,10 +82,10 @@ class Signer
 
     /**
      * @param  string $user_id
-     * @param  string $extra_data
+     * @param  array $extra_data
      * @return string
      */
-    public function jwtUserSessionToken(string $user_id, array $extra_data)
+    public function jwtUserSessionToken($user_id, $extra_data)
     {
         $payload = [
             'user_id'   => $user_id,
