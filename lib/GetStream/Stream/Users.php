@@ -69,7 +69,7 @@ class Users
      *
      * @return array
      */
-    public function add(string $userId, array $data=null, bool $getOrCreate=false)
+    public function add(string $userId, array $data=null, bool $getOrCreate=null)
     {
         $endpoint = 'user/';
         $payload = [
