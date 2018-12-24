@@ -98,7 +98,7 @@ class ReactionTest extends TestCase
         $reactionId = $reaction['id'];
         $refId = $this->reactions->createReference($reaction['id']);
         $this->assertSame($refId, 'SR:' . $reactionId);
-        $refObj =  $this->reactions->createReference($reaction['id']);
+        $refObj =  $this->reactions->createReference($reaction);
         $this->assertSame($refObj, 'SR:' . $reactionId);
     }
 

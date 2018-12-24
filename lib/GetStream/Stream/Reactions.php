@@ -124,7 +124,7 @@ class Reactions
     public function createReference($reactionId)
     {
         $myReactionId = $reactionId;
-        if(is_array($reactionId) && in_array('id', $reactionId)){
+        if(is_array($reactionId) && array_key_exists('id', $reactionId)){
             $myReactionId = $reactionId['id'];
         }
         return 'SR:' . $myReactionId;
