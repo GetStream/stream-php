@@ -214,7 +214,7 @@ class BaseFeed
         }
         $query_params = array_merge($query_params, $options);
 
-        $prefix_enrich = $enrich ? 'enrich' : '';
+        $prefix_enrich = $enrich ? 'enrich/' : '';
 
         return $this->makeHttpRequest("{$prefix_enrich}{$this->base_feed_url}/", 'GET', null, $query_params, 'feed', 'read');
     }

@@ -94,7 +94,7 @@ class Users
     public function createReference($userId)
     {
         $myUserId = $userId;
-        if(is_array($userId) && in_array('id', $userId)){
+        if(is_array($userId) && array_key_exists('id', $userId)){
             $myUserId = $userId['id'];
         }
         return 'SU:' . $myUserId;

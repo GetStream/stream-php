@@ -42,6 +42,32 @@ class Collections
         ]);
     }
 
+    private function doRequest($method, $endpoint, $params=null)
+    {
+        if($params === null){
+            $params = array();
+        }
+        if( $method === 'POST' || $method === 'PUT' ){
+            $params = ['json' => $params];
+        }
+        try {
+            $response = $this->client->request($method, $endpoint, $params);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            $msg = $response->getBody();
+            $code = $response->getStatusCode();
+            $previous = $e;
+            throw new StreamFeedException($msg, $code, $previous);
+        }
+        return $response;
+    }
+
+    /**
+     * @param string $collectionName
+     * @param string $id
+     *
+     * @return string
+     */
     public function createReference($collectionName, $id)
     {
         return "SO:".$collectionName.":".$id;
@@ -58,21 +84,9 @@ class Collections
         $mappedIds = array_map(function ($id) use ($collectionName) {
             return sprintf('%s:%s', $collectionName, $id);
         }, $ids);
-
-        $queryParams = ['foreign_ids' => join(',', $mappedIds)];
-
-        try {
-            $response = $this->client->request('GET', 'meta/?'.http_build_query($queryParams));
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $msg = $response->getBody();
-            $code = $response->getStatusCode();
-            $previous = $e;
-            throw new StreamFeedException($msg, $code, $previous);
-        }
-
+        $params = ['foreign_ids' => join(',', $mappedIds)];
+        $response = $this->doRequest('GET', 'meta/', $params);
         $body = $response->getBody()->getContents();
-
         return json_decode($body, true);
     }
 
@@ -84,20 +98,8 @@ class Collections
      */
     public function upsert($collectionName, array $data)
     {
-        $options = ['json' => ['data' => [$collectionName => $data]]];
-
-        try {
-            $response = $this->client->request('POST', 'meta/', $options);
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $msg = $response->getBody();
-            $code = $response->getStatusCode();
-            $previous = $e;
-            throw new StreamFeedException($msg, $code, $previous);
-        }
-
+        $response = $this->doRequest('POST', 'meta/', ['data' => [$collectionName => array($data)]]);
         $body = $response->getBody()->getContents();
-
         return json_decode($body, true);
     }
 
@@ -153,7 +155,6 @@ class Collections
                 $queryParams = \GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery());
                 $query = http_build_query($queryParams + ['api_key' => $this->apiKey]);
                 $request = $request->withUri($request->getUri()->withQuery($query));
-
                 return $handler($request, $options);
             };
         });
