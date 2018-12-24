@@ -91,6 +91,17 @@ class ReactionTest extends TestCase
         $this->assertSame($reaction['data'], $data);
     }
 
+    public function testCreateReference()
+    {
+        $data = array('client' => 'php');
+        $reaction = $this->reactions->add('like', $this->activity_id, 'bob', $data);
+        $reactionId = $reaction['id'];
+        $refId = $this->reactions->createReference($reaction['id']);
+        $this->assertSame($refId, 'SR:' . $reactionId);
+        $refObj =  $this->reactions->createReference($reaction['id']);
+        $this->assertSame($refObj, 'SR:' . $reactionId);
+    }
+
     public function testAddChildReaction()
     {
         $initial_reaction = $this->reactions->add('like', $this->activity_id, 'bob');
@@ -109,6 +120,14 @@ class ReactionTest extends TestCase
         $this->assertSame($reaction['user_id'], 'bob');
         $this->assertSame($reaction['kind'], 'like');
         $this->assertSame($reaction['activity_id'], $this->activity_id);
+        $response = $this->aggregated2->getActivities($offset=0, $limit=3);
+        // check a targeted feed
+        $latest_activity = $response["results"][0]['activities'][0];
+        $this->assertSame(
+            $latest_activity["reaction"],
+            $this->reactions->createReference($reaction)
+        );
+        $this->assertSame($latest_activity["verb"], "like");
     }
 
     public function testGetReaction(){

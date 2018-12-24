@@ -119,6 +119,20 @@ class Reactions
     /**
      * @param string $reactionId
      *
+     * @return string
+     */
+    public function createReference($reactionId)
+    {
+        $myReactionId = $reactionId;
+        if(is_array($reactionId) && in_array('id', $reactionId)){
+            $myReactionId = $reactionId['id'];
+        }
+        return 'SR:' . $myReactionId;
+    }
+
+    /**
+     * @param string $reactionId
+     *
      * @return array
      */
     public function delete($reactionId)
