@@ -191,6 +191,52 @@ try {
 }
 ```
 
+Reactions:
+
+The reactions module has the following methods.
+
+    - add(string $kind, string $activityId, string $userId, array $data=null, array $targetFeeds=null)
+    - addChild(string $kind, string $parentId, string $userId, array $data=null, array $targetFeeds=null)
+    - delete(string $reactionId)
+    - filter(string $lookupField, string $lookupValue, string $kind=null, array $params=null)
+    - get(string $reactionId)
+    - update(string $reactionId, array $data=null, array $targetFeeds=null)
+
+Also see documention on the [reactions endpoint](https://getstream.io/docs_rest/#reactions)
+
+```php
+
+$reaction = $client->reactions()->add('like', $activity_id, 'bob');
+
+$bob_likes = $client->reactions()->filter('user_id', 'bob', 'like');
+
+$client->reactions()->delete($reaction['id']);
+
+```
+
+Users:
+
+The users module has the following methods.
+
+    - add(string $userId, array $data=null, bool $getOrCreate=false)
+    - createReference(string $userId)
+    - delete(string $userId)
+    - get(string $userId)
+    - update(string $userId, array $data=null)
+
+Also see documention on the [users endpoint](https://getstream.io/docs/php/#users_introduction)
+
+
+```php
+
+$user = $client->users()->add('42');
+
+$user =  $client->users()->update('42', array('name' => 'Arthur Dent');
+
+$client->users()->delete('42');
+
+```
+
 Again, our full documentation with all options and methods, is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
 
 ### Framework integration

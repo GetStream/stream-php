@@ -203,7 +203,7 @@ class BaseFeed
      *
      * @throws StreamFeedException
      */
-    public function getActivities($offset = 0, $limit = 20, $options = [])
+    public function getActivities($offset = 0, $limit = 20, $options = [], $enrich=false)
     {
         $query_params = ['offset' => $offset, 'limit' => $limit];
         if (array_key_exists('mark_read', $options) && is_array($options['mark_read'])) {
@@ -214,7 +214,9 @@ class BaseFeed
         }
         $query_params = array_merge($query_params, $options);
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'GET', null, $query_params, 'feed', 'read');
+        $prefix_enrich = $enrich ? 'enrich/' : '';
+
+        return $this->makeHttpRequest("{$prefix_enrich}{$this->base_feed_url}/", 'GET', null, $query_params, 'feed', 'read');
     }
 
     /**

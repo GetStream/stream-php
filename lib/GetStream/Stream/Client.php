@@ -167,6 +167,22 @@ class Client
     }
 
     /**
+     * @return Reactions
+     */
+    public function reactions()
+    {
+        return new Reactions($this, $this->api_key, $this->api_secret);
+    }
+
+    /**
+     * @return Users
+     */
+    public function users()
+    {
+        return new Users($this, $this->api_key, $this->api_secret);
+    }
+
+    /**
      * @return string
      */
     public function getBaseUrl()

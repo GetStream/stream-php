@@ -644,4 +644,31 @@ class FeedTest extends TestCase
     {
         $this->client->updateActivities([]);
     }
+
+    public function testEnrichment(){
+        $user = $this->client->users()->add("5", ["name" => "George Martin"], $getOrCreate=true);
+        unset($user['duration']);
+        $activity = [
+            'actor' => $this->client->users()->createReference($user),
+            'verb' => 'produce',
+            'object' => 'beatles'
+        ];
+        $feed = $this->client->feed('user', Uuid::uuid4());
+        $feed->addActivity($activity);
+        $response = $feed->getActivities(0, 3, [], $enrich=true);
+        $this->assertSame($response["results"][0]["actor"], $user);
+        $bear = ["id" => "1", "type" => "bear", "color" => "blue"];
+        $respone = $this->client->collections()->upsert("animals", $bear);
+        unset($bear['duration']);
+        $activity = [
+            'actor' => 'john',
+            'verb' => 'chase',
+            'object' => $this->client->collections()->createReference("animals", "1"),
+        ];
+        $feed->addActivity($activity);
+        $response = $feed->getActivities(0, 1, [], $enrich=true);
+        $this->assertSame($response["results"][0]["object"]['id'], $bear['id']);
+        unset($bear['id']);
+        $this->assertEquals($response["results"][0]["object"]['data'], $bear, $canonicalize=true);
+    }
 }

@@ -9,7 +9,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
 
-class Collections
+class Users
 {
     /**
      * @var Client
@@ -63,69 +63,81 @@ class Collections
     }
 
     /**
-     * @param string $collectionName
-     * @param string $id
+     * @param string $userId
+     * @param array $data
+     * @param bool $getOrCreate
+     *
+     * @return array
+     */
+    public function add($userId, array $data=null, $getOrCreate=null)
+    {
+        $endpoint = 'user/';
+        $payload = [
+            'id' => $userId,
+        ];
+        if( $data !== null ){
+            $payload['data'] = $data;
+        }
+        if($getOrCreate){
+            $endpoint .= '?get_or_create=true';
+        }
+        $response = $this->doRequest('POST', $endpoint, $payload);
+        $body = $response->getBody()->getContents();
+        return json_decode($body, true);
+    }
+
+    /**
+     * @param string $userId
      *
      * @return string
      */
-    public function createReference($collectionName, $id)
+    public function createReference($userId)
     {
-        return "SO:".$collectionName.":".$id;
-    }
-
-    /**
-     * @param string $collectionName
-     * @param array $ids
-     *
-     * @return array
-     */
-    public function select($collectionName, array $ids)
-    {
-        $mappedIds = array_map(function ($id) use ($collectionName) {
-            return sprintf('%s:%s', $collectionName, $id);
-        }, $ids);
-        $params = ['foreign_ids' => join(',', $mappedIds)];
-        $response = $this->doRequest('GET', 'meta/', $params);
-        $body = $response->getBody()->getContents();
-        return json_decode($body, true);
-    }
-
-    /**
-     * @param string $collectionName
-     * @param array $data
-     *
-     * @return array
-     */
-    public function upsert($collectionName, array $data)
-    {
-        $response = $this->doRequest('POST', 'meta/', ['data' => [$collectionName => array($data)]]);
-        $body = $response->getBody()->getContents();
-        return json_decode($body, true);
-    }
-
-    /**
-     * @param string $collectionName
-     * @param array $ids
-     *
-     * @return array
-     */
-    public function delete($collectionName, array $ids)
-    {
-        $ids = join(',', $ids);
-        $queryParams = ['collection_name' => $collectionName, 'ids' => $ids];
-
-        try {
-            $response = $this->client->request('DELETE', 'meta/?'.http_build_query($queryParams));
-        } catch (ClientException $e) {
-            $response = $e->getResponse();
-            $msg = $response->getBody();
-            $code = $response->getStatusCode();
-            $previous = $e;
-            throw new StreamFeedException($msg, $code, $previous);
+        $myUserId = $userId;
+        if(is_array($userId) && array_key_exists('id', $userId)){
+            $myUserId = $userId['id'];
         }
+        return 'SU:' . $myUserId;
+    }
 
+    /**
+     * @param string $userId
+     *
+     * @return array
+     */
+    public function delete($userId)
+    {
+        $response = $this->doRequest('DELETE', 'user/' . $userId . '/');
         $body = $response->getBody()->getContents();
+        return json_decode($body, true);
+    }
 
+    /**
+     * @param string $userId
+     *
+     * @return array
+     */
+    public function get($userId)
+    {
+        $response = $this->doRequest('GET', 'user/' . $userId . '/');
+        $body = $response->getBody()->getContents();
+        return json_decode($body, true);
+    }
+
+    /**
+     * @param string $userId
+     * @param array $data
+
+     * @return array
+     */
+    public function update($userId, array $data=null)
+    {
+        $payload = [];
+        if( $data !== null ){
+            $payload['data'] = $data;
+        }
+        $response = $this->doRequest('PUT', 'user/' . $userId . '/', $payload);
+        $body = $response->getBody()->getContents();
         return json_decode($body, true);
     }
 
@@ -138,7 +150,7 @@ class Collections
             'action' => '*',
             'user_id' => '*',
             'feed_id' => '*',
-            'resource' => 'collections',
+            'resource' => 'users',
         ], $this->apiSecret, 'HS256');
 
         $stack = HandlerStack::create();
