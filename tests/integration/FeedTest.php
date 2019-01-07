@@ -696,6 +696,14 @@ class FeedTest extends TestCase
         $this->assertCount(2, $activities);
         $ids = [$activities[0]['id'], $activities[1]['id']];
         $response = $this->client->getActivities($ids=$ids)['results'];
-        $this->assertEquals($activities, $response, $canonicalize=true);
+        $this->assertCount(2, $response);
+        $this->assertEquals(sort($activities), sort($response), $canonicalize=true);
+        $foreign_id_times = [
+            ['fid:ga2', $now],
+            ['fid:ga1', $now],
+        ];
+        $response = $this->client->getActivities(null, $foreign_id_times=$foreign_id_times)['results'];
+        $this->assertCount(2, $response);
+        $this->assertEquals(sort($activities), sort($response), $canonicalize=true);
     }
 }

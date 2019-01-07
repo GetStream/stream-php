@@ -1,6 +1,7 @@
 <?php
 namespace GetStream\Stream;
 
+use DateTime;
 use Exception;
 
 const VERSION = '2.6.0';
@@ -237,10 +238,15 @@ class Client
             $times = [];
             foreach($foreign_id_times as $fit){
                 $fids[] = $fit[0];
-                $times[] = $fit[1];
+                try {
+                    $times[] = $fit[1]->format(DateTime::ISO8601);
+                } catch(Exception $e) {
+                    // assume it's in the right format already
+                    $times[] = $fit[1];
+                }
             }
             $query_params = [
-                "foreign_ids" => join(',', $fid),
+                "foreign_ids" => join(',', $fids),
                 "timestamps" => join(',', $times)
             ];
 
@@ -255,7 +261,6 @@ class Client
         if (empty($activities)) {
             return;
         }
-
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
         $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
         return $activityUpdateOp->updateActivities($activities);
@@ -265,7 +270,6 @@ class Client
     {
         return $this->updateActivities([$activity]);
     }
-
 
     /**
      * Creates a redirect url for tracking the given events in the context of
