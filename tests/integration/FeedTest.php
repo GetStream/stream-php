@@ -200,6 +200,18 @@ class FeedTest extends TestCase
         $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
         $this->assertSame($payload->client, 'PHP');
     }
+    
+    public function testUserToken()
+    {
+        $token = $this->client->createUserToken('user');
+        $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
+        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
+        $this->assertSame($payload->user_id, 'user');
+        $token = $this->client->createUserToken('user', array('client'=>'PHP'));
+        $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
+        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
+        $this->assertSame($payload->client, 'PHP');
+    }
 
     public function testAddActivity()
     {

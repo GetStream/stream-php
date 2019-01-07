@@ -113,6 +113,19 @@ class Client
         if(is_null($extra_data)){
             $extra_data = array();
         }
+        return $this->createUserToken($user_id, $extra_data);
+    }
+
+    /**
+     * @param  string $user_id
+     * @param  array $extra_data
+     * @return string
+     */
+    public function createUserToken($user_id, array $extra_data=null)
+    {
+        if(is_null($extra_data)){
+            $extra_data = array();
+        }
         return $this->signer->jwtUserSessionToken($user_id, $extra_data);
     }
 
