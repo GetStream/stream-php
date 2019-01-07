@@ -683,4 +683,19 @@ class FeedTest extends TestCase
         unset($bear['id']);
         $this->assertEquals($response["results"][0]["object"]['data'], $bear, $canonicalize=true);
     }
+
+    public function testGetActivities(){
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $time = $now->format(DateTime::ISO8601);
+        $activities = [
+            ['actor' => 'multi1', 'verb' => 'tweet', 'object' => 1, 'time' => $time, 'foreign_id' => 'fid:ga1'],
+            ['actor' => 'multi2', 'verb' => 'tweet', 'object' => 2, 'time' => $time, 'foreign_id' => 'fid:ga2'],
+        ];
+        $response = $this->user1->addActivities($activities);
+        $activities = $this->user1->getActivities(0, 2)['results'];
+        $this->assertCount(2, $activities);
+        $ids = [$activities[0]['id'], $activities[1]['id']];
+        $response = $this->client->getActivities($ids=$ids)['results'];
+        $this->assertEquals($activities, $response, $canonicalize=true);
+    }
 }

@@ -228,6 +228,28 @@ class Client
         return "{$baseUrl}/{$this->api_version}/{$uri}";
     }
 
+    public function getActivities($ids=null, $foreign_id_times=null)
+    {
+        if($ids!==null){
+            $query_params = ["ids" => join(',', $ids)];
+        } else {
+            $fids = [];
+            $times = [];
+            foreach($foreign_id_times as $fit){
+                $fids[] = $fit[0];
+                $times[] = $fit[1];
+            }
+            $query_params = [
+                "foreign_ids" => join(',', $fid),
+                "timestamps" => join(',', $times)
+            ];
+
+        }
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $activities = new Activities($this, $this->api_key, $token);
+        return $activities->_getActivities($query_params);
+    }
+
     public function updateActivities($activities)
     {
         if (empty($activities)) {
