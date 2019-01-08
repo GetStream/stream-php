@@ -167,11 +167,8 @@ $batcher->followMany($follows);
 Generating tokens for client-side usage:
 
 ```php
-// Generating a client side token
-$token = $userFeed->getToken();
-
-// Generating a read-only client side token
-$readonlyToken = $userFeed->getReadonlyToken();
+// Generating a user token 
+$userToken = $client->createUserSessionToken("the-user-id");
 ```
 
 RateLimits:
