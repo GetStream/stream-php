@@ -37,7 +37,6 @@ class ActivityUpdateOperation extends Feed
 
     public function partiallyUpdateActivity($data){
         return $this->makeHttpRequest('activity/', 'POST', $data);
-
     }
 
     public function updateActivities($activities)

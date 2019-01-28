@@ -256,6 +256,16 @@ class Client
         return $activities->_getActivities($query_params);
     }
 
+    public function batchPartialActivityUpdate($data)
+    {
+        if(count($data) > 100){
+            throw new Exception("Max 100 activities allowed in batch update");
+        }
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        return $activityUpdateOp->partiallyUpdateActivity(["changes" => $data]);
+    }
+
     public function doPartialActivityUpdate($id=null, $foreign_id=null, $time=null, $set=null, $unset=null)
     {
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');

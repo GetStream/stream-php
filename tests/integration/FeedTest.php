@@ -91,6 +91,83 @@ class FeedTest extends TestCase
         $this->client->updateActivity($activity);
     }
 
+    public function testBatchPartialUpdateActivity()
+    {
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $activity_data = [
+            'actor' => 1,
+            'verb' => 'tweet',
+            'object' => 1,
+            'time' => $now->format(DateTime::ISO8601),
+            'foreign_id' => 'batch1',
+            'popularity' => 100,
+            'new' => true,
+        ];
+        $act1 = $this->user1->addActivity($activity_data);
+        $activity_data = [
+            'actor' => 2,
+            'verb' => 'tweet',
+            'object' => 2,
+            'time' => $now->format(DateTime::ISO8601),
+            'foreign_id' => 'batch2',
+            'popularity' => 100,
+            'new' => true,
+        ];
+        $act2 = $this->user1->addActivity($activity_data);
+        $payload = [
+            [
+                "id" => $act1["id"],
+                "set" => ["popularity" => 999],
+                "unset" => ['new'],
+            ],
+            [
+                "id" => $act2["id"],
+                "set" => ["popularity" => 5],
+                //"unset" => [],
+            ],
+        ];
+        $response = $this->client->batchPartialActivityUpdate($payload);
+        $updated = $this->user1->getActivities(0,2)["results"];
+        if($updated[0]["id"] == $act1["id"]){
+            $updated1 = $updated[0];
+            $updated2 = $updated[1];
+        } else {
+            $updated1 = $updated[1];
+            $updated2 = $updated[0];
+        }
+        $this->assertEquals($updated1['popularity'], 999);
+        $this->assertFalse(in_array("new", $updated1));
+        $this->assertEquals($updated2['popularity'], 5);
+        $this->assertTrue(in_array("new", $updated2));
+
+        $payload = [
+            [
+                "foreign_id" => $act1["foreign_id"],
+                "time" => $act1["time"],
+                "set" => ["popularity" => 1242],
+            ],
+            [
+                "foreign_id" => $act2["foreign_id"],
+                "time" => $act2["time"],
+                "set" => ["popularity" => -3],
+                "unset" => ["new"],
+            ],
+        ];
+        $response = $this->client->batchPartialActivityUpdate($payload);
+        $updated = $this->user1->getActivities(0,2)["results"];
+        if($updated[0]["id"] == $act1["id"]){
+            $updated1 = $updated[0];
+            $updated2 = $updated[1];
+        } else {
+            $updated1 = $updated[1];
+            $updated2 = $updated[0];
+        }
+        $this->assertEquals($updated1['popularity'], 1242);
+        $this->assertFalse(in_array("new", $updated1));
+        $this->assertEquals($updated2['popularity'], -3);
+        $this->assertFalse(in_array("new", $updated2));
+    }
+
     public function testPartialUpdateActivity()
     {
         $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
@@ -102,8 +179,8 @@ class FeedTest extends TestCase
             'foreign_id' => 'batch1',
             'product' => ["name"=> "shoes", "price"=> 9.99, "color"=> "blue"],
         ];
-        $response = $this->user1->addActivity($activity_data);
-        $activity = $response;
+        $activity = $this->user1->addActivity($activity_data);
+
         $set = [
             "product.name" => "boots",
             "product.price" => 7.99,
