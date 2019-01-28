@@ -256,6 +256,32 @@ class Client
         return $activities->_getActivities($query_params);
     }
 
+    public function doPartialActivityUpdate($id=null, $foreign_id=null, $time=null, $set=null, $unset=null)
+    {
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        if($id === null && ($foreign_id === null || $time === null)){
+            throw new Exception(
+                "The id or foreign_id+time parameters must be provided and not be None"
+            );
+        }
+        if($id !== null && ($foreign_id !== null || $time !== null)){
+            throw new Exception(
+                "Only one of the id or the foreign_id+time parameters can be provided"
+            );
+        }
+
+        $data = ["set" => $set, "unset" => $unset];
+
+        if($id !== null){
+            $data["id"] = $id;
+        } else {
+            $data["foreign_id"] = $foreign_id;
+            $data["time"] = $time;
+        }
+        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        return $activityUpdateOp->partiallyUpdateActivity($data);
+    }
+
     public function updateActivities($activities)
     {
         if (empty($activities)) {

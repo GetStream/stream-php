@@ -91,6 +91,56 @@ class FeedTest extends TestCase
         $this->client->updateActivity($activity);
     }
 
+    public function testPartialUpdateActivity()
+    {
+        $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
+        $activity_data = [
+            'actor' => 1,
+            'verb' => 'tweet',
+            'object' => 1,
+            'time' => $now->format(DateTime::ISO8601),
+            'foreign_id' => 'batch1',
+            'product' => ["name"=> "shoes", "price"=> 9.99, "color"=> "blue"],
+        ];
+        $response = $this->user1->addActivity($activity_data);
+        $activity = $response;
+        $set = [
+            "product.name" => "boots",
+            "product.price" => 7.99,
+            "popularity" => 1000,
+            "foo" => ["bar" => ["baz" => "qux"]],
+        ];
+        $unset = ["product.color"];
+
+        $this->client->doPartialActivityUpdate($activity['id'], null, null, $set, $unset);
+
+        $updated = $this->user1->getActivities(0, 1)['results'][0];
+
+        $this->assertEquals($updated['id'], $activity['id']);
+        $this->assertEquals($updated['product']['name'], 'boots');
+        $this->assertEquals($updated['popularity'], 1000);
+        $this->assertFalse(in_array('color', $updated['product']));
+
+        $set = [
+            "foo.bar.baz" => 42,
+            "popularity" => 9000,
+        ];
+        $unset = ["product.price"];
+
+        $this->client->doPartialActivityUpdate(null, $activity['foreign_id'], $activity['time'], $set, $unset);
+
+
+        $updated_again = $this->user1->getActivities(0, 1)['results'][0];
+
+        $this->assertEquals($updated_again['id'], $activity['id']);
+        $this->assertEquals($updated_again['foo']['bar']['baz'], 42);
+        $this->assertEquals($updated_again['popularity'], 9000);
+        $this->assertEquals($updated_again['product']['name'], 'boots');
+        $this->assertFalse(in_array('color', $updated_again['product']));
+        $this->assertFalse(in_array('price', $updated_again['product']));
+
+    }
+
     public function testAddToMany()
     {
         $id = Uuid::uuid4();
@@ -172,7 +222,7 @@ class FeedTest extends TestCase
             ['source' => $f2->getId(), 'target' => $u2->getId(), 'keep_history' => true]
         ];
         $batcher->unfollowMany($unfollows);
-        
+
         $resp = $f1->following();
         $this->assertCount(0, $resp['results']);
         $resp = $f2->following();
@@ -180,7 +230,7 @@ class FeedTest extends TestCase
 
         $this->assertCount(0, $f1->getActivities()['results']);
         $this->assertCount(1, $f2->getActivities()['results']);
-        
+
     }
 
     public function testReadonlyToken()
@@ -200,7 +250,7 @@ class FeedTest extends TestCase
         $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
         $this->assertSame($payload->client, 'PHP');
     }
-    
+
     public function testUserToken()
     {
         $token = $this->client->createUserToken('user');
