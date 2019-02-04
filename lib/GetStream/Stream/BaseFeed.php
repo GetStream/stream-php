@@ -203,8 +203,11 @@ class BaseFeed
      *
      * @throws StreamFeedException
      */
-    public function getActivities($offset = 0, $limit = 20, $options = [], $enrich=false)
+    public function getActivities($offset = 0, $limit = 20, $options = [], $enrich=false, $reactions = null)
     {
+        if($options === null){
+            $options = [];
+        }
         $query_params = ['offset' => $offset, 'limit' => $limit];
         if (array_key_exists('mark_read', $options) && is_array($options['mark_read'])) {
             $options['mark_read'] = implode(',', $options['mark_read']);
@@ -213,6 +216,24 @@ class BaseFeed
             $options['mark_seen'] = implode(',', $options['mark_seen']);
         }
         $query_params = array_merge($query_params, $options);
+
+        if($reactions !== null){
+            if(!is_array($reactions)){
+                throw new StreamFeedException("reactions argument should be an associative array");
+            }
+            if(isset($reactions["own"]) && $reactions["own"]){
+                $query_params["withOwnReactions"] = true;
+                $enrich = true;
+            }
+            if(isset($reactions["recent"]) && $reactions["recent"]){
+                $query_params["withRecentReactions"] = true;
+                $enrich = true;
+            }
+            if(isset($reactions["counts"]) && $reactions["counts"]){
+                $query_params["withReactionCounts"] = true;
+                $enrich = true;
+            }
+        }
 
         $prefix_enrich = $enrich ? 'enrich/' : '';
 
@@ -362,13 +383,13 @@ class BaseFeed
         if ($new_targets) {
             $data['new_targets'] = $new_targets;
         }
-        
+
         if ($added_targets) {
-            $data['added_targets'] = $added_targets;           
+            $data['added_targets'] = $added_targets;
         }
-        
+
         if ($removed_targets) {
-            $data['removed_targets'] = $removed_targets;           
+            $data['removed_targets'] = $removed_targets;
         }
         return $this->makeHttpRequest("feed_targets/{$this->slug}/{$this->user_id}/activity_to_targets/", 'POST', $data, null, 'feed_targets', 'write');
     }
