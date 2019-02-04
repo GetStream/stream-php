@@ -2,7 +2,7 @@
 
 namespace GetStream\Stream;
 
-class ActivityUpdateOperation extends Feed
+class Activities extends Feed
 {
     /**
      * @var string
@@ -35,16 +35,12 @@ class ActivityUpdateOperation extends Feed
         return $headers;
     }
 
-    public function partiallyUpdateActivity($data){
-        return $this->makeHttpRequest('activity/', 'POST', $data);
-    }
-
-    public function updateActivities($activities)
+    public function _getActivities($query_params)
     {
-        if (empty($activities)) {
+        if (empty($query_params)) {
             return;
         }
 
-        return $this->makeHttpRequest('activities/', 'POST', compact('activities'));
+        return $this->makeHttpRequest('activities/', 'GET', null, $query_params);
     }
 }

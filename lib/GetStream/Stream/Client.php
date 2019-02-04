@@ -1,6 +1,7 @@
 <?php
 namespace GetStream\Stream;
 
+use DateTime;
 use Exception;
 
 const VERSION = '2.6.0';
@@ -113,6 +114,19 @@ class Client
         if(is_null($extra_data)){
             $extra_data = array();
         }
+        return $this->createUserToken($user_id, $extra_data);
+    }
+
+    /**
+     * @param  string $user_id
+     * @param  array $extra_data
+     * @return string
+     */
+    public function createUserToken($user_id, array $extra_data=null)
+    {
+        if(is_null($extra_data)){
+            $extra_data = array();
+        }
         return $this->signer->jwtUserSessionToken($user_id, $extra_data);
     }
 
@@ -215,12 +229,74 @@ class Client
         return "{$baseUrl}/{$this->api_version}/{$uri}";
     }
 
+    public function getActivities($ids=null, $foreign_id_times=null)
+    {
+        if($ids!==null){
+            $query_params = ["ids" => join(',', $ids)];
+        } else {
+            $fids = [];
+            $times = [];
+            foreach($foreign_id_times as $fit){
+                $fids[] = $fit[0];
+                try {
+                    $times[] = $fit[1]->format(DateTime::ISO8601);
+                } catch(Exception $e) {
+                    // assume it's in the right format already
+                    $times[] = $fit[1];
+                }
+            }
+            $query_params = [
+                "foreign_ids" => join(',', $fids),
+                "timestamps" => join(',', $times)
+            ];
+
+        }
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $activities = new Activities($this, $this->api_key, $token);
+        return $activities->_getActivities($query_params);
+    }
+
+    public function batchPartialActivityUpdate($data)
+    {
+        if(count($data) > 100){
+            throw new Exception("Max 100 activities allowed in batch update");
+        }
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        return $activityUpdateOp->partiallyUpdateActivity(["changes" => $data]);
+    }
+
+    public function doPartialActivityUpdate($id=null, $foreign_id=null, $time=null, $set=null, $unset=null)
+    {
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        if($id === null && ($foreign_id === null || $time === null)){
+            throw new Exception(
+                "The id or foreign_id+time parameters must be provided and not be None"
+            );
+        }
+        if($id !== null && ($foreign_id !== null || $time !== null)){
+            throw new Exception(
+                "Only one of the id or the foreign_id+time parameters can be provided"
+            );
+        }
+
+        $data = ["set" => $set, "unset" => $unset];
+
+        if($id !== null){
+            $data["id"] = $id;
+        } else {
+            $data["foreign_id"] = $foreign_id;
+            $data["time"] = $time;
+        }
+        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        return $activityUpdateOp->partiallyUpdateActivity($data);
+    }
+
     public function updateActivities($activities)
     {
         if (empty($activities)) {
             return;
         }
-
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
         $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
         return $activityUpdateOp->updateActivities($activities);
@@ -230,7 +306,6 @@ class Client
     {
         return $this->updateActivities([$activity]);
     }
-
 
     /**
      * Creates a redirect url for tracking the given events in the context of
