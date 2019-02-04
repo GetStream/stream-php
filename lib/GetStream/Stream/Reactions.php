@@ -50,6 +50,10 @@ class Reactions
         if( $method === 'POST' || $method === 'PUT' ){
             $params = ['json' => $params];
         }
+        if( $method === 'GET' && $params !== null ){
+
+            $endpoint .= '?' . http_build_query($params);
+        }
         try {
             $response = $this->client->request($method, $endpoint, $params);
         } catch (ClientException $e) {
