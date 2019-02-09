@@ -9,6 +9,7 @@ use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
+use GuzzleHttp\Exception\ClientException;
 
 class CollectionTest extends TestCase
 {
@@ -64,13 +65,15 @@ class CollectionTest extends TestCase
         $this->client->timeout = 10000;
         $this->user1 = $this->client->feed('user', Uuid::uuid4());
         $this->user2 = $this->client->feed('user', Uuid::uuid4());
-        // $this->aggregated2 = $this->client->feed('aggregated', Uuid::uuid4());
-        // $this->aggregated3 = $this->client->feed('aggregated', Uuid::uuid4());
-        // $this->flat3 = $this->client->feed('flat', Uuid::uuid4());
-        // $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
-        // $response = $this->user1->addActivity($activity_data);
-        // $this->activity_id = $response['id'];
         $this->collections = $this->client->collections();
+    }
+
+    public function cleanUp(){
+        try {
+            $this->collections->delete("food","cheese-burger");
+        } catch(ClientException $e) {
+            // pass
+        }
     }
 
     public function testUpsert()
@@ -80,95 +83,98 @@ class CollectionTest extends TestCase
 
     }
 
-    public function testAddDataCollection()
+    public function testAddCollection()
     {
-        $data = array('client' => 'php');
-        $collection = $this->collections->add('like', $this->activity_id, 'bob', $data);
-        $this->assertSame($collection['user_id'], 'bob');
-        $this->assertSame($collection['kind'], 'like');
-        $this->assertSame($collection['activity_id'], $this->activity_id);
-        $this->assertSame($collection['data'], $data);
-    }
-
-    public function testCreateReference()
-    {
-        $data = array('client' => 'php');
-        $collection = $this->collections->add('like', $this->activity_id, 'bob', $data);
-        $collectionId = $collection['id'];
-        $refId = $this->collections->createReference($collection['id']);
-        $this->assertSame($refId, 'SR:' . $collectionId);
-        $refObj =  $this->collections->createReference($collection);
-        $this->assertSame($refObj, 'SR:' . $collectionId);
-    }
-
-    public function testAddChildCollection()
-    {
-        $initial_collection = $this->collections->add('like', $this->activity_id, 'bob');
-        $child_collection = $this->collections->addChild('like', $initial_collection['id'], 'alice');
-        $this->assertSame($child_collection['user_id'], 'alice');
-        $this->assertSame($initial_collection['user_id'], 'bob');
-        $this->assertSame($child_collection['kind'], 'like');
-        $this->assertSame($child_collection['activity_id'], $this->activity_id);
-        $this->assertSame($child_collection['parent'], $initial_collection['id']);
-    }
-
-    public function testAddTargetFeedsCollection()
-    {
-        $target_feeds = array($this->aggregated2->getId(), $this->aggregated3->getId());
-        $collection = $this->collections->add('like', $this->activity_id, 'bob', null, $target_feeds);
-        $this->assertSame($collection['user_id'], 'bob');
-        $this->assertSame($collection['kind'], 'like');
-        $this->assertSame($collection['activity_id'], $this->activity_id);
-        $response = $this->aggregated2->getActivities($offset=0, $limit=3);
-        // check a targeted feed
-        $latest_activity = $response["results"][0]['activities'][0];
-        $this->assertSame(
-            $latest_activity["collection"],
-            $this->collections->createReference($collection)
+        $response = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"]
         );
-        $this->assertSame($latest_activity["verb"], "like");
+        $this->assertNotSame($response["id"], "cheese-burger");
+        $this->assertSame($response["collection"], 'food');
+        $this->assertSame($response["foreign_id"], "food:" . $response['id']);
+        $this->assertSame($response['data']['name'], 'Cheese Burger');
     }
 
-    public function testGetCollection(){
-        $created_collection = $this->collections->add('like', $this->activity_id, 'bob');
-        $retrieved_collection = $this->collections->get($created_collection['id']);
-        $this->assertSame($created_collection['id'], $retrieved_collection['id']);
-        $this->assertSame($created_collection['user_id'], $retrieved_collection['user_id']);
-        $this->assertSame($created_collection['kind'], $retrieved_collection['kind']);
-        $this->assertSame($created_collection['created_at'], $retrieved_collection['created_at']);
+    public function testAddCollectionWithId()
+    {
+        $response = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger"
+        );
+        $this->assertSame($response["id"], "cheese-burger");
+        $this->assertSame($response["collection"], "food");
+        $this->assertSame($response["foreign_id"], "food:cheese-burger");
+        $this->assertSame($response['data']['name'], 'Cheese Burger');
     }
 
     /**
      * @expectedException \GetStream\Stream\StreamFeedException
      */
-    public function testDeleteCollection(){
-        $created_collection = $this->collections->add('like', $this->activity_id, 'bob');
-        $retrieved_collection = $this->collections->get($created_collection['id']);
-        $this->collections->delete($created_collection['id']);
-        $retrieved_collection = $this->collections->get($created_collection['id']);
+    public function testAddCollectionAgain()
+    {
+        // Adding again should throw error
+        $response = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger"
+        );
+    }
+
+    public function testDeleteCollection()
+    {
+        $response = $this->collections->delete("food","cheese-burger");
+    }
+
+    /**
+     * @expectedException \GetStream\Stream\StreamFeedException
+     */
+    public function testDeleteCollectionAgain()
+    {
+        $response = $this->collections->delete("food","cheese-burger");
+    }
+
+    public function testCreateReference()
+    {
+        $refId = $this->collections->createReference("item", "42");
+        $this->assertSame($refId, 'SO:item:42');
+    }
+
+    public function testGetCollection(){
+        $created_collection = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"]
+        );
+        $retrieved_collection = $this->collections->get('food', $created_collection['id']);
+        $this->assertSame($created_collection['id'], $retrieved_collection['id']);
+        $this->assertSame($created_collection['data']['name'], $retrieved_collection['data']['name']);
+        $this->assertSame($created_collection['collection'], $retrieved_collection['collection']);
+        $this->assertSame($created_collection['created_at'], $retrieved_collection['created_at']);
     }
 
     public function testUpdateCollection(){
-        $data = array('client' => 'php');
-        $created_collection = $this->collections->add('unlike', $this->activity_id, 'bob', $data);
-        $retrieved_collection = $this->collections->get($created_collection['id']);
-        $updated_data = array('client' => 'updated-php', 'more' => 'kets');
-        $updated_collection = $this->collections->update($created_collection['id'], $updated_data);
-        $this->assertSame($retrieved_collection['data'], $data);
-        $this->assertSame($updated_collection['data'], $updated_data);
+        $created_collection = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"]
+        );
+        $response = $this->collections->update("food", $created_collection['id'], ["name" => "Cheese Burger", "rating" => "1 stars"]);
+        $this->assertSame($response['data']['rating'], '1 stars');
+        $this->assertSame($response['data']['name'], 'Cheese Burger');
     }
 
     public function testFilterCollection(){
-        $collections = $this->collections->filter('user_id', 'bob', 'like');
-        foreach($collections['results'] as $collection){
-            $this->assertSame($collection['kind'], 'like');
-            $this->assertSame($collection['user_id'], 'bob');
-        }
-        $collections = $this->collections->filter('user_id', 'bob', 'unlike');
-        foreach($collections['results'] as $collection){
-            $this->assertSame($collection['kind'], 'unlike');
-            $this->assertSame($collection['user_id'], 'bob');
-        }
+        $created_collection = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], 'cheese-burger'
+        );
+        $response = $this->collections->select('food', ['cheese-burger', '124']);
+        $this->assertSame($response['response']['data'][0]['id'], 'cheese-burger');
+        $response = $this->collections->delete("food","cheese-burger");
+    }
+
+    public function testDeleteManyCollection()
+    {
+        // Adding again should throw error
+        $response = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger-1"
+        );
+        $response = $this->collections->add(
+            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger-2"
+        );
+        $response = $this->collections->deleteMany("food",["cheese-burger-1", "cheese-burger-2"]);
+
     }
 
 }
