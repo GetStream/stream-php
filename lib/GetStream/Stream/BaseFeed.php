@@ -264,22 +264,6 @@ class BaseFeed
     }
 
     /**
-     * @deprecated Will be removed in version 3.0.0
-     *
-     * @param string $targetFeedSlug
-     * @param string $targetUserId
-     * @param int $activityCopyLimit
-     *
-     * @return mixed
-     *
-     * @throws StreamFeedException
-     */
-    public function followFeed($targetFeedSlug, $targetUserId, $activityCopyLimit = 300)
-    {
-        return $this->follow($targetFeedSlug, $targetUserId, $activityCopyLimit);
-    }
-
-    /**
      * @param  int $offset
      * @param  int $limit
      * @return mixed
@@ -331,36 +315,6 @@ class BaseFeed
         }
         $targetFeedId = "$targetFeedSlug:$targetUserId";
         return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$targetFeedId}/", 'DELETE', null, $queryParams, 'follower', 'delete');
-    }
-
-    /**
-     * @deprecated Will be removed in version 3.0.0
-     *
-     * @param string $targetFeedSlug
-     * @param string $targetUserId
-     * @param bool $keepHistory
-     *
-     * @return mixed
-     *
-     * @throws StreamFeedException
-     */
-    public function unfollowFeed($targetFeedSlug, $targetUserId, $keepHistory = false)
-    {
-        return $this->unfollow($targetFeedSlug, $targetUserId, $keepHistory);
-    }
-
-    /**
-     * @deprecated Will be removed in version 3.0.0
-     *
-     * No need to clean up, one should just use different feed ids.
-     *
-     * @return mixed
-     *
-     * @throws StreamFeedException
-     */
-    public function delete()
-    {
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'DELETE', null, null, 'feed', 'delete');
     }
 
     /**

@@ -2,6 +2,17 @@
  Change history
 ================
 
+3.0.0
+=====
+:release-date: 2019-02-11
+:by: Peter van Kampen
+
+* Add support for users, collections, reactions, enrichment
+* Add `Client::doPartiallyUpdateActivity`
+* Add `Client::batchPartialActivityUpdate` methods
+* Add `Client::getActivities` methods
+* Remove deprecated methods on Feed Class
+
 2.9.1
 =====
 :release-date: 2018-12-03
