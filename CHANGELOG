@@ -2,6 +2,13 @@
  Change history
 ================
 
+3.0.1
+=====
+:release-date: 2019-07-13
+:by: Peter van Kampen
+
+* More flexible collections upsert
+
 3.0.0
 =====
 :release-date: 2019-02-11
