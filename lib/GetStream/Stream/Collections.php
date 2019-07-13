@@ -175,7 +175,10 @@ class Collections
      */
     public function upsert($collectionName, array $data)
     {
-        $response = $this->doRequest('POST', 'meta/', ['data' => [$collectionName => array($data)]]);
+        if(!is_array($data)){
+            $data = array($data);
+        }
+        $response = $this->doRequest('POST', 'meta/', ['data' => [$collectionName => $data]]);
         $body = $response->getBody()->getContents();
         return json_decode($body, true);
     }
