@@ -6,7 +6,7 @@ use Exception;
 
 const VERSION = '2.6.0';
 
-class Client
+class Client implements ClientInterface
 {
     const API_ENDPOINT = 'stream-io-api.com/api';
 
@@ -131,7 +131,7 @@ class Client
     }
 
     /**
-     * @param  BaseFeed $feed
+     * @param  BaseFeedInterface $feed
      * @param  string $resource
      * @param  string $action
      * @return string
@@ -146,7 +146,7 @@ class Client
      * @param  string $feed_slug
      * @param  string $user_id
      * @param  string|null $token
-     * @return Feed
+     * @return FeedInterface
      */
     public function feed($feed_slug, $user_id, $token = null)
     {

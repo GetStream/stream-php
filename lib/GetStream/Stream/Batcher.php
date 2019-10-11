@@ -12,11 +12,11 @@ class Batcher extends Feed
     private $signer;
 
     /**
-     * @param Client $client
+     * @param ClientInterface $client
      * @param Signer $signer
      * @param string $api_key
      */
-    public function __construct($client, Signer $signer, $api_key)
+    public function __construct(ClientInterface $client, Signer $signer, $api_key)
     {
         $this->client = $client;
         $this->signer = $signer;

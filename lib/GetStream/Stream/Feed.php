@@ -7,7 +7,7 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 
-class Feed extends BaseFeed
+class Feed extends BaseFeed implements FeedInterface
 {
     /**
      * @var string
