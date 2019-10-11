@@ -2,7 +2,7 @@
 
 namespace GetStream\Stream;
 
-class BaseFeed
+class BaseFeed implements BaseFeedInterface
 {
     /**
      * @var string
@@ -35,12 +35,12 @@ class BaseFeed
     protected $api_key;
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
     protected $client;
 
     /**
-     * @param Client $client
+     * @param ClientInterface $client
      * @param string $feed_slug
      * @param string $user_id
      * @param string $api_key
@@ -48,7 +48,7 @@ class BaseFeed
      *
      * @throws StreamFeedException
      */
-    public function __construct($client, $feed_slug, $user_id, $api_key, $token)
+    public function __construct(ClientInterface $client, $feed_slug, $user_id, $api_key, $token)
     {
         if (!$this->validFeedSlug($feed_slug)) {
             throw new StreamFeedException('feed_slug can only contain alphanumeric characters or underscores');
