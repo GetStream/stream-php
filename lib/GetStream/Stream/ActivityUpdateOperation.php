@@ -10,11 +10,11 @@ class ActivityUpdateOperation extends Feed
     protected $token;
 
     /**
-     * @param Client $client
+     * @param ClientInterface $client
      * @param string $api_key
      * @param string $token
      */
-    public function __construct($client, $api_key, $token)
+    public function __construct(ClientInterface $client, $api_key, $token)
     {
         $this->client = $client;
         $this->api_key = $api_key;

@@ -3,7 +3,6 @@
 namespace GetStream\Stream;
 
 use Firebase\JWT\JWT;
-use GetStream\Stream\Client as StreamClient;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
@@ -14,7 +13,7 @@ class Personalization
     const API_ENDPOINT = 'https://personalization.stream-io-api.com/personalization/v1.0/';
 
     /**
-     * @var Client
+     * @var ClientInterface
      */
     private $client;
 
@@ -29,11 +28,11 @@ class Personalization
     private $apiSecret;
 
     /**
-     * @param \GetStream\Stream\Client $streamClient
+     * @param ClientInterface $streamClient
      * @param string $apiKey
      * @param string $apiSecret
      */
-    public function __construct(StreamClient $streamClient, $apiKey, $apiSecret)
+    public function __construct(ClientInterface $streamClient, $apiKey, $apiSecret)
     {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
