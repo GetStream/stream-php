@@ -45,6 +45,7 @@ class ClientTest extends TestCase
     {
         $client = new Client('key', 'secret', $location='qa');
         $feed1 = $client->feed('flat', '1');
+        $this->assertSame($feed1->getId(), 'flat:1');
     }
 
     public function testCreateReference()
