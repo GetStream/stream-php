@@ -229,7 +229,7 @@ class Client implements ClientInterface
         return "{$baseUrl}/{$this->api_version}/{$uri}";
     }
 
-    public function getActivities($ids=null, $foreign_id_times=null)
+    public function getActivities($ids=null, $foreign_id_times=null, $enrich=false, $reactions = null)
     {
         if($ids!==null){
             $query_params = ["ids" => join(',', $ids)];
@@ -251,9 +251,28 @@ class Client implements ClientInterface
             ];
 
         }
+
+        if($reactions !== null){
+            if(!is_array($reactions)){
+                throw new StreamFeedException("reactions argument should be an associative array");
+            }
+            if(isset($reactions["own"]) && $reactions["own"]){
+                $query_params["withOwnReactions"] = true;
+                $enrich = true;
+            }
+            if(isset($reactions["recent"]) && $reactions["recent"]){
+                $query_params["withRecentReactions"] = true;
+                $enrich = true;
+            }
+            if(isset($reactions["counts"]) && $reactions["counts"]){
+                $query_params["withReactionCounts"] = true;
+                $enrich = true;
+            }
+        }
+
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
         $activities = new Activities($this, $this->api_key, $token);
-        return $activities->_getActivities($query_params);
+        return $activities->_getActivities($query_params, $enrich);
     }
 
     public function batchPartialActivityUpdate($data)

@@ -832,5 +832,9 @@ class FeedTest extends TestCase
         $response = $this->client->getActivities(null, $foreign_id_times=$foreign_id_times)['results'];
         $this->assertCount(2, $response);
         $this->assertEquals(sort($activities), sort($response), $canonicalize=true);
+
+        $response = $this->client->getActivities($ids, null, false, array('withReactionCounts' => true));
+        $this->assertCount(2,$response);
+        $this->assertEquals($response["results"][0]["reaction_counts"], 0);
     }
 }

@@ -35,12 +35,18 @@ class Activities extends Feed
         return $headers;
     }
 
-    public function _getActivities($query_params)
+    public function _getActivities($query_params, $enrich = false)
     {
         if (empty($query_params)) {
             return;
         }
 
-        return $this->makeHttpRequest('activities/', 'GET', null, $query_params);
+        $url = 'activities/';
+
+        if($enrich) {
+            $url = "enrich/$url";
+        }
+
+        return $this->makeHttpRequest($url, 'GET', null, $query_params);
     }
 }
