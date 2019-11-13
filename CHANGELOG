@@ -2,6 +2,13 @@
  Change history
 ================
 
+3.0.2
+=====
+:release-date: 2019-11-12
+:by: Tommaso Barbugli
+
+* Add support for enrichment in getActivities
+
 3.0.1
 =====
 :release-date: 2019-07-13
