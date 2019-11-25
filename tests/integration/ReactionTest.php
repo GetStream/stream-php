@@ -52,7 +52,7 @@ class ReactionTest extends TestCase
      */
     protected $reactions;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->client = new Client(
             getenv('STREAM_API_KEY'),
@@ -139,10 +139,8 @@ class ReactionTest extends TestCase
         $this->assertSame($created_reaction['created_at'], $retrieved_reaction['created_at']);
     }
 
-    /**
-     * @expectedException \GetStream\Stream\StreamFeedException
-     */
     public function testDeleteReaction(){
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $created_reaction = $this->reactions->add('like', $this->activity_id, 'bob');
         $retrieved_reaction = $this->reactions->get($created_reaction['id']);
         $this->reactions->delete($created_reaction['id']);

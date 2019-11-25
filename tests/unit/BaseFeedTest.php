@@ -17,20 +17,16 @@ class BaseFeedTest extends TestCase
         $this->assertSame('feed/feed/1/', $response['uri']);
     }
 
-    /**
-     * @expectedException \GetStream\Stream\StreamFeedException
-     */
     public function testValidateSlug()
     {
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $client = $this->createClientMock();
         new BaseFeedStub($client, 'feed-ko', '1', 'api', 'token');
     }
 
-    /**
-     * @expectedException \GetStream\Stream\StreamFeedException
-     */
     public function testValidateUserId()
     {
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $client = $this->createClientMock();
         new BaseFeedStub($client, 'feed_ko', 'ko:1', 'api', 'token');
     }
@@ -38,7 +34,8 @@ class BaseFeedTest extends TestCase
     public function testDashIsOkUserId()
     {
         $client = $this->createClientMock();
-        new BaseFeedStub($client, 'feed_ko', 'ko-1', 'api', 'token');
+        $feed = new BaseFeedStub($client, 'feed_ko', 'ko-1', 'api', 'token');
+        $this->assertSame($feed->getUserId(), 'ko-1');
     }
 
     public function testGetToken()

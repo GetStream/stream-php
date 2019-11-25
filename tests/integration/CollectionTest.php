@@ -53,7 +53,7 @@ class CollectionTest extends TestCase
      */
     protected $collections;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->client = new Client(
             getenv('STREAM_API_KEY'),
@@ -78,9 +78,10 @@ class CollectionTest extends TestCase
 
     public function testUpsert()
     {
-        $collection = $this->collections->upsert('animals', ['id' => '1', 'name' => 'bear', 'color' => 'blue']);
-        $collection = $this->collections->upsert('items', ['id' => '42', 'name' => 'towel']);
-
+        $collection = $this->collections->upsert('animals', [['id' => '1', 'name' => 'bear', 'color' => 'blue']]);
+        $this->assertSame($collection['data']['animals'][0]['name'], 'bear');
+        $collection = $this->collections->upsert('items', [['id' => '42', 'name' => 'towel']]);
+        $this->assertSame($collection['data']['items'][0]['name'], 'towel');
     }
 
     public function testAddCollection()
@@ -105,12 +106,10 @@ class CollectionTest extends TestCase
         $this->assertSame($response['data']['name'], 'Cheese Burger');
     }
 
-    /**
-     * @expectedException \GetStream\Stream\StreamFeedException
-     */
     public function testAddCollectionAgain()
     {
         // Adding again should throw error
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $response = $this->collections->add(
             "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger"
         );
@@ -119,13 +118,12 @@ class CollectionTest extends TestCase
     public function testDeleteCollection()
     {
         $response = $this->collections->delete("food","cheese-burger");
+        $this->assertTrue(array_key_exists("duration", $response));
     }
 
-    /**
-     * @expectedException \GetStream\Stream\StreamFeedException
-     */
     public function testDeleteCollectionAgain()
     {
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $response = $this->collections->delete("food","cheese-burger");
     }
 
@@ -174,7 +172,7 @@ class CollectionTest extends TestCase
             "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger-2"
         );
         $response = $this->collections->deleteMany("food",["cheese-burger-1", "cheese-burger-2"]);
-
+        $this->assertTrue(array_key_exists("duration", $response));
     }
 
 }

@@ -52,7 +52,7 @@ class UserTest extends TestCase
      */
     protected $users;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->client = new Client(
             getenv('STREAM_API_KEY'),
@@ -110,10 +110,8 @@ class UserTest extends TestCase
         $this->assertSame($created_user['data'], array());
     }
 
-    /**
-     * @expectedException \GetStream\Stream\StreamFeedException
-     */
     public function testDeleteUser(){
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $uuid = Uuid::uuid4()->toString();
         $created_user = $this->users->add($uuid);
         $retrieved_user = $this->users->get($created_user['id']);

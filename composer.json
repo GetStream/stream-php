@@ -11,14 +11,13 @@
         }
     ],
     "require": {
-        "php": ">=5.5",
-        "guzzlehttp/guzzle": "^6.0",
-        "firebase/php-jwt": "~3.0|~4.0|~5.0"
+        "php": ">=7.2",
+        "guzzlehttp/guzzle": "^6.3.3",
+        "firebase/php-jwt": "^v5.0.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^4.3",
-        "satooshi/php-coveralls": "^1.0",
-        "ramsey/uuid": "^3.7"
+        "phpunit/phpunit": "^8.2.1",
+        "ramsey/uuid": "^3.8"
     },
     "autoload": {
         "psr-0": {

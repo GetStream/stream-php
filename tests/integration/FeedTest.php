@@ -37,7 +37,7 @@ class FeedTest extends TestCase
      */
     protected $flat3;
 
-    protected function setUp()
+    protected function setUp():void
     {
         $this->client = new Client(
             getenv('STREAM_API_KEY'),
@@ -72,6 +72,9 @@ class FeedTest extends TestCase
         ];
         $events = [$impression, $engagement];
         $finalUrl = $this->client->createRedirectUrl($targetUrl, $events);
+        $this->assertTrue(strpos($finalUrl, "google.com") > 0);
+        $this->assertTrue(strpos($finalUrl, "feed_id") > 0);
+        $this->assertTrue(strpos($finalUrl, "flat%3Atommaso") > 0);
     }
 
     public function testUpdateActivity()
@@ -86,9 +89,12 @@ class FeedTest extends TestCase
             'popularity' => 100
         ];
 
-        $this->client->updateActivity($activity);
+        $response = $this->client->updateActivity($activity);
         $activity['popularity'] = 10;
         $this->client->updateActivity($activity);
+        $response = $this->client->getActivities(null, [[$activity['foreign_id'], $now]]);
+        $check = $response['results'][0];
+        $this->assertSame($activity['popularity'], $check['popularity']);
     }
 
     public function testBatchPartialUpdateActivity()
@@ -524,8 +530,13 @@ class FeedTest extends TestCase
 
     public function testVerifyOff()
     {
+        $activities_before = $this->user1->getActivities(0, 2);
         $this->user1->setGuzzleDefaultOption('verify', true);
-        $activities = $this->user1->getActivities(0, 2);
+        $activities_after = $this->user1->getActivities(0, 2);
+        $this->assertSame(
+            $activities_before['results'][0]['id'],
+            $activities_after['results'][0]['id'],
+        );
     }
 
     public function testMarkRead()
@@ -781,7 +792,8 @@ class FeedTest extends TestCase
 
     public function testUpdateActivitiesWithZeroActivitiesShouldNotFail()
     {
-        $this->client->updateActivities([]);
+        $response = $this->client->updateActivities([]);
+        $this->assertNull($response);
     }
 
     public function testEnrichment(){
@@ -796,7 +808,7 @@ class FeedTest extends TestCase
         $feed->addActivity($activity);
         $response = $feed->getActivities(0, 3, [], $enrich=true);
         $this->assertSame($response["results"][0]["actor"], $user);
-        $bear = ["id" => "1", "type" => "bear", "color" => "blue"];
+        $bear = [["id" => "1", "type" => "bear", "color" => "blue"]];
         $respone = $this->client->collections()->upsert("animals", $bear);
         unset($bear['duration']);
         $activity = [
@@ -806,9 +818,7 @@ class FeedTest extends TestCase
         ];
         $feed->addActivity($activity);
         $response = $feed->getActivities(0, 1, [], $enrich=true);
-        $this->assertSame($response["results"][0]["object"]['id'], $bear['id']);
-        unset($bear['id']);
-        $this->assertEquals($response["results"][0]["object"]['data'], $bear, $canonicalize=true);
+        $this->assertSame($response["results"][0]["object"]['id'], $bear[0]['id']);
     }
 
     public function testGetActivities(){
