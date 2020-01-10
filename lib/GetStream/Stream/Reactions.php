@@ -112,7 +112,7 @@ class Reactions
             $payload['data'] = $data;
         }
         if( $targetFeeds !== null ){
-            $payload['target_feeds'] = join(',', $targetFeeds);
+            $payload['target_feeds'] = $targetFeeds;
         }
         $response = $this->doRequest('POST', 'reaction/', $payload);
         $body = $response->getBody()->getContents();

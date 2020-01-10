@@ -2,6 +2,21 @@
  Change history
 ================
 
+4.0.1
+=====
+:release-date: 2019-11-25
+:by: Peter van Kampen
+
+* PHP 7.4
+* Fix for targetFeeds in reactions()->addChild
+
+4.0.0
+=====
+:release-date: 2019-11-25
+:by: Tommaso Barbugli
+
+* Upgrade dependencies, drop php5.x support, update tests
+
 3.0.2
 =====
 :release-date: 2019-11-12
