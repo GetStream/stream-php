@@ -124,7 +124,7 @@ class Personalization
                     ->withAddedHeader('Authorization', $token)
                     ->withAddedHeader('Stream-Auth-Type', 'jwt')
                     ->withAddedHeader('Content-Type', 'application/json')
-                    ->withAddedHeader('X-Stream-Client', 'stream-php-client-' . VERSION);
+                    ->withAddedHeader('X-Stream-Client', 'stream-php-client-' . Client::VERSION);
 
                 return $handler($request, $options);
             };

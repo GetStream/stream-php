@@ -202,7 +202,7 @@ class Collections
                     ->withAddedHeader('Authorization', $token)
                     ->withAddedHeader('Stream-Auth-Type', 'jwt')
                     ->withAddedHeader('Content-Type', 'application/json')
-                    ->withAddedHeader('X-Stream-Client', 'stream-php-client-' . VERSION);
+                    ->withAddedHeader('X-Stream-Client', 'stream-php-client-' . Client::VERSION);
 
                 // Add a api_key query param.
                 $queryParams = \GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery());

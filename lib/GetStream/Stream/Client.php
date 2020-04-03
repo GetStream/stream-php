@@ -4,11 +4,11 @@ namespace GetStream\Stream;
 use DateTime;
 use Exception;
 
-const VERSION = '4.1.0';
-
 class Client implements ClientInterface
 {
-    const API_ENDPOINT = 'stream-io-api.com/api';
+    public const VERSION = '4.1.0';
+
+    public const API_ENDPOINT = 'stream-io-api.com/api';
 
     /**
      * @var string
