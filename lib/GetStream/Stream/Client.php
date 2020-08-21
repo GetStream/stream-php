@@ -4,7 +4,7 @@ namespace GetStream\Stream;
 use DateTime;
 use Exception;
 
-const VERSION = '4.0.1';
+const VERSION = '4.1.0';
 
 class Client implements ClientInterface
 {

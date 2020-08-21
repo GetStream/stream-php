@@ -2,6 +2,15 @@
  Change history
 ================
 
+4.1.0
+=====
+:release-date: 2020-08-21
+:by: Ferhat Elmas
+
+* Add kinds filter into getActivities for a feed or a Client
+* Fix version header
+* Support guzzle 7
+
 4.0.1
 =====
 :release-date: 2019-11-25
