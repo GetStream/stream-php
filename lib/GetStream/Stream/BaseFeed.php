@@ -233,6 +233,10 @@ class BaseFeed implements BaseFeedInterface
                 $query_params["withReactionCounts"] = true;
                 $enrich = true;
             }
+            if(isset($reactions["kinds"]) && $reactions["kinds"]){
+                $query_params["reactionKindsFilter"] = implode(",", $reactions["kinds"]);
+                $enrich = true;
+            }
         }
 
         $prefix_enrich = $enrich ? 'enrich/' : '';

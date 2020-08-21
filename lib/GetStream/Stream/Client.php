@@ -4,7 +4,7 @@ namespace GetStream\Stream;
 use DateTime;
 use Exception;
 
-const VERSION = '2.6.0';
+const VERSION = '4.0.1';
 
 class Client implements ClientInterface
 {
@@ -268,6 +268,10 @@ class Client implements ClientInterface
                 $query_params["withReactionCounts"] = true;
                 $enrich = true;
             }
+            if(isset($reactions["kinds"]) && $reactions["kinds"]){
+                $query_params["reactionKindsFilter"] = implode(",", $reactions["kinds"]);
+                $enrich = true;
+            }
         }
 
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
@@ -339,5 +343,4 @@ class Client implements ClientInterface
         $analytics = new Analytics($this, $this->api_key, $token);
         return $analytics->createRedirectUrl($targetUrl, $events);
     }
-
 }

@@ -1,5 +1,4 @@
-stream-php
-==========
+# stream-php
 
 [![Build Status](https://travis-ci.org/GetStream/stream-php.svg?branch=master)](https://travis-ci.org/GetStream/stream-php)
 [![Coverage Status](https://coveralls.io/repos/github/GetStream/stream-php/badge.svg?branch=master)](https://coveralls.io/github/GetStream/stream-php?branch=master)
@@ -33,7 +32,7 @@ composer require get-stream/stream:"~2.1.0"
 
 See the [Travis configuration](.travis.yml) for details of how it is built and tested against different PHP versions.
 
-### Documentatation
+### Documentation
 
 Our full documentation for this package is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
 
@@ -167,7 +166,7 @@ $batcher->followMany($follows);
 Generating tokens for client-side usage:
 
 ```php
-// Generating a user token 
+// Generating a user token
 $userToken = $client->createUserSessionToken("the-user-id");
 ```
 
@@ -222,7 +221,6 @@ The users module has the following methods.
     - update(string $userId, array $data=null)
 
 Also see documention on the [users endpoint](https://getstream.io/docs/php/#users_introduction)
-
 
 ```php
 

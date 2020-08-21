@@ -534,8 +534,8 @@ class FeedTest extends TestCase
         $this->user1->setGuzzleDefaultOption('verify', true);
         $activities_after = $this->user1->getActivities(0, 2);
         $this->assertSame(
-            $activities_before['results'][0]['id'],
-            $activities_after['results'][0]['id'],
+            $activities_before['results'],
+            $activities_after['results'],
         );
     }
 
@@ -843,8 +843,15 @@ class FeedTest extends TestCase
         $this->assertCount(2, $response);
         $this->assertEquals(sort($activities), sort($response), $canonicalize=true);
 
-        $response = $this->client->getActivities($ids, null, false, array('withReactionCounts' => true));
-        $this->assertCount(2,$response);
-        $this->assertEquals($response["results"][0]["reaction_counts"], 0);
+        $response = $this->client->getActivities($ids, null, false, ['counts' => true]);
+        $this->assertCount(2, $response["results"]);
+        $this->assertCount(0, $response["results"][0]["reaction_counts"]);
+
+        $this->client->reactions()->add('like', $ids[0], "bob");
+        $this->client->reactions()->add('comment', $ids[0], "bob");
+
+        $response = $this->client->getActivities([$ids[0]], null, false, ['counts' => true, 'kinds' => ["like"]]);
+        $this->assertCount(1, $response["results"]);
+        $this->assertCount(1, $response["results"][0]["reaction_counts"]);
     }
 }
