@@ -2,6 +2,13 @@
  Change history
 ================
 
+4.1.1
+=====
+:release-date: 2021-01-26
+:by: Ferhat Elmas
+
+* Fix type of activity_id in remove_activity in docblock
+
 4.1.0
 =====
 :release-date: 2020-08-21
