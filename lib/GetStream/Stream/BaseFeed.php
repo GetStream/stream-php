@@ -178,7 +178,7 @@ class BaseFeed implements BaseFeedInterface
     }
 
     /**
-     * @param int $activity_id
+     * @param string $activity_id
      * @param bool $foreign_id
      * @return mixed
      *
