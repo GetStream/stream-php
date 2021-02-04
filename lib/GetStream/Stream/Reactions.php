@@ -2,11 +2,8 @@
 
 namespace GetStream\Stream;
 
-use Firebase\JWT\JWT;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\HandlerStack;
-use Psr\Http\Message\RequestInterface;
 
 class Reactions
 {
@@ -37,7 +34,7 @@ class Reactions
         $this->client = new GuzzleClient([
             'base_uri' => $streamClient->getBaseUrl().'/'.$streamClient->api_version.'/',
             'timeout' => $streamClient->timeout,
-            'handler' => $this->handlerStack(),
+            'handler' => Util::handlerStack($apiKey, $apiSecret, 'reactions'),
         ]);
     }
 
@@ -199,38 +196,5 @@ class Reactions
         $response = $this->doRequest('PUT', 'reaction/' . $reactionId . '/', $payload);
         $body = $response->getBody()->getContents();
         return json_decode($body, true);
-    }
-
-    /**
-     * @return HandlerStack
-     */
-    private function handlerStack()
-    {
-        $token = JWT::encode([
-            'action' => '*',
-            'user_id' => '*',
-            'feed_id' => '*',
-            'resource' => 'reactions',
-        ], $this->apiSecret, 'HS256');
-
-        $stack = HandlerStack::create();
-        $stack->push(function (callable $handler) use ($token) {
-            return function (RequestInterface $request, array $options) use ($handler, $token) {
-                // Add authentication headers.
-                $request = $request
-                    ->withAddedHeader('Authorization', $token)
-                    ->withAddedHeader('Stream-Auth-Type', 'jwt')
-                    ->withAddedHeader('Content-Type', 'application/json')
-                    ->withAddedHeader('X-Stream-Client', 'stream-php-client-' . VERSION);
-
-                // Add a api_key query param.
-                $queryParams = \GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery());
-                $query = http_build_query($queryParams + ['api_key' => $this->apiKey]);
-                $request = $request->withUri($request->getUri()->withQuery($query));
-                return $handler($request, $options);
-            };
-        });
-
-        return $stack;
     }
 }

@@ -2,11 +2,8 @@
 
 namespace GetStream\Stream;
 
-use Firebase\JWT\JWT;
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
-use GuzzleHttp\HandlerStack;
-use Psr\Http\Message\RequestInterface;
 
 class Personalization
 {
@@ -39,7 +36,7 @@ class Personalization
         $this->client = new GuzzleClient([
             'base_uri' => self::API_ENDPOINT,
             'timeout' => $streamClient->timeout,
-            'handler' => $this->handlerStack(),
+            'handler' => Util::handlerStack($apiKey, $apiSecret, 'personalization'),
         ]);
     }
 
@@ -103,33 +100,5 @@ class Personalization
         $body = $response->getBody()->getContents();
 
         return json_decode($body, true);
-    }
-
-    /**
-     * @return HandlerStack
-     */
-    private function handlerStack()
-    {
-        $token = JWT::encode([
-            'action' => '*',
-            'user_id' => '*',
-            'feed_id' => '*',
-            'resource' => 'personalization',
-        ], $this->apiSecret, 'HS256');
-
-        $stack = HandlerStack::create();
-        $stack->push(function (callable $handler) use ($token) {
-            return function (RequestInterface $request, array $options) use ($handler, $token) {
-                $request = $request
-                    ->withAddedHeader('Authorization', $token)
-                    ->withAddedHeader('Stream-Auth-Type', 'jwt')
-                    ->withAddedHeader('Content-Type', 'application/json')
-                    ->withAddedHeader('X-Stream-Client', 'stream-php-client-' . VERSION);
-
-                return $handler($request, $options);
-            };
-        });
-
-        return $stack;
     }
 }

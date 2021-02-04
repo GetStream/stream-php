@@ -2,9 +2,6 @@
 
 namespace GetStream\Integration;
 
-use DateTime;
-use DateTimeZone;
-use Firebase\JWT\JWT;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
 use PHPUnit\Framework\TestCase;
