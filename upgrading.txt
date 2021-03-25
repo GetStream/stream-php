@@ -1,4 +1,0 @@
-2.0.0 Changed signature to initialise Feeds and for follow / unfollow feeds.
-
-. Feed and Client->feed signatures changed; the feed_id argument (eg. 'user:1') is not split in the feed_slug and user_id arguments ('user', '1')
-. Feed->follow and Feed->unfollow signature changed (see line above)
