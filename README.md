@@ -20,15 +20,15 @@ Composer will install our latest version automatically.
 
 #### PHP compatibility
 
-Current releases require PHP `7.2` or higher, and depends on Guzzle version 6.
+Current releases require PHP `7.3` or higher, and depends on Guzzle version `^6.3.3`.
 
-If you need to use the client with PHP 5.4 or earlier versions of Guzzle, you can grab an earlier version of this package:
+If you need to use the client with an old PHP or earlier versions of Guzzle, you can grab an earlier version of this package, for example:
 
 ```
 composer require get-stream/stream:"~2.1.0"
 ```
 
-See the [Travis configuration](.travis.yml) for details of how it is built and tested against different PHP versions.
+See the [action](.github/workflows/ci.yml) for details of how it is built and tested against different PHP versions.
 
 ### Documentation
 
