@@ -205,7 +205,7 @@ class BaseFeed implements BaseFeedInterface
      */
     public function getActivities($offset = 0, $limit = 20, $options = [], $enrich=false, $reactions = null)
     {
-        if($options === null){
+        if ($options === null) {
             $options = [];
         }
         $query_params = ['offset' => $offset, 'limit' => $limit];
@@ -217,23 +217,23 @@ class BaseFeed implements BaseFeedInterface
         }
         $query_params = array_merge($query_params, $options);
 
-        if($reactions !== null){
-            if(!is_array($reactions)){
+        if ($reactions !== null) {
+            if (!is_array($reactions)) {
                 throw new StreamFeedException("reactions argument should be an associative array");
             }
-            if(isset($reactions["own"]) && $reactions["own"]){
+            if (isset($reactions["own"]) && $reactions["own"]) {
                 $query_params["withOwnReactions"] = true;
                 $enrich = true;
             }
-            if(isset($reactions["recent"]) && $reactions["recent"]){
+            if (isset($reactions["recent"]) && $reactions["recent"]) {
                 $query_params["withRecentReactions"] = true;
                 $enrich = true;
             }
-            if(isset($reactions["counts"]) && $reactions["counts"]){
+            if (isset($reactions["counts"]) && $reactions["counts"]) {
                 $query_params["withReactionCounts"] = true;
                 $enrich = true;
             }
-            if(isset($reactions["kinds"]) && $reactions["kinds"]){
+            if (isset($reactions["kinds"]) && $reactions["kinds"]) {
                 $query_params["reactionKindsFilter"] = implode(",", $reactions["kinds"]);
                 $enrich = true;
             }

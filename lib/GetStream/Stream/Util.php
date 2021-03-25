@@ -6,7 +6,8 @@ use Firebase\JWT\JWT;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
 
-class Util {
+class Util
+{
     /**
      * @return HandlerStack
      */

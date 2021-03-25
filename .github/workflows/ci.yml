@@ -24,11 +24,11 @@ jobs:
       - name: Deps
         run: composer install --no-interaction
 
-      # - name: Quality
-      #   if: matrix.php-versions == '7.4'
-      #   run: |
-      #     vendor/bin/php-cs-fixer fix --config=.php_cs.dist -v --dry-run --stop-on-violation
-      #     vendor/bin/phan --force-polyfill-parser || true
+      - name: Quality
+        if: matrix.php-versions == '7.4'
+        run: |
+          vendor/bin/php-cs-fixer fix --config=.php_cs.dist -v --dry-run --stop-on-violation
+          vendor/bin/phan --force-polyfill-parser || true
 
       - name: Test
         env:

@@ -43,7 +43,7 @@ class Activities extends Feed
 
         $url = 'activities/';
 
-        if($enrich) {
+        if ($enrich) {
             $url = "enrich/$url";
         }
 

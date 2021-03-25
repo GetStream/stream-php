@@ -83,7 +83,7 @@ class ReactionTest extends TestCase
 
     public function testAddDataReaction()
     {
-        $data = array('client' => 'php');
+        $data = ['client' => 'php'];
         $reaction = $this->reactions->add('like', $this->activity_id, 'bob', $data);
         $this->assertSame($reaction['user_id'], 'bob');
         $this->assertSame($reaction['kind'], 'like');
@@ -93,7 +93,7 @@ class ReactionTest extends TestCase
 
     public function testCreateReference()
     {
-        $data = array('client' => 'php');
+        $data = ['client' => 'php'];
         $reaction = $this->reactions->add('like', $this->activity_id, 'bob', $data);
         $reactionId = $reaction['id'];
         $refId = $this->reactions->createReference($reaction['id']);
@@ -115,7 +115,7 @@ class ReactionTest extends TestCase
 
     public function testAddTargetFeedsReaction()
     {
-        $target_feeds = array($this->aggregated2->getId(), $this->aggregated3->getId());
+        $target_feeds = [$this->aggregated2->getId(), $this->aggregated3->getId()];
         $reaction = $this->reactions->add('like', $this->activity_id, 'bob', null, $target_feeds);
         $this->assertSame($reaction['user_id'], 'bob');
         $this->assertSame($reaction['kind'], 'like');
@@ -130,7 +130,8 @@ class ReactionTest extends TestCase
         $this->assertSame($latest_activity["verb"], "like");
     }
 
-    public function testGetReaction(){
+    public function testGetReaction()
+    {
         $created_reaction = $this->reactions->add('like', $this->activity_id, 'bob');
         $retrieved_reaction = $this->reactions->get($created_reaction['id']);
         $this->assertSame($created_reaction['id'], $retrieved_reaction['id']);
@@ -139,7 +140,8 @@ class ReactionTest extends TestCase
         $this->assertSame($created_reaction['created_at'], $retrieved_reaction['created_at']);
     }
 
-    public function testDeleteReaction(){
+    public function testDeleteReaction()
+    {
         $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $created_reaction = $this->reactions->add('like', $this->activity_id, 'bob');
         $retrieved_reaction = $this->reactions->get($created_reaction['id']);
@@ -147,27 +149,28 @@ class ReactionTest extends TestCase
         $retrieved_reaction = $this->reactions->get($created_reaction['id']);
     }
 
-    public function testUpdateReaction(){
-        $data = array('client' => 'php');
+    public function testUpdateReaction()
+    {
+        $data = ['client' => 'php'];
         $created_reaction = $this->reactions->add('unlike', $this->activity_id, 'bob', $data);
         $retrieved_reaction = $this->reactions->get($created_reaction['id']);
-        $updated_data = array('client' => 'updated-php', 'more' => 'kets');
+        $updated_data = ['client' => 'updated-php', 'more' => 'kets'];
         $updated_reaction = $this->reactions->update($created_reaction['id'], $updated_data);
         $this->assertSame($retrieved_reaction['data'], $data);
         $this->assertSame($updated_reaction['data'], $updated_data);
     }
 
-    public function testFilterReaction(){
+    public function testFilterReaction()
+    {
         $reactions = $this->reactions->filter('user_id', 'bob', 'like');
-        foreach($reactions['results'] as $reaction){
+        foreach ($reactions['results'] as $reaction) {
             $this->assertSame($reaction['kind'], 'like');
             $this->assertSame($reaction['user_id'], 'bob');
         }
         $reactions = $this->reactions->filter('user_id', 'bob', 'unlike');
-        foreach($reactions['results'] as $reaction){
+        foreach ($reactions['results'] as $reaction) {
             $this->assertSame($reaction['kind'], 'unlike');
             $this->assertSame($reaction['user_id'], 'bob');
         }
     }
-
 }

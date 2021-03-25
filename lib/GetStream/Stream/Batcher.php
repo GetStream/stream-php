@@ -72,7 +72,7 @@ class Batcher extends Feed
     {
         $query_params = [];
         if ($activity_copy_limit !== null) {
-          $query_params["activity_copy_limit"] = $activity_copy_limit;
+            $query_params["activity_copy_limit"] = $activity_copy_limit;
         }
         return $this->makeHttpRequest('follow_many/', 'POST', $follows, $query_params);
     }

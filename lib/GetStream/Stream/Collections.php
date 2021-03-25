@@ -40,14 +40,13 @@ class Collections
 
     private function doRequest($method, $endpoint, $params=null)
     {
-        if($params === null){
-            $params = array();
+        if ($params === null) {
+            $params = [];
         }
-        if( $method === 'POST' || $method === 'PUT' ){
+        if ($method === 'POST' || $method === 'PUT') {
             $params = ['json' => $params];
         }
-        if( $method === 'GET' && $params !== null ){
-
+        if ($method === 'GET' && $params !== null) {
             $endpoint .= '?' . http_build_query($params);
         }
         try {
@@ -97,7 +96,6 @@ class Collections
      */
     public function delete($collectionName, $id)
     {
-
         $response = $this->doRequest('DELETE', 'collections/' . $collectionName . '/' . $id . '/');
         $body = $response->getBody()->getContents();
         return json_decode($body, true);
@@ -110,13 +108,13 @@ class Collections
      * @return array
      */
     public function deleteMany($collectionName, array $ids)
-     {
+    {
         $ids = join(',', $ids);
         $queryParams = ['collection_name' => $collectionName, 'ids' => $ids];
         $response = $this->client->request('DELETE', 'collections/?'.http_build_query($queryParams));
         $body = $response->getBody()->getContents();
         return json_decode($body, true);
-     }
+    }
 
     /**
      * @param string $collectionName
@@ -171,8 +169,8 @@ class Collections
      */
     public function upsert($collectionName, array $data)
     {
-        if(!is_array($data)){
-            $data = array($data);
+        if (!is_array($data)) {
+            $data = [$data];
         }
         $response = $this->doRequest('POST', 'meta/', ['data' => [$collectionName => $data]]);
         $body = $response->getBody()->getContents();
