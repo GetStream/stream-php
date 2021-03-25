@@ -41,10 +41,10 @@ class Users
 
     private function doRequest($method, $endpoint, $params=null)
     {
-        if($params === null){
-            $params = array();
+        if ($params === null) {
+            $params = [];
         }
-        if( $method === 'POST' || $method === 'PUT' ){
+        if ($method === 'POST' || $method === 'PUT') {
             $params = ['json' => $params];
         }
         try {
@@ -72,10 +72,10 @@ class Users
         $payload = [
             'id' => $userId,
         ];
-        if( $data !== null ){
+        if ($data !== null) {
             $payload['data'] = $data;
         }
-        if($getOrCreate){
+        if ($getOrCreate) {
             $endpoint .= '?get_or_create=true';
         }
         $response = $this->doRequest('POST', $endpoint, $payload);
@@ -91,7 +91,7 @@ class Users
     public function createReference($userId)
     {
         $myUserId = $userId;
-        if(is_array($userId) && array_key_exists('id', $userId)){
+        if (is_array($userId) && array_key_exists('id', $userId)) {
             $myUserId = $userId['id'];
         }
         return 'SU:' . $myUserId;
@@ -130,7 +130,7 @@ class Users
     public function update($userId, array $data=null)
     {
         $payload = [];
-        if( $data !== null ){
+        if ($data !== null) {
             $payload['data'] = $data;
         }
         $response = $this->doRequest('PUT', 'user/' . $userId . '/', $payload);

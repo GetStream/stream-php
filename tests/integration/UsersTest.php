@@ -87,7 +87,7 @@ class UserTest extends TestCase
 
     public function testAddUserData()
     {
-        $data = array('client' => 'php');
+        $data = ['client' => 'php'];
         $uuid = Uuid::uuid4()->toString();
         $user = $this->users->add($uuid, $data);
         $this->assertSame($user['id'], $uuid);
@@ -96,7 +96,8 @@ class UserTest extends TestCase
         $this->assertSame($user['data'], $data);
     }
 
-    public function testGetUser(){
+    public function testGetUser()
+    {
         $uuid = Uuid::uuid4()->toString();
         $created_user = $this->users->add($uuid);
         $retrieved_user = $this->users->get($uuid);
@@ -104,10 +105,11 @@ class UserTest extends TestCase
         $this->assertSame($created_user['updated_at'], $retrieved_user['updated_at']);
         $this->assertSame($created_user['created_at'], $retrieved_user['created_at']);
         $this->assertSame($created_user['data'], $retrieved_user['data']);
-        $this->assertSame($created_user['data'], array());
+        $this->assertSame($created_user['data'], []);
     }
 
-    public function testDeleteUser(){
+    public function testDeleteUser()
+    {
         $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $uuid = Uuid::uuid4()->toString();
         $created_user = $this->users->add($uuid);
@@ -116,15 +118,15 @@ class UserTest extends TestCase
         $retrieved_user = $this->users->get($created_user['id']);
     }
 
-    public function testUpdateUser(){
+    public function testUpdateUser()
+    {
         $uuid = Uuid::uuid4()->toString();
-        $data = array('client' => 'php');
+        $data = ['client' => 'php'];
         $created_user = $this->users->add($uuid, $data);
         $retrieved_user = $this->users->get($created_user['id']);
-        $updated_data = array('client' => 'updated-php', 'more' => 'keys');
+        $updated_data = ['client' => 'updated-php', 'more' => 'keys'];
         $updated_user = $this->users->update($created_user['id'], $updated_data);
         $this->assertSame($retrieved_user['data'], $data);
         $this->assertSame($updated_user['data'], $updated_data);
     }
-
 }

@@ -68,10 +68,11 @@ class CollectionTest extends TestCase
         $this->collections = $this->client->collections();
     }
 
-    public function cleanUp(){
+    public function cleanUp()
+    {
         try {
-            $this->collections->delete("food","cheese-burger");
-        } catch(ClientException $e) {
+            $this->collections->delete("food", "cheese-burger");
+        } catch (ClientException $e) {
             // pass
         }
     }
@@ -87,7 +88,8 @@ class CollectionTest extends TestCase
     public function testAddCollection()
     {
         $response = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"]
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"]
         );
         $this->assertNotSame($response["id"], "cheese-burger");
         $this->assertSame($response["collection"], 'food');
@@ -98,7 +100,9 @@ class CollectionTest extends TestCase
     public function testAddCollectionWithId()
     {
         $response = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger"
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"],
+            "cheese-burger"
         );
         $this->assertSame($response["id"], "cheese-burger");
         $this->assertSame($response["collection"], "food");
@@ -111,20 +115,22 @@ class CollectionTest extends TestCase
         // Adding again should throw error
         $this->expectException(\GetStream\Stream\StreamFeedException::class);
         $response = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger"
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"],
+            "cheese-burger"
         );
     }
 
     public function testDeleteCollection()
     {
-        $response = $this->collections->delete("food","cheese-burger");
+        $response = $this->collections->delete("food", "cheese-burger");
         $this->assertTrue(array_key_exists("duration", $response));
     }
 
     public function testDeleteCollectionAgain()
     {
         $this->expectException(\GetStream\Stream\StreamFeedException::class);
-        $response = $this->collections->delete("food","cheese-burger");
+        $response = $this->collections->delete("food", "cheese-burger");
     }
 
     public function testCreateReference()
@@ -133,9 +139,11 @@ class CollectionTest extends TestCase
         $this->assertSame($refId, 'SO:item:42');
     }
 
-    public function testGetCollection(){
+    public function testGetCollection()
+    {
         $created_collection = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"]
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"]
         );
         $retrieved_collection = $this->collections->get('food', $created_collection['id']);
         $this->assertSame($created_collection['id'], $retrieved_collection['id']);
@@ -144,35 +152,43 @@ class CollectionTest extends TestCase
         $this->assertSame($created_collection['created_at'], $retrieved_collection['created_at']);
     }
 
-    public function testUpdateCollection(){
+    public function testUpdateCollection()
+    {
         $created_collection = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"]
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"]
         );
         $response = $this->collections->update("food", $created_collection['id'], ["name" => "Cheese Burger", "rating" => "1 stars"]);
         $this->assertSame($response['data']['rating'], '1 stars');
         $this->assertSame($response['data']['name'], 'Cheese Burger');
     }
 
-    public function testFilterCollection(){
+    public function testFilterCollection()
+    {
         $created_collection = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], 'cheese-burger'
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"],
+            'cheese-burger'
         );
         $response = $this->collections->select('food', ['cheese-burger', '124']);
         $this->assertSame($response['response']['data'][0]['id'], 'cheese-burger');
-        $response = $this->collections->delete("food","cheese-burger");
+        $response = $this->collections->delete("food", "cheese-burger");
     }
 
     public function testDeleteManyCollection()
     {
         // Adding again should throw error
         $response = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger-1"
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"],
+            "cheese-burger-1"
         );
         $response = $this->collections->add(
-            "food", ["name" => "Cheese Burger", "rating" => "4 stars"], "cheese-burger-2"
+            "food",
+            ["name" => "Cheese Burger", "rating" => "4 stars"],
+            "cheese-burger-2"
         );
-        $response = $this->collections->deleteMany("food",["cheese-burger-1", "cheese-burger-2"]);
+        $response = $this->collections->deleteMany("food", ["cheese-burger-1", "cheese-burger-2"]);
         $this->assertTrue(array_key_exists("duration", $response));
     }
-
 }

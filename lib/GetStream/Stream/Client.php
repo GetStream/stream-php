@@ -111,8 +111,8 @@ class Client implements ClientInterface
      */
     public function createUserSessionToken($user_id, array $extra_data=null)
     {
-        if(is_null($extra_data)){
-            $extra_data = array();
+        if (is_null($extra_data)) {
+            $extra_data = [];
         }
         return $this->createUserToken($user_id, $extra_data);
     }
@@ -124,8 +124,8 @@ class Client implements ClientInterface
      */
     public function createUserToken($user_id, array $extra_data=null)
     {
-        if(is_null($extra_data)){
-            $extra_data = array();
+        if (is_null($extra_data)) {
+            $extra_data = [];
         }
         return $this->signer->jwtUserSessionToken($user_id, $extra_data);
     }
@@ -231,16 +231,16 @@ class Client implements ClientInterface
 
     public function getActivities($ids=null, $foreign_id_times=null, $enrich=false, $reactions = null)
     {
-        if($ids!==null){
+        if ($ids!==null) {
             $query_params = ["ids" => join(',', $ids)];
         } else {
             $fids = [];
             $times = [];
-            foreach($foreign_id_times as $fit){
+            foreach ($foreign_id_times as $fit) {
                 $fids[] = $fit[0];
                 try {
                     $times[] = $fit[1]->format(DateTime::ISO8601);
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     // assume it's in the right format already
                     $times[] = $fit[1];
                 }
@@ -249,26 +249,25 @@ class Client implements ClientInterface
                 "foreign_ids" => join(',', $fids),
                 "timestamps" => join(',', $times)
             ];
-
         }
 
-        if($reactions !== null){
-            if(!is_array($reactions)){
+        if ($reactions !== null) {
+            if (!is_array($reactions)) {
                 throw new StreamFeedException("reactions argument should be an associative array");
             }
-            if(isset($reactions["own"]) && $reactions["own"]){
+            if (isset($reactions["own"]) && $reactions["own"]) {
                 $query_params["withOwnReactions"] = true;
                 $enrich = true;
             }
-            if(isset($reactions["recent"]) && $reactions["recent"]){
+            if (isset($reactions["recent"]) && $reactions["recent"]) {
                 $query_params["withRecentReactions"] = true;
                 $enrich = true;
             }
-            if(isset($reactions["counts"]) && $reactions["counts"]){
+            if (isset($reactions["counts"]) && $reactions["counts"]) {
                 $query_params["withReactionCounts"] = true;
                 $enrich = true;
             }
-            if(isset($reactions["kinds"]) && $reactions["kinds"]){
+            if (isset($reactions["kinds"]) && $reactions["kinds"]) {
                 $query_params["reactionKindsFilter"] = implode(",", $reactions["kinds"]);
                 $enrich = true;
             }
@@ -281,7 +280,7 @@ class Client implements ClientInterface
 
     public function batchPartialActivityUpdate($data)
     {
-        if(count($data) > 100){
+        if (count($data) > 100) {
             throw new Exception("Max 100 activities allowed in batch update");
         }
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
@@ -292,12 +291,12 @@ class Client implements ClientInterface
     public function doPartialActivityUpdate($id=null, $foreign_id=null, $time=null, $set=null, $unset=null)
     {
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
-        if($id === null && ($foreign_id === null || $time === null)){
+        if ($id === null && ($foreign_id === null || $time === null)) {
             throw new Exception(
                 "The id or foreign_id+time parameters must be provided and not be None"
             );
         }
-        if($id !== null && ($foreign_id !== null || $time !== null)){
+        if ($id !== null && ($foreign_id !== null || $time !== null)) {
             throw new Exception(
                 "Only one of the id or the foreign_id+time parameters can be provided"
             );
@@ -305,7 +304,7 @@ class Client implements ClientInterface
 
         $data = ["set" => $set, "unset" => $unset];
 
-        if($id !== null){
+        if ($id !== null) {
             $data["id"] = $id;
         } else {
             $data["foreign_id"] = $foreign_id;

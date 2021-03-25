@@ -3,8 +3,8 @@ namespace GetStream\Stream;
 
 class StreamFeedException extends \Exception
 {
-
-    private function getRateLimitValue($headerName){
+    private function getRateLimitValue($headerName)
+    {
         /* Sample headers
 
            x-ratelimit-limit: 2000
@@ -13,21 +13,23 @@ class StreamFeedException extends \Exception
 
         */
         $e = $this->getPrevious();
-        if($e){
+        if ($e) {
             return (string)$e->getResponse()->getHeader("x-ratelimit-" . $headerName)[0];
         }
     }
 
-    public function getRateLimitLimit(){
+    public function getRateLimitLimit()
+    {
         return $this->getRateLimitValue("limit");
     }
 
-    public function getRateLimitRemaining(){
+    public function getRateLimitRemaining()
+    {
         return $this->getRateLimitValue("remaining");
     }
 
-    public function getRateLimitReset(){
+    public function getRateLimitReset()
+    {
         return $this->getRateLimitValue("reset");
     }
-
 }

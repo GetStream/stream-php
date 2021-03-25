@@ -133,8 +133,8 @@ class FeedTest extends TestCase
             ],
         ];
         $response = $this->client->batchPartialActivityUpdate($payload);
-        $updated = $this->user1->getActivities(0,2)["results"];
-        if($updated[0]["id"] == $act1["id"]){
+        $updated = $this->user1->getActivities(0, 2)["results"];
+        if ($updated[0]["id"] == $act1["id"]) {
             $updated1 = $updated[0];
             $updated2 = $updated[1];
         } else {
@@ -160,8 +160,8 @@ class FeedTest extends TestCase
             ],
         ];
         $response = $this->client->batchPartialActivityUpdate($payload);
-        $updated = $this->user1->getActivities(0,2)["results"];
-        if($updated[0]["id"] == $act1["id"]){
+        $updated = $this->user1->getActivities(0, 2)["results"];
+        if ($updated[0]["id"] == $act1["id"]) {
             $updated1 = $updated[0];
             $updated2 = $updated[1];
         } else {
@@ -221,7 +221,6 @@ class FeedTest extends TestCase
         $this->assertEquals($updated_again['product']['name'], 'boots');
         $this->assertFalse(in_array('color', $updated_again['product']));
         $this->assertFalse(in_array('price', $updated_again['product']));
-
     }
 
     public function testAddToMany()
@@ -313,7 +312,6 @@ class FeedTest extends TestCase
 
         $this->assertCount(0, $f1->getActivities()['results']);
         $this->assertCount(1, $f2->getActivities()['results']);
-
     }
 
     public function testReadonlyToken()
@@ -326,11 +324,11 @@ class FeedTest extends TestCase
     {
         $token = $this->client->createUserSessionToken('user');
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
+        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
         $this->assertSame($payload->user_id, 'user');
-        $token = $this->client->createUserSessionToken('user', array('client'=>'PHP'));
+        $token = $this->client->createUserSessionToken('user', ['client'=>'PHP']);
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
+        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
         $this->assertSame($payload->client, 'PHP');
     }
 
@@ -338,11 +336,11 @@ class FeedTest extends TestCase
     {
         $token = $this->client->createUserToken('user');
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
+        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
         $this->assertSame($payload->user_id, 'user');
-        $token = $this->client->createUserToken('user', array('client'=>'PHP'));
+        $token = $this->client->createUserToken('user', ['client'=>'PHP']);
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), array('HS256'));
+        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
         $this->assertSame($payload->client, 'PHP');
     }
 
@@ -796,7 +794,8 @@ class FeedTest extends TestCase
         $this->assertNull($response);
     }
 
-    public function testEnrichment(){
+    public function testEnrichment()
+    {
         $user = $this->client->users()->add("5", ["name" => "George Martin"], $getOrCreate=true);
         unset($user['duration']);
         $activity = [
@@ -821,7 +820,8 @@ class FeedTest extends TestCase
         $this->assertSame($response["results"][0]["object"]['id'], $bear[0]['id']);
     }
 
-    public function testGetActivities(){
+    public function testGetActivities()
+    {
         $now = new DateTime('now', new DateTimeZone('Pacific/Nauru'));
         $time = $now->format(DateTime::ISO8601);
         $activities = [

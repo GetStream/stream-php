@@ -40,14 +40,13 @@ class Reactions
 
     private function doRequest($method, $endpoint, $params=null)
     {
-        if($params === null){
-            $params = array();
+        if ($params === null) {
+            $params = [];
         }
-        if( $method === 'POST' || $method === 'PUT' ){
+        if ($method === 'POST' || $method === 'PUT') {
             $params = ['json' => $params];
         }
-        if( $method === 'GET' && $params !== null ){
-
+        if ($method === 'GET' && $params !== null) {
             $endpoint .= '?' . http_build_query($params);
         }
         try {
@@ -78,10 +77,10 @@ class Reactions
             'activity_id' => $activityId,
             'user_id' => $userId,
         ];
-        if( $data !== null ){
+        if ($data !== null) {
             $payload['data'] = $data;
         }
-        if( $targetFeeds !== null ){
+        if ($targetFeeds !== null) {
             $payload['target_feeds'] = $targetFeeds;
         }
         $response = $this->doRequest('POST', 'reaction/', $payload);
@@ -105,10 +104,10 @@ class Reactions
             'parent' => $parentId,
             'user_id' => $userId,
         ];
-        if( $data !== null ){
+        if ($data !== null) {
             $payload['data'] = $data;
         }
-        if( $targetFeeds !== null ){
+        if ($targetFeeds !== null) {
             $payload['target_feeds'] = $targetFeeds;
         }
         $response = $this->doRequest('POST', 'reaction/', $payload);
@@ -124,7 +123,7 @@ class Reactions
     public function createReference($reactionId)
     {
         $myReactionId = $reactionId;
-        if(is_array($reactionId) && array_key_exists('id', $reactionId)){
+        if (is_array($reactionId) && array_key_exists('id', $reactionId)) {
             $myReactionId = $reactionId['id'];
         }
         return 'SR:' . $myReactionId;
@@ -152,11 +151,11 @@ class Reactions
      */
     public function filter($lookupField, $lookupValue, $kind=null, array $params=null)
     {
-        if(!in_array($lookupField, array("reaction_id", "activity_id", "user_id"))){
+        if (!in_array($lookupField, ["reaction_id", "activity_id", "user_id"])) {
             throw StreamFeedException("Invalid request parameters");
         }
         $endpoint = "reaction/" . $lookupField . "/" . $lookupValue . "/";
-        if( $kind !== null ){
+        if ($kind !== null) {
             $endpoint .= $kind . "/";
         }
         $response = $this->doRequest('GET', $endpoint, $params);
@@ -187,10 +186,10 @@ class Reactions
     public function update($reactionId, array $data=null, array $targetFeeds=null)
     {
         $payload = [];
-        if( $data !== null ){
+        if ($data !== null) {
             $payload['data'] = $data;
         }
-        if( $targetFeeds !== null ){
+        if ($targetFeeds !== null) {
             $payload['target_feeds'] = $targetFeeds;
         }
         $response = $this->doRequest('PUT', 'reaction/' . $reactionId . '/', $payload);

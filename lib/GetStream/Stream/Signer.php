@@ -90,10 +90,9 @@ class Signer
         $payload = [
             'user_id'   => $user_id,
         ];
-        foreach($extra_data as $name => $value){
+        foreach ($extra_data as $name => $value) {
             $payload[$name] = $value;
         }
         return JWT::encode($payload, $this->api_secret, 'HS256');
     }
-
 }
