@@ -4,7 +4,7 @@ namespace GetStream\Stream;
 use DateTime;
 use Exception;
 
-const VERSION = '4.1.1';
+require_once('Version.php');
 
 class Client implements ClientInterface
 {

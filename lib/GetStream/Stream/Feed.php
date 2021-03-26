@@ -7,6 +7,8 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 
+require_once('Version.php');
+
 class Feed extends BaseFeed implements FeedInterface
 {
     /**
