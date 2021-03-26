@@ -1,3 +1,8 @@
+## 5.0.0 - 2021-03-26
+* Drop support for PHP 7.2 and add 8.0 support
+* Fix undefined constant deprecation from 7.2
+* Move to github actions and add static analysis
+
 ## 4.1.1 - 2021-01-26
 * Fix type of activity_id in remove_activity in docblock
 
