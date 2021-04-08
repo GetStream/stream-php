@@ -1,3 +1,6 @@
+## 5.0.1 - 2021-04-08
+* Fix namespacing issue for constant initialization of version
+
 ## 5.0.0 - 2021-03-26
 * Drop support for PHP 7.2 and add 8.0 support
 * Fix undefined constant deprecation from 7.2
