@@ -7,8 +7,6 @@ use GuzzleHttp\Exception\ClientException;
 use GuzzleHttp\HandlerStack;
 use GuzzleHttp\Psr7\Uri;
 
-require_once('Version.php');
-
 class Feed extends BaseFeed implements FeedInterface
 {
     /**
@@ -66,7 +64,7 @@ class Feed extends BaseFeed implements FeedInterface
             'Authorization' => $token,
             'Content-Type' => 'application/json',
             'stream-auth-type' => 'jwt',
-            'X-Stream-Client' => 'stream-php-client-' . VERSION,
+            'X-Stream-Client' => 'stream-php-client-' . Constant::VERSION,
         ];
     }
 

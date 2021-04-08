@@ -4,8 +4,6 @@ namespace GetStream\Stream;
 use DateTime;
 use Exception;
 
-require_once('Version.php');
-
 class Client implements ClientInterface
 {
     const API_ENDPOINT = 'stream-io-api.com/api';
