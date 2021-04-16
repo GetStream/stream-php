@@ -249,4 +249,4 @@ vendor/bin/phpunit --testsuite "Unit Test Suite"
 
 ### Copyright and License Information
 
-[BSD-3](https://github.com/GetStream/stream-php/blob/master/LICENSE).
+Project is licensed under the [BSD 3-Clause](LICENSE).
