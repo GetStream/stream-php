@@ -255,6 +255,9 @@ class Client implements ClientInterface
             }
             if (isset($reactions["own"]) && $reactions["own"]) {
                 $query_params["withOwnReactions"] = true;
+                if (isset($reactions["user_id"]) && $reactions["user_id"]) {
+                    $query_params["user_id"] = $reactions["user_id"];
+                }
                 $enrich = true;
             }
             if (isset($reactions["recent"]) && $reactions["recent"]) {
