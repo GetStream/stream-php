@@ -1,3 +1,7 @@
+## 5.0.2 - 2021-06-08
+* Accept user_id for own reactions
+* Handle deprecated cs fixer config
+
 ## 5.0.1 - 2021-04-08
 * Fix namespacing issue for constant initialization of version
 
