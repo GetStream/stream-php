@@ -1,3 +1,6 @@
+## 5.1.0 - 2021-06-21
+* Add target feeds extra data support for reactions
+
 ## 5.0.2 - 2021-06-08
 * Accept user_id for own reactions
 * Handle deprecated cs fixer config
