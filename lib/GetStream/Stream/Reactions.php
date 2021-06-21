@@ -67,10 +67,11 @@ class Reactions
      * @param string $userId
      * @param array $data
      * @param array $targetFeeds
+     * @param array $targetFeedsExtraData
      *
      * @return array
      */
-    public function add($kind, $activityId, $userId, array $data=null, array $targetFeeds=null)
+    public function add($kind, $activityId, $userId, array $data=null, array $targetFeeds=null, $targetFeedsExtraData=null)
     {
         $payload = [
             'kind' => $kind,
@@ -83,6 +84,9 @@ class Reactions
         if ($targetFeeds !== null) {
             $payload['target_feeds'] = $targetFeeds;
         }
+        if ($targetFeedsExtraData !== null) {
+            $payload['target_feeds_extra_data'] = $targetFeedsExtraData;
+        }
         $response = $this->doRequest('POST', 'reaction/', $payload);
         $body = $response->getBody()->getContents();
         return json_decode($body, true);
@@ -94,10 +98,11 @@ class Reactions
      * @param string $userId
      * @param array $data
      * @param array $targetFeeds
+     * @param array $targetFeedsExtraData
      *
      * @return array
      */
-    public function addChild($kind, $parentId, $userId, array $data=null, array $targetFeeds=null)
+    public function addChild($kind, $parentId, $userId, array $data=null, array $targetFeeds=null, $targetFeedsExtraData=null)
     {
         $payload = [
             'kind' => $kind,
@@ -109,6 +114,9 @@ class Reactions
         }
         if ($targetFeeds !== null) {
             $payload['target_feeds'] = $targetFeeds;
+        }
+        if ($targetFeedsExtraData !== null) {
+            $payload['target_feeds_extra_data'] = $targetFeedsExtraData;
         }
         $response = $this->doRequest('POST', 'reaction/', $payload);
         $body = $response->getBody()->getContents();
@@ -180,10 +188,11 @@ class Reactions
      * @param string $reactionId
      * @param array $data
      * @param array $targetFeeds
+     * @param array $targetFeedsExtraData
      *
      * @return array
      */
-    public function update($reactionId, array $data=null, array $targetFeeds=null)
+    public function update($reactionId, array $data=null, array $targetFeeds=null, $targetFeedsExtraData=null)
     {
         $payload = [];
         if ($data !== null) {
@@ -191,6 +200,9 @@ class Reactions
         }
         if ($targetFeeds !== null) {
             $payload['target_feeds'] = $targetFeeds;
+        }
+        if ($targetFeedsExtraData !== null) {
+            $payload['target_feeds_extra_data'] = $targetFeedsExtraData;
         }
         $response = $this->doRequest('PUT', 'reaction/' . $reactionId . '/', $payload);
         $body = $response->getBody()->getContents();
