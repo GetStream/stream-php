@@ -135,9 +135,6 @@ $activities = [
 ];
 
 $userFeed->addActivities($activities);
-
-// Delete an entire feed and its content
-$userFeed->delete();
 ```
 
 Advanced batching:
