@@ -1,3 +1,6 @@
+## 5.1.1 - 2021-09-28
+* Replace deprecated query parse of Guzzle
+
 ## 5.1.0 - 2021-06-21
 * Add target feeds extra data support for reactions
 
