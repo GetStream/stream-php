@@ -29,7 +29,7 @@ class Util
                     ->withAddedHeader('Content-Type', 'application/json')
                     ->withAddedHeader('X-Stream-Client', 'stream-php-client-' . Constant::VERSION);
                 // Add a api_key query param.
-                $queryParams = \GuzzleHttp\Psr7\parse_query($request->getUri()->getQuery());
+                $queryParams = \GuzzleHttp\Psr7\Query::parse($request->getUri()->getQuery());
                 $query = http_build_query($queryParams + ['api_key' => $apiKey]);
                 $request = $request->withUri($request->getUri()->withQuery($query));
                 return $handler($request, $options);
