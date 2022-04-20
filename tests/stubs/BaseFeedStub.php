@@ -6,7 +6,7 @@ use GetStream\Stream\BaseFeed;
 
 class BaseFeedStub extends BaseFeed
 {
-    public function makeHttpRequest($uri, $method, $data = null, $query_params = null)
+    public function makeHttpRequest($uri, $method, $data = [], $query_params = [], $resource = '', $action = '')
     {
         return [
             'uri' => $uri,

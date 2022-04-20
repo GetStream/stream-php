@@ -4,12 +4,11 @@ namespace GetStream\Stream;
 
 use GuzzleHttp\Client as GuzzleClient;
 use GuzzleHttp\Exception\ClientException;
-use Utils;
 
 class Users
 {
     /**
-     * @var ClientInterface
+     * @var GuzzleClient
      */
     private $client;
 
@@ -61,7 +60,7 @@ class Users
 
     /**
      * @param string $userId
-     * @param array $data
+     * @param ?array $data
      * @param bool $getOrCreate
      *
      * @return array
@@ -123,7 +122,7 @@ class Users
 
     /**
      * @param string $userId
-     * @param array $data
+     * @param ?array $data
 
      * @return array
      */

@@ -1,6 +1,8 @@
 <?php
 namespace GetStream\Stream;
 
+use GuzzleHttp\Exception\ClientException;
+
 class StreamFeedException extends \Exception
 {
     private function getRateLimitValue($headerName)
@@ -13,9 +15,15 @@ class StreamFeedException extends \Exception
 
         */
         $e = $this->getPrevious();
-        if ($e) {
-            return (string)$e->getResponse()->getHeader("x-ratelimit-" . $headerName)[0];
+        if ($e && $e instanceof ClientException) {
+            $headerValues = $e->getResponse()->getHeader("x-ratelimit-" . $headerName);
+
+            if ($headerValues) {
+                return $headerValues[0];
+            }
         }
+
+        return null;
     }
 
     public function getRateLimitLimit()

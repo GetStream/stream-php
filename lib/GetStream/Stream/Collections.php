@@ -8,7 +8,7 @@ use GuzzleHttp\Exception\ClientException;
 class Collections
 {
     /**
-     * @var ClientInterface
+     * @var GuzzleClient
      */
     private $client;
 

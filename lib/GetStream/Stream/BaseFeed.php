@@ -2,8 +2,23 @@
 
 namespace GetStream\Stream;
 
+use GuzzleHttp\Client as GuzzleClient;
+use GuzzleHttp\Exception\ClientException;
+use GuzzleHttp\HandlerStack;
+use GuzzleHttp\Psr7\Uri;
+
 class BaseFeed implements BaseFeedInterface
 {
+    /**
+    * @var array
+    */
+    protected $guzzleOptions = [];
+
+    /**
+     * @var array
+     */
+    protected $httpRequestHeaders = [];
+
     /**
      * @var string
      */
@@ -157,7 +172,7 @@ class BaseFeed implements BaseFeedInterface
             $activity['to'] = $this->signToField($activity['to']);
         }
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity, null, 'feed', 'write');
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', $activity, [], 'feed', 'write');
     }
 
     /**
@@ -174,7 +189,7 @@ class BaseFeed implements BaseFeedInterface
             }
         }
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', compact('activities'), null, 'feed', 'write');
+        return $this->makeHttpRequest("{$this->base_feed_url}/", 'POST', compact('activities'), [], 'feed', 'write');
     }
 
     /**
@@ -192,7 +207,7 @@ class BaseFeed implements BaseFeedInterface
             $query_params['foreign_id'] = 1;
         }
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', null, $query_params, 'feed', 'delete');
+        return $this->makeHttpRequest("{$this->base_feed_url}/{$activity_id}/", 'DELETE', [], $query_params, 'feed', 'delete');
     }
 
     /**
@@ -241,7 +256,7 @@ class BaseFeed implements BaseFeedInterface
 
         $prefix_enrich = $enrich ? 'enrich/' : '';
 
-        return $this->makeHttpRequest("{$prefix_enrich}{$this->base_feed_url}/", 'GET', null, $query_params, 'feed', 'read');
+        return $this->makeHttpRequest("{$prefix_enrich}{$this->base_feed_url}/", 'GET', [], $query_params, 'feed', 'read');
     }
 
     /**
@@ -264,7 +279,7 @@ class BaseFeed implements BaseFeedInterface
             $data['target_token'] = $target_feed->getToken();
         }
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, null, 'follower', 'write');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'POST', $data, [], 'follower', 'write');
     }
 
     /**
@@ -281,7 +296,7 @@ class BaseFeed implements BaseFeedInterface
             'offset' => $offset,
         ];
 
-        return $this->makeHttpRequest("{$this->base_feed_url}/followers/", 'GET', null, $query_params, 'follower', 'read');
+        return $this->makeHttpRequest("{$this->base_feed_url}/followers/", 'GET', [], $query_params, 'follower', 'read');
     }
 
     /**
@@ -299,7 +314,7 @@ class BaseFeed implements BaseFeedInterface
             'offset' => $offset,
             'filter' => implode(',', $filter),
         ];
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'GET', null, $query_params, 'follower', 'read');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/", 'GET', [], $query_params, 'follower', 'read');
     }
 
     /**
@@ -318,7 +333,7 @@ class BaseFeed implements BaseFeedInterface
             $queryParams['keep_history'] = 'true';
         }
         $targetFeedId = "$targetFeedSlug:$targetUserId";
-        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$targetFeedId}/", 'DELETE', null, $queryParams, 'follower', 'delete');
+        return $this->makeHttpRequest("{$this->base_feed_url}/follows/{$targetFeedId}/", 'DELETE', [], $queryParams, 'follower', 'delete');
     }
 
     /**
@@ -349,6 +364,91 @@ class BaseFeed implements BaseFeedInterface
         if ($removed_targets) {
             $data['removed_targets'] = $removed_targets;
         }
-        return $this->makeHttpRequest("feed_targets/{$this->slug}/{$this->user_id}/activity_to_targets/", 'POST', $data, null, 'feed_targets', 'write');
+        return $this->makeHttpRequest("feed_targets/{$this->slug}/{$this->user_id}/activity_to_targets/", 'POST', $data, [], 'feed_targets', 'write');
+    }
+
+    /**
+     * @return \GuzzleHttp\HandlerStack
+     */
+    public function getHandlerStack()
+    {
+        return HandlerStack::create();
+    }
+
+    /**
+     * @return \GuzzleHttp\Client
+     */
+    public function getHttpClient()
+    {
+        $handler = $this->getHandlerStack();
+        return new GuzzleClient([
+            'base_uri' => $this->client->getBaseUrl(),
+            'timeout' => $this->client->timeout,
+            'handler' => $handler,
+            'headers' => ['Accept-Encoding' => 'gzip'],
+        ]);
+    }
+
+    public function setGuzzleDefaultOption($option, $value)
+    {
+        $this->guzzleOptions[$option] = $value;
+    }
+
+    /**
+     * @param  string $resource
+     * @param  string $action
+     * @return array
+     */
+    protected function getHttpRequestHeaders($resource, $action)
+    {
+        $token = $this->client->createFeedJWTToken($this, $resource, $action);
+
+        return [
+            'Authorization' => $token,
+            'Content-Type' => 'application/json',
+            'stream-auth-type' => 'jwt',
+            'X-Stream-Client' => 'stream-php-client-' . Constant::VERSION,
+        ];
+    }
+
+    /**
+     * @param  string $uri
+     * @param  string $method
+     * @param  array $data
+     * @param  array $query_params
+     * @param  string $resource
+     * @param  string $action
+     * @return mixed
+     * @throws StreamFeedException
+     */
+    public function makeHttpRequest($uri, $method, $data = [], $query_params = [], $resource = '', $action = '')
+    {
+        $query_params['api_key'] = $this->api_key;
+        $client = $this->getHttpClient();
+        $headers = $this->getHttpRequestHeaders($resource, $action);
+
+        $uri = (new Uri($this->client->buildRequestUrl($uri)))
+            ->withQuery(http_build_query($query_params));
+
+        $options = $this->guzzleOptions;
+        $options['headers'] = $headers;
+
+        if ($method === 'POST') {
+            $options['json'] = $data;
+        }
+
+        try {
+            $response = $client->request($method, $uri, $options);
+        } catch (ClientException $e) {
+            $response = $e->getResponse();
+            $msg = $response->getBody();
+            $code = $response->getStatusCode();
+            $previous = $e;
+            throw new StreamFeedException($msg, $code, $previous);
+        }
+
+        $body = $response->getBody()->getContents();
+
+        return json_decode($body, true);
     }
 }
