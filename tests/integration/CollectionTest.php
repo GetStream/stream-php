@@ -8,7 +8,6 @@ use Firebase\JWT\JWT;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 use GuzzleHttp\Exception\ClientException;
 
 class CollectionTest extends TestCase
@@ -63,8 +62,8 @@ class CollectionTest extends TestCase
         );
         $this->client->setLocation('qa');
         $this->client->timeout = 10000;
-        $this->user1 = $this->client->feed('user', Uuid::uuid4());
-        $this->user2 = $this->client->feed('user', Uuid::uuid4());
+        $this->user1 = $this->client->feed('user', $this->generateGuid());
+        $this->user2 = $this->client->feed('user', $this->generateGuid());
         $this->collections = $this->client->collections();
     }
 
@@ -75,6 +74,11 @@ class CollectionTest extends TestCase
         } catch (ClientException $e) {
             // pass
         }
+    }
+
+    private function generateGuid()
+    {
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
     }
 
     public function testUpsert()

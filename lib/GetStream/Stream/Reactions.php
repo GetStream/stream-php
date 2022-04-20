@@ -27,7 +27,7 @@ class Reactions
      * @param string $apiKey
      * @param string $apiSecret
      */
-    public function __construct(ClientInterface  $streamClient, $apiKey, $apiSecret)
+    public function __construct(ClientInterface $streamClient, $apiKey, $apiSecret)
     {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;

@@ -8,7 +8,6 @@ use Firebase\JWT\JWT;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
 use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 
 class ReactionTest extends TestCase
 {
@@ -62,15 +61,20 @@ class ReactionTest extends TestCase
         );
         $this->client->setLocation('qa');
         $this->client->timeout = 10000;
-        $this->user1 = $this->client->feed('user', Uuid::uuid4());
-        $this->user2 = $this->client->feed('user', Uuid::uuid4());
-        $this->aggregated2 = $this->client->feed('aggregated', Uuid::uuid4());
-        $this->aggregated3 = $this->client->feed('aggregated', Uuid::uuid4());
-        $this->flat3 = $this->client->feed('flat', Uuid::uuid4());
+        $this->user1 = $this->client->feed('user', $this->generateGuid());
+        $this->user2 = $this->client->feed('user', $this->generateGuid());
+        $this->aggregated2 = $this->client->feed('aggregated', $this->generateGuid());
+        $this->aggregated3 = $this->client->feed('aggregated', $this->generateGuid());
+        $this->flat3 = $this->client->feed('flat', $this->generateGuid());
         $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
         $response = $this->user1->addActivity($activity_data);
         $this->activity_id = $response['id'];
         $this->reactions = $this->client->reactions();
+    }
+
+    private function generateGuid()
+    {
+        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
     }
 
     public function testSimpleAddReaction()

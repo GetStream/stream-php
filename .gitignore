@@ -3,4 +3,4 @@ composer.lock
 /build
 .phpunit.result.cache
 .envrc
-.php_cs.cache
+.*.cache
