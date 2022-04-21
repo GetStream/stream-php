@@ -20,11 +20,11 @@
 
 ## 📝 About Stream
 
-You can sign up for a Stream account at our [Get Started](https://getstream.io/chat/get_started/) page.
+You can sign up for a Stream account at our [Get Started](https://getstream.io/activity-feeds/) page.
 
-You can use this library to access chat API endpoints server-side.
+You can use this library to access Feeds API endpoints server-side.
 
-For the client-side integrations (web and mobile) have a look at the JavaScript, iOS and Android SDK libraries ([docs](https://getstream.io/chat/)).
+For the client-side integrations (web and mobile) have a look at the JavaScript, iOS and Android SDK libraries ([docs](https://getstream.io/activity-feeds/docs/?language=php)).
 
 💡 Note that there is also a higher level [Laravel integration](https://github.com/getstream/stream-laravel) which hooks into the Eloquent ORM.
 
@@ -255,6 +255,8 @@ There's a higher level integration with [Laravel](https://laravel.com) called [`
 The `stream-laravel` integration helps you to hook into the Laravel's Eloquent ORM to sync data to Stream.
 
 ## ✍️ Contributing
+
+Project is licensed under the [BSD 3-Clause](LICENSE).
 
 We welcome code changes that improve this library or fix a problem, please make sure to follow all best practices and add tests if applicable before submitting a Pull Request on Github. We are very happy to merge your code in the official repository. Make sure to sign our [Contributor License Agreement (CLA)](https://docs.google.com/forms/d/e/1FAIpQLScFKsKkAJI7mhCr7K9rEIOpqIDThrWxuvxnwUq2XkHyG154vQ/viewform) first. See our [license file](./LICENSE) for more details.
 

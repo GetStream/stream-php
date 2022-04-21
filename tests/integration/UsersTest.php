@@ -4,9 +4,8 @@ namespace GetStream\Integration;
 
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
-use PHPUnit\Framework\TestCase;
 
-class UserTest extends TestCase
+class UserTest extends TestBase
 {
     /**
      * @var Client
@@ -61,11 +60,6 @@ class UserTest extends TestCase
         $this->users = $this->client->users();
 
         // $this->user1 = $this->client->feed('user', $this->generateGuid());
-    }
-
-    private function generateGuid()
-    {
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
     }
 
     public function testSimpleAddUser()

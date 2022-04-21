@@ -2,15 +2,11 @@
 
 namespace GetStream\Integration;
 
-use DateTime;
-use DateTimeZone;
-use Firebase\JWT\JWT;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
-use PHPUnit\Framework\TestCase;
 use GuzzleHttp\Exception\ClientException;
 
-class CollectionTest extends TestCase
+class CollectionTest extends TestBase
 {
     /**
      * @var Client
@@ -74,11 +70,6 @@ class CollectionTest extends TestCase
         } catch (ClientException $e) {
             // pass
         }
-    }
-
-    private function generateGuid()
-    {
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
     }
 
     public function testUpsert()

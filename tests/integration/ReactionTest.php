@@ -2,14 +2,10 @@
 
 namespace GetStream\Integration;
 
-use DateTime;
-use DateTimeZone;
-use Firebase\JWT\JWT;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
-use PHPUnit\Framework\TestCase;
 
-class ReactionTest extends TestCase
+class ReactionTest extends TestBase
 {
     /**
      * @var Client
@@ -70,11 +66,6 @@ class ReactionTest extends TestCase
         $response = $this->user1->addActivity($activity_data);
         $this->activity_id = $response['id'];
         $this->reactions = $this->client->reactions();
-    }
-
-    private function generateGuid()
-    {
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
     }
 
     public function testSimpleAddReaction()

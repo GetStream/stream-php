@@ -7,9 +7,8 @@ use DateTimeZone;
 use Firebase\JWT\JWT;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
-use PHPUnit\Framework\TestCase;
 
-class FeedTest extends TestCase
+class FeedTest extends TestBase
 {
     /**
      * @var Client
@@ -50,11 +49,6 @@ class FeedTest extends TestCase
         $this->aggregated2 = $this->client->feed('aggregated', $this->generateGuid());
         $this->aggregated3 = $this->client->feed('aggregated', $this->generateGuid());
         $this->flat3 = $this->client->feed('flat', $this->generateGuid());
-    }
-
-    private function generateGuid()
-    {
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
     }
 
     public function testRedirectUrl()
