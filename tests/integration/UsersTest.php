@@ -4,10 +4,8 @@ namespace GetStream\Integration;
 
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
-use PHPUnit\Framework\TestCase;
-use Ramsey\Uuid\Uuid;
 
-class UserTest extends TestCase
+class UserTest extends TestBase
 {
     /**
      * @var Client
@@ -61,12 +59,12 @@ class UserTest extends TestCase
         $this->client->timeout = 10000;
         $this->users = $this->client->users();
 
-        // $this->user1 = $this->client->feed('user', Uuid::uuid4());
+        // $this->user1 = $this->client->feed('user', $this->generateGuid());
     }
 
     public function testSimpleAddUser()
     {
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = $this->generateGuid();
         $user = $this->users->add($uuid);
         $this->assertSame($user['id'], $uuid);
         $this->assertTrue(array_key_exists('created_at', $user));
@@ -76,7 +74,7 @@ class UserTest extends TestCase
 
     public function testGetOrCreateUser()
     {
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = $this->generateGuid();
         $user1 = $this->users->add($uuid);
         $user2 = $this->users->add($uuid, null, true);
 
@@ -88,7 +86,7 @@ class UserTest extends TestCase
     public function testAddUserData()
     {
         $data = ['client' => 'php'];
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = $this->generateGuid();
         $user = $this->users->add($uuid, $data);
         $this->assertSame($user['id'], $uuid);
         $this->assertTrue(array_key_exists('created_at', $user));
@@ -98,7 +96,7 @@ class UserTest extends TestCase
 
     public function testGetUser()
     {
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = $this->generateGuid();
         $created_user = $this->users->add($uuid);
         $retrieved_user = $this->users->get($uuid);
         $this->assertSame($created_user['id'], $retrieved_user['id']);
@@ -111,7 +109,7 @@ class UserTest extends TestCase
     public function testDeleteUser()
     {
         $this->expectException(\GetStream\Stream\StreamFeedException::class);
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = $this->generateGuid();
         $created_user = $this->users->add($uuid);
         $retrieved_user = $this->users->get($created_user['id']);
         $this->users->delete($created_user['id']);
@@ -120,7 +118,7 @@ class UserTest extends TestCase
 
     public function testUpdateUser()
     {
-        $uuid = Uuid::uuid4()->toString();
+        $uuid = $this->generateGuid();
         $data = ['client' => 'php'];
         $created_user = $this->users->add($uuid, $data);
         $retrieved_user = $this->users->get($created_user['id']);

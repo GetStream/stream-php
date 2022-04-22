@@ -8,7 +8,7 @@ use GuzzleHttp\Exception\ClientException;
 class Reactions
 {
     /**
-     * @var Client
+     * @var GuzzleClient
      */
     private $client;
 
@@ -27,7 +27,7 @@ class Reactions
      * @param string $apiKey
      * @param string $apiSecret
      */
-    public function __construct(ClientInterface  $streamClient, $apiKey, $apiSecret)
+    public function __construct(ClientInterface $streamClient, $apiKey, $apiSecret)
     {
         $this->apiKey = $apiKey;
         $this->apiSecret = $apiSecret;
@@ -63,11 +63,11 @@ class Reactions
 
     /**
      * @param string $kind
-     * @param string $activityIid
+     * @param string $activityId
      * @param string $userId
-     * @param array $data
-     * @param array $targetFeeds
-     * @param array $targetFeedsExtraData
+     * @param ?array $data
+     * @param ?array $targetFeeds
+     * @param ?array $targetFeedsExtraData
      *
      * @return array
      */
@@ -96,9 +96,9 @@ class Reactions
      * @param string $kind
      * @param string $parentId
      * @param string $userId
-     * @param array $data
-     * @param array $targetFeeds
-     * @param array $targetFeedsExtraData
+     * @param ?array $data
+     * @param ?array $targetFeeds
+     * @param ?array $targetFeedsExtraData
      *
      * @return array
      */
@@ -153,14 +153,14 @@ class Reactions
      * @param string $lookupField
      * @param string $lookupValue
      * @param string $kind
-     * @param array $params // for pagination parameters e.g. ["limit" => "10"]
+     * @param ?array $params // for pagination parameters e.g. ["limit" => "10"]
      *
      * @return array
      */
     public function filter($lookupField, $lookupValue, $kind=null, array $params=null)
     {
         if (!in_array($lookupField, ["reaction_id", "activity_id", "user_id"])) {
-            throw StreamFeedException("Invalid request parameters");
+            throw new StreamFeedException("Invalid request parameters");
         }
         $endpoint = "reaction/" . $lookupField . "/" . $lookupValue . "/";
         if ($kind !== null) {
@@ -186,8 +186,8 @@ class Reactions
 
     /**
      * @param string $reactionId
-     * @param array $data
-     * @param array $targetFeeds
+     * @param ?array $data
+     * @param ?array $targetFeeds
      * @param array $targetFeedsExtraData
      *
      * @return array

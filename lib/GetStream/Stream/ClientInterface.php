@@ -2,6 +2,10 @@
 
 namespace GetStream\Stream;
 
+/**
+ * @property string $timeout
+ * @property string $api_version
+ */
 interface ClientInterface
 {
     /**
@@ -16,14 +20,14 @@ interface ClientInterface
 
     /**
      * @param string $user_id
-     * @param array $extra_data
+     * @param ?array $extra_data
      * @return string
      */
     public function createUserSessionToken($user_id, array $extra_data = null);
 
     /**
      * @param string $user_id
-     * @param array $extra_data
+     * @param ?array $extra_data
      * @return string
      */
     public function createUserToken($user_id, array $extra_data = null);

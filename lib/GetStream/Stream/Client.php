@@ -73,6 +73,8 @@ class Client implements ClientInterface
         }
 
         $parsed_url = parse_url($url);
+        '@phan-var array $parsed_url';
+
         $api_key = $parsed_url['user'];
         $api_secret = $parsed_url['pass'];
 
@@ -104,7 +106,7 @@ class Client implements ClientInterface
 
     /**
      * @param  string $user_id
-     * @param  array $extra_data
+     * @param  ?array $extra_data
      * @return string
      */
     public function createUserSessionToken($user_id, array $extra_data=null)
@@ -117,7 +119,7 @@ class Client implements ClientInterface
 
     /**
      * @param  string $user_id
-     * @param  array $extra_data
+     * @param  ?array $extra_data
      * @return string
      */
     public function createUserToken($user_id, array $extra_data=null)

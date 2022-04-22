@@ -1,7 +1,11 @@
 {
     "name": "get-stream/stream",
     "description": "A PHP client for Stream (https://getstream.io)",
-    "keywords": ["stream", "newsfeed", "feedly"],
+    "keywords": [
+        "stream",
+        "newsfeed",
+        "feedly"
+    ],
     "homepage": "https://getstream.io",
     "license": "BSD-3-Clause",
     "authors": [
@@ -10,25 +14,28 @@
             "email": "support@getstream.io"
         }
     ],
+    "support": {
+        "issues": "https://github.com/GetStream/stream-php/issues",
+        "docs": "https://getstream.io/activity-feeds/docs/?language=php"
+    },
     "require": {
         "php": ">=7.3",
         "guzzlehttp/guzzle": "^6.3.3 || ^7.0.1",
         "firebase/php-jwt": "^v5.0.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.18.0",
-        "phan/phan": "^4.0.3",
-        "phpunit/phpunit": "^8.2.1",
-        "ramsey/uuid": "^3.8"
+        "friendsofphp/php-cs-fixer": "^3.0.0",
+        "phan/phan": "^5.3.2",
+        "phpunit/phpunit": "^9.5.20"
     },
     "autoload": {
         "psr-0": {
-            "GetStream\\Stream" : "lib/"
+            "GetStream\\Stream": "lib/"
         },
         "psr-4": {
-            "GetStream\\Stubs\\" : "tests/stubs/",
-            "GetStream\\Unit\\" : "tests/unit/",
-            "GetStream\\Integration\\" : "tests/integration/"
+            "GetStream\\Stubs\\": "tests/stubs/",
+            "GetStream\\Unit\\": "tests/unit/",
+            "GetStream\\Integration\\": "tests/integration/"
         }
     }
 }

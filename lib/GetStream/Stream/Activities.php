@@ -47,6 +47,6 @@ class Activities extends Feed
             $url = "enrich/$url";
         }
 
-        return $this->makeHttpRequest($url, 'GET', null, $query_params);
+        return $this->makeHttpRequest($url, 'GET', [], $query_params);
     }
 }

@@ -1,40 +1,58 @@
-# stream-php
+# Official PHP SDK for [Stream Feeds](https://getstream.io/activity-feeds/)
 
 [![build](https://github.com/GetStream/stream-php/workflows/build/badge.svg)](https://github.com/GetStream/stream-php/actions) [![Latest Stable Version](https://poser.pugx.org/get-stream/stream/v/stable)](https://packagist.org/packages/get-stream/stream)
 
-[stream-php](https://github.com/GetStream/stream-php) is the official PHP client for [Stream](https://getstream.io/), a web service for building scalable newsfeeds and activity streams.
+<p align="center">
+    <img src="./assets/logo.svg" width="50%" height="50%">
+</p>
+<p align="center">
+    Official PHP API client for Stream Feeds, a web service for building scalable newsfeeds and activity streams.
+    <br />
+    <a href="https://getstream.io/activity-feeds/docs/?language=php"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/GetStream/stream-laravel">Laravel Feeds Library</a>
+    ·
+    <a href="https://github.com/GetStream/stream-php/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/GetStream/stream-php/issues">Request Feature</a>
+</p>
 
-Note that there is also a higher level [Laravel](https://github.com/getstream/stream-laravel) integration which hooks into the Eloquent ORM.
+## 📝 About Stream
 
-You can sign up for a Stream account at https://getstream.io/get_started.
+You can sign up for a Stream account at our [Get Started](https://getstream.io/activity-feeds/) page.
 
-### Installation
+You can use this library to access Feeds API endpoints server-side.
 
-#### Composer
+For the client-side integrations (web and mobile) have a look at the JavaScript, iOS and Android SDK libraries ([docs](https://getstream.io/activity-feeds/docs/?language=php)).
 
-```
-composer require get-stream/stream
+💡 Note that there is also a higher level [Laravel integration](https://github.com/getstream/stream-laravel) which hooks into the Eloquent ORM.
+
+## ⚙️ Installation
+
+```bash
+$ composer require get-stream/stream
 ```
 
 Composer will install our latest version automatically.
 
-#### PHP compatibility
+### PHP compatibility
 
 Current releases require PHP `7.3` or higher, and depends on Guzzle version `^6.3.3`.
 
 If you need to use the client with an old PHP or earlier versions of Guzzle, you can grab an earlier version of this package, for example:
 
-```
-composer require get-stream/stream:"~2.1.0"
+```bash
+$ composer require get-stream/stream:"~2.1.0"
 ```
 
 See the [action](.github/workflows/ci.yml) for details of how it is built and tested against different PHP versions.
 
-### Documentation
+## 📚 Documentation
 
 Our full documentation for this package is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
 
-#### Quick start
+## ✨ Getting started
 
 First, [signup here](https://getstream.io/dashboard/) for a free account and grab your API key and secret.
 
@@ -229,26 +247,20 @@ $client->users()->delete('42');
 
 Again, our full documentation with all options and methods, is available at [https://getstream.io/docs/php/](https://getstream.io/docs/php/).
 
-### Framework integration
+## ☯️ Framework integration
 
-#### Laravel
+### Laravel
 
 There's a higher level integration with [Laravel](https://laravel.com) called [`get-stream/stream-laravel`](https://github.com/getstream/stream-laravel).
 The `stream-laravel` integration helps you to hook into the Laravel's Eloquent ORM to sync data to Stream.
 
-### Contributing
-
-We love contributions. We love contributions with tests even more! To run the test-suite to ensure everything still works, run phpunit:
-
-```
-vendor/bin/phpunit --testsuite "Unit Test Suite"
-```
-
-### Copyright and License Information
+## ✍️ Contributing
 
 Project is licensed under the [BSD 3-Clause](LICENSE).
 
-## We are hiring!
+We welcome code changes that improve this library or fix a problem, please make sure to follow all best practices and add tests if applicable before submitting a Pull Request on Github. We are very happy to merge your code in the official repository. Make sure to sign our [Contributor License Agreement (CLA)](https://docs.google.com/forms/d/e/1FAIpQLScFKsKkAJI7mhCr7K9rEIOpqIDThrWxuvxnwUq2XkHyG154vQ/viewform) first. See our [license file](./LICENSE) for more details.
+
+## 🧑‍💻 We are hiring!
 
 We've recently closed a [$38 million Series B funding round](https://techcrunch.com/2021/03/04/stream-raises-38m-as-its-chat-and-activity-feed-apis-power-communications-for-1b-users/) and we keep actively growing.
 Our APIs are used by more than a billion end-users, and you'll have a chance to make a huge impact on the product within a team of the strongest engineers all over the world.

@@ -10,7 +10,7 @@ class Personalization
     const API_ENDPOINT = 'https://personalization.stream-io-api.com/personalization/v1.0/';
 
     /**
-     * @var ClientInterface
+     * @var GuzzleClient
      */
     private $client;
 
