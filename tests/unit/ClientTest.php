@@ -62,6 +62,20 @@ class ClientTest extends TestCase
         $this->assertEquals($ref, "SU:42");
     }
 
+    public function testGetActivitiesByForeignIdExceptionNoArray()
+    {
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
+        $client = new Client('key', 'secret');
+        $client->getActivitiesByForeignId([1, 2]);
+    }
+
+    public function testGetActivitiesByForeignIdExceptionMalformedArray()
+    {
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
+        $client = new Client('key', 'secret');
+        $client->getActivitiesByForeignId([[1, 2], [2, 3, 4]]);
+    }
+
     public function testEnvironmentVariable()
     {
         // Arrange
