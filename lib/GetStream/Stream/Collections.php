@@ -34,7 +34,7 @@ class Collections
         $this->client = new GuzzleClient([
             'base_uri' => $streamClient->getBaseUrl().'/'.$streamClient->api_version.'/',
             'timeout' => $streamClient->timeout,
-            'handler' => Util::handlerStack($apiKey, $apiSecret, 'collections'),
+            'handler' => Util::handlerStack($streamClient, $apiKey, $apiSecret, 'collections'),
         ]);
     }
 

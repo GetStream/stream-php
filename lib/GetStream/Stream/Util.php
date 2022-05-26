@@ -9,9 +9,13 @@ use Psr\Http\Message\RequestInterface;
 class Util
 {
     /**
+     * @param ClientInterface $streamClient
+     * @param string $apiKey
+     * @param string $apiSecret
+     * @param string $resource
      * @return HandlerStack
      */
-    public static function handlerStack($apiKey, $apiSecret, $resource)
+    public static function handlerStack($streamClient, $apiKey, $apiSecret, $resource)
     {
         $token = JWT::encode([
             'action' => '*',
@@ -19,7 +23,12 @@ class Util
             'feed_id' => '*',
             'resource' => $resource,
         ], $apiSecret, 'HS256');
-        $stack = HandlerStack::create();
+
+
+        $stack = $streamClient->getCustomHttpHandlerStack();
+        if (!$stack) {
+            $stack = HandlerStack::create();
+        }
         $stack->push(function (callable $handler) use ($token, $apiKey) {
             return function (RequestInterface $request, array $options) use ($handler, $token, $apiKey) {
                 // Add authentication headers.

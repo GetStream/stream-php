@@ -380,7 +380,11 @@ class BaseFeed implements BaseFeedInterface
      */
     public function getHttpClient()
     {
-        $handler = $this->getHandlerStack();
+        $handler = $this->client->getCustomHttpHandlerStack();
+        if (!$handler) {
+            $handler = $this->getHandlerStack();
+        }
+
         return new GuzzleClient([
             'base_uri' => $this->client->getBaseUrl(),
             'timeout' => $this->client->timeout,

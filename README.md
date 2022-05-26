@@ -64,6 +64,14 @@ $client = new GetStream\Stream\Client('YOUR_API_KEY', 'YOUR_API_SECRET');
 
 // Instantiate a feed object
 $userFeed = $client->feed('user', '1');
+
+// If you want, you can set a custom http handler
+$handler = new \GuzzleHttp\HandlerStack();
+$stack->push(Middleware::mapRequest(function (RequestInterface $r) {
+    echo 'Sending request to Stream Feeds API: ' . $r->getUri() . PHP_EOL;
+    return $r;
+}));
+$client->setCustomHttpHandler($handler);
 ```
 
 By default, the Client will target the GetStream REST API at `stream-io-api.com/api`.

@@ -3,6 +3,7 @@ namespace GetStream\Stream;
 
 use DateTime;
 use Exception;
+use GuzzleHttp\HandlerStack;
 
 class Client implements ClientInterface
 {
@@ -44,6 +45,11 @@ class Client implements ClientInterface
     public $timeout;
 
     /**
+     * @var HandlerStack|null
+     */
+    public $customHttpHandler;
+
+    /**
      * @param string $api_key
      * @param string $api_secret
      * @param string $api_version
@@ -59,6 +65,23 @@ class Client implements ClientInterface
         $this->timeout = $timeout;
         $this->location = $location;
         $this->protocol = 'https';
+    }
+
+    /**
+     * @param HandlerStack $handler
+     * @return void
+     */
+    public function setCustomHttpHandler($handler)
+    {
+        $this->customHttpHandler = $handler;
+    }
+
+    /**
+     * @return HandlerStack|null
+     */
+    public function getCustomHttpHandlerStack()
+    {
+        return $this->customHttpHandler;
     }
 
     /**
