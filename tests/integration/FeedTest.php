@@ -5,6 +5,7 @@ namespace GetStream\Integration;
 use DateTime;
 use DateTimeZone;
 use Firebase\JWT\JWT;
+use Firebase\JWT\Key;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
 
@@ -322,11 +323,11 @@ class FeedTest extends TestBase
     {
         $token = $this->client->createUserSessionToken('user');
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
+        $payload = JWT::decode($token, new Key(getenv('STREAM_API_SECRET'), 'HS256'));
         $this->assertSame($payload->user_id, 'user');
         $token = $this->client->createUserSessionToken('user', ['client'=>'PHP']);
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
+        $payload = JWT::decode($token, new Key(getenv('STREAM_API_SECRET'), 'HS256'));
         $this->assertSame($payload->client, 'PHP');
     }
 
@@ -334,11 +335,11 @@ class FeedTest extends TestBase
     {
         $token = $this->client->createUserToken('user');
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
+        $payload = JWT::decode($token, new Key(getenv('STREAM_API_SECRET'), 'HS256'));
         $this->assertSame($payload->user_id, 'user');
         $token = $this->client->createUserToken('user', ['client'=>'PHP']);
         $this->assertStringStartsWith('eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoidXNlci', $token);
-        $payload = JWT::decode($token, getenv('STREAM_API_SECRET'), ['HS256']);
+        $payload = JWT::decode($token, new Key(getenv('STREAM_API_SECRET'), 'HS256'));
         $this->assertSame($payload->client, 'PHP');
     }
 
@@ -682,6 +683,57 @@ class FeedTest extends TestBase
         $this->user1->addActivities($activities);
         $response = $this->client->feed('flat', $to)->getActivities(0, 2);
         $this->assertSame('many2', $response['results'][0]['actor']);
+    }
+
+    public function testGetAppActivities()
+    {
+        $fid = $this->generateGuid();
+        $time = '2006-01-02T15:04:05.999999999';
+        $resp = $this->client->feed('flat', $this->generateGuid())->addActivity(
+            ['actor'=>'bob', 'verb'=>'does', 'object'=>'something', 'foreign_id'=>$fid, 'time'=>$time]
+        );
+        $id = $resp['id'];
+
+        $resp = $this->client->getActivitiesById([$id]);
+        $this->assertCount(1, $resp['results']);
+        $this->assertSame($resp['results'][0]['id'], $id);
+
+        $resp = $this->client->getActivitiesByForeignId([
+            [$fid, $resp['results'][0]['time']],
+        ]);
+        $this->assertArrayHasKey('results', $resp);
+    }
+
+    public function testActivityPartialUpdate()
+    {
+        $userId = $this->generateGuid();
+        $feed = $this->client->feed('flat', $userId);
+        $activity = [
+            'actor'=>'bob',
+            'verb'=>'does',
+            'object'=>'something',
+            'foreign_id'=>$this->generateGuid(),
+            'time'=>'2006-01-02T15:04:05.999999999',
+            'popularity'=>42,
+            'foo'=> [
+                'bar'=>'baz',
+                'qux'=>'waldo',
+            ],
+        ];
+        $resp = $feed->addActivity($activity);
+        $set = [
+            'popularity' => 23,
+            'foo.bar' => 999,
+        ];
+        $unset = [ 'foo.qux' ];
+        $this->client->activityPartialUpdateById($resp['id'], $set, $unset);
+        $resp = $this->client->getActivitiesById([$resp['id']]);
+        $this->assertCount(1, $resp['results']);
+        $activity = $resp['results'][0];
+        $expected = $activity;
+        $expected['popularity'] = 23;
+        $expected['foo']['bar'] = 999;
+        $this->assertSame($resp['results'][0], $expected);
     }
 
     public function testUpdateActivitiesToRemoveTarget()

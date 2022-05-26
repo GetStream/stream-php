@@ -287,7 +287,7 @@ class Client implements ClientInterface
             throw new Exception("Max 100 activities allowed in batch update");
         }
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
-        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        $activityUpdateOp = new ActivitiesOperation($this, $this->api_key, $token);
         return $activityUpdateOp->partiallyUpdateActivity(["changes" => $data]);
     }
 
@@ -313,7 +313,7 @@ class Client implements ClientInterface
             $data["foreign_id"] = $foreign_id;
             $data["time"] = $time;
         }
-        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        $activityUpdateOp = new ActivitiesOperation($this, $this->api_key, $token);
         return $activityUpdateOp->partiallyUpdateActivity($data);
     }
 
@@ -323,13 +323,88 @@ class Client implements ClientInterface
             return;
         }
         $token = $this->signer->jwtScopeToken('*', 'activities', '*');
-        $activityUpdateOp = new ActivityUpdateOperation($this, $this->api_key, $token);
+        $activityUpdateOp = new ActivitiesOperation($this, $this->api_key, $token);
         return $activityUpdateOp->updateActivities($activities);
     }
 
     public function updateActivity($activity)
     {
         return $this->updateActivities([$activity]);
+    }
+
+    private function getAppActivities($data)
+    {
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $op = new ActivitiesOperation($this, $this->api_key, $token);
+        return $op->getAppActivities($data);
+    }
+
+    /**
+     * Retrieves activities for the current app having the given IDs.
+     * @param array $ids
+     * @return mixed
+     */
+    public function getActivitiesById($ids = [])
+    {
+        return $this->getAppActivities(['ids' => $ids]);
+    }
+
+    /**
+     * Retrieves activities for the current app having the given list of [foreign ID, time] elements.
+     * @param array $foreignIdTimes
+     * @return mixed
+     */
+    public function getActivitiesByForeignId($foreignIdTimes = [])
+    {
+        $foreignIds = [];
+        $timestamps = [];
+        foreach ($foreignIdTimes as $fidTime) {
+            if (!is_array($fidTime) || count($fidTime) != 2) {
+                throw new StreamFeedException('malformed foreign ID and time combination');
+            }
+            array_push($foreignIds, $fidTime[0]);
+            array_push($timestamps, $fidTime[1]);
+        }
+        return $this->getAppActivities(['foreign_ids' => $foreignIds, 'timestamps' => $timestamps]);
+    }
+
+    private function activityPartialUpdate($data = [])
+    {
+        $token = $this->signer->jwtScopeToken('*', 'activities', '*');
+        $op = new ActivitiesOperation($this, $this->api_key, $token);
+        return $op->activityPartialUpdate($data);
+    }
+
+    /**
+     * Performs an activity partial update by the given activity ID.
+     * @param string $id
+     * @param mixed $set
+     * @param array $unset
+     * @return mixed
+     */
+    public function activityPartialUpdateById($id, $set = [], $unset = [])
+    {
+        return $this->activityPartialUpdate(['id' => $id, 'set' => $set, 'unset' => $unset]);
+    }
+
+    /**
+     * Performs an activity partial update by the given foreign ID and time.
+     * @param string $foreign_id
+     * @param DateTime|int $time
+     * @param mixed $set
+     * @param array $unset
+     * @return mixed
+     */
+    public function activityPartialUpdateByForeignId($foreign_id, $time, $set = [], $unset = [])
+    {
+        return $this->activityPartialUpdate(
+            [
+                'foreign_id' => $foreign_id,
+                'time' => $time,
+                'set' => $set,
+                'unset' => $unset
+            ]
+        );
     }
 
     /**
