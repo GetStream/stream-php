@@ -2,6 +2,8 @@
 
 namespace GetStream\Stream;
 
+use GuzzleHttp\HandlerStack;
+
 /**
  * @property string $timeout
  * @property string $api_version
@@ -17,6 +19,11 @@ interface ClientInterface
      * @param string $location
      */
     public function setLocation($location);
+
+    /**
+     * @return HandlerStack|null
+     */
+    public function getCustomHttpHandlerStack();
 
     /**
      * @param string $user_id

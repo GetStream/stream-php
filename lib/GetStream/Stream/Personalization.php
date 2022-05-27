@@ -36,7 +36,7 @@ class Personalization
         $this->client = new GuzzleClient([
             'base_uri' => self::API_ENDPOINT,
             'timeout' => $streamClient->timeout,
-            'handler' => Util::handlerStack($apiKey, $apiSecret, 'personalization'),
+            'handler' => Util::handlerStack($streamClient, $apiKey, $apiSecret, 'personalization'),
         ]);
     }
 
