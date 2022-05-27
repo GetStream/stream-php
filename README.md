@@ -20,13 +20,15 @@
 
 ## 📝 About Stream
 
+> > 💡 Note: this is a library for the **Feeds** product. The Chat SDKs can be found [here](https://getstream.io/chat/docs/).
+
 You can sign up for a Stream account at our [Get Started](https://getstream.io/activity-feeds/) page.
 
 You can use this library to access Feeds API endpoints server-side.
 
 For the client-side integrations (web and mobile) have a look at the JavaScript, iOS and Android SDK libraries ([docs](https://getstream.io/activity-feeds/docs/?language=php)).
 
-💡 Note that there is also a higher level [Laravel integration](https://github.com/getstream/stream-laravel) which hooks into the Eloquent ORM.
+> 💡 Note: there is also a higher level [Laravel integration](https://github.com/getstream/stream-laravel) which hooks into the Eloquent ORM.
 
 ## ⚙️ Installation
 
