@@ -2,7 +2,7 @@ name: build
 
 on: [pull_request]
 
-concurrency: 
+concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref }}
   cancel-in-progress: true
 
@@ -13,13 +13,13 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        php-versions: ['7.3', '7.4', '8.0', '8.1']
+        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
         with:
           fetch-depth: 0 # gives the commit message linter access to all previous commits
-    
+
       - name: Commit lint
         if: ${{ matrix.php-versions == '7.3' }}
         uses: wagoid/commitlint-github-action@v4
