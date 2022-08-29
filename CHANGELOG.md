@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [6.0.0](https://github.com/GetStream/stream-php/compare/5.2.0...6.0.0) (2022-08-29)
+
+
+### Features
+
+* drop php 7.3 support ([#117](https://github.com/GetStream/stream-php/issues/117)) ([f97432b](https://github.com/GetStream/stream-php/commit/f97432bfafb9adfa963ef3254a6e2575fb4d7b01))
+
 ## [5.2.0](https://github.com/GetStream/stream-php/compare/5.1.1...5.2.0) (2022-08-29)
 
 
