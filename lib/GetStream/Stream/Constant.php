@@ -4,5 +4,5 @@ namespace GetStream\Stream;
 
 class Constant
 {
-    const VERSION = '5.1.1';
+    const VERSION = '5.1.2';
 }

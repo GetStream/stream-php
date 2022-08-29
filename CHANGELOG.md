@@ -1,3 +1,22 @@
+# Changelog
+
+All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+
+### [5.1.2](https://github.com/GetStream/stream-php/compare/5.1.1...5.1.2) (2022-08-29)
+
+
+### Features
+
+* **activities:** add get activities api ([#111](https://github.com/GetStream/stream-php/issues/111)) ([971f6a6](https://github.com/GetStream/stream-php/commit/971f6a6135fd591603278289d01a0e3962785095))
+* **guzzle:** add custom http middleware possibility ([#112](https://github.com/GetStream/stream-php/issues/112)) ([6960b3f](https://github.com/GetStream/stream-php/commit/6960b3f9b67170be845404d87c0ffc2e48237a46))
+
+
+### Bug Fixes
+
+* bump guzzle for security and add 8.2 ([#114](https://github.com/GetStream/stream-php/issues/114)) ([31bc4f8](https://github.com/GetStream/stream-php/commit/31bc4f80740bb0192d8d4a14b23837bcf11a4d4d))
+* fix phan errors ([1b15faa](https://github.com/GetStream/stream-php/commit/1b15faa24c9f29d289f8565fff13cced6e31edcf))
+* pr comment fixes ([3bd65f3](https://github.com/GetStream/stream-php/commit/3bd65f32c714c39114a9e7cbc52adf14b9f06acc))
+
 ## 5.1.1 - 2021-09-28
 * Replace deprecated query parse of Guzzle
 
