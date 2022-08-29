@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 1
       matrix:
-        php-versions: ['7.3', '7.4', '8.0', '8.1', '8.2']
+        php-versions: ['7.4', '8.0', '8.1', '8.2']
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -21,7 +21,7 @@ jobs:
           fetch-depth: 0 # gives the commit message linter access to all previous commits
 
       - name: Commit lint
-        if: ${{ matrix.php-versions == '7.3' }}
+        if: ${{ matrix.php-versions == '7.4' }}
         uses: wagoid/commitlint-github-action@v4
 
       - name: Setup PHP
@@ -36,7 +36,7 @@ jobs:
         run: composer install --no-interaction
 
       - name: Quality
-        if: matrix.php-versions == '7.3'
+        if: matrix.php-versions == '7.4'
         run: |
           vendor/bin/php-cs-fixer fix --config=.php-cs-fixer.dist.php -v --dry-run --stop-on-violation
           vendor/bin/phan --no-progress-bar

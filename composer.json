@@ -19,7 +19,7 @@
         "docs": "https://getstream.io/activity-feeds/docs/?language=php"
     },
     "require": {
-        "php": ">=7.3",
+        "php": ">=7.4",
         "guzzlehttp/guzzle": "^6.5.8 || ^7.0.1",
         "firebase/php-jwt": "^v5.0.0 || ^v6.0.0"
     },
