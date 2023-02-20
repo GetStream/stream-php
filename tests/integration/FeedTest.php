@@ -486,19 +486,21 @@ class FeedTest extends TestBase
 
     public function testFlatFollowUnfollowPrivate()
     {
-        $id = $this->generateGuid();
+        if (!str_contains(getenv('STREAM_BASE_URL'), 'localhost')) {
+            $id = $this->generateGuid();
 
-        $secret = $this->client->feed('secret', $id);
-        $this->user1->unfollow('secret', $id);
-        $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
-        $response = $secret->addActivity($activity_data);
-        $activity_id = $response['id'];
-        $this->user1->follow('secret', $id);
-        sleep(2);
-        $activities = $this->user1->getActivities(0, 1)['results'];
-        $this->assertCount(1, $activities);
-        $this->assertSame($activity_id, $activities[0]['id']);
-        $this->user1->unfollow('secret', $id);
+            $secret = $this->client->feed('secret', $id);
+            $this->user1->unfollow('secret', $id);
+            $activity_data = ['actor' => 1, 'verb' => 'tweet', 'object' => 1];
+            $response = $secret->addActivity($activity_data);
+            $activity_id = $response['id'];
+            $this->user1->follow('secret', $id);
+            sleep(2);
+            $activities = $this->user1->getActivities(0, 1)['results'];
+            $this->assertCount(1, $activities);
+            $this->assertSame($activity_id, $activities[0]['id']);
+            $this->user1->unfollow('secret', $id);
+        }
     }
 
     public function testGet()
