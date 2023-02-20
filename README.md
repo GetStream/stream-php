@@ -40,7 +40,7 @@ Composer will install our latest version automatically.
 
 ### PHP compatibility
 
-Current releases require PHP `7.4` or higher, and depends on Guzzle version `^6.5.8`.
+Current releases require PHP `8.0` or higher, and depends on Guzzle version `^7.5.0`.
 
 If you need to use the client with an old PHP or earlier versions of Guzzle, you can grab an earlier version of this package, for example:
 

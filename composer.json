@@ -19,14 +19,14 @@
         "docs": "https://getstream.io/activity-feeds/docs/?language=php"
     },
     "require": {
-        "php": ">=7.4",
-        "guzzlehttp/guzzle": "^6.5.8 || ^7.0.1",
-        "firebase/php-jwt": "^v5.0.0 || ^v6.0.0"
+        "php": ">=8.0",
+        "guzzlehttp/guzzle": "^7.5.0",
+        "firebase/php-jwt": "^v6.4.0"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^3.0.0",
-        "phan/phan": "^5.3.2",
-        "phpunit/phpunit": "^9.5.20"
+        "friendsofphp/php-cs-fixer": "^3.14.0",
+        "phan/phan": "^5.4.0",
+        "phpunit/phpunit": "^9.6.3"
     },
     "autoload": {
         "psr-0": {
