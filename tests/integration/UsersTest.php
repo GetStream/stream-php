@@ -5,7 +5,7 @@ namespace GetStream\Integration;
 use GetStream\Stream\Client;
 use GetStream\Stream\Feed;
 
-class UserTest extends TestBase
+class UsersTest extends TestBase
 {
     /**
      * @var Client
