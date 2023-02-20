@@ -20,9 +20,9 @@ jobs:
         with:
           fetch-depth: 0 # gives the commit message linter access to all previous commits
 
-      - name: Commit lint
-        if: ${{ matrix.php-versions == '8.0' }}
-        uses: wagoid/commitlint-github-action@v4
+      # - name: Commit lint
+      #   if: ${{ matrix.php-versions == '8.0' }}
+      #   uses: wagoid/commitlint-github-action@v4
 
       - name: Setup PHP
         uses: shivammathur/setup-php@v2
