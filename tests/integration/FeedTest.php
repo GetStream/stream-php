@@ -745,7 +745,7 @@ class FeedTest extends TestBase
         $activities = [
             [
                 'actor' => 'actor', 'verb' => 'tweet', 'object' => 1,
-                'to'    => ["flat:${target}"], 'time' => $time,
+                'to'    => ["flat:{$target}"], 'time' => $time,
                 'foreign_id' => 'fid1',
             ],
         ];
@@ -753,7 +753,7 @@ class FeedTest extends TestBase
         $response = $this->client->feed('flat', $target)->getActivities();
         $this->assertCount(1, $response['results']);
 
-        $feed->updateActivityToTargets('fid1', $time, [], [], ["flat:${target}"]);
+        $feed->updateActivityToTargets('fid1', $time, [], [], ["flat:{$target}"]);
 
         $response = $this->client->feed('flat', $target)->getActivities();
         $this->assertCount(0, $response['results']);
@@ -775,7 +775,7 @@ class FeedTest extends TestBase
         $response = $this->client->feed('flat', $target)->getActivities();
         $this->assertCount(0, $response['results']);
 
-        $feed->updateActivityToTargets('fid1', $time, [], ["flat:${target}"], []);
+        $feed->updateActivityToTargets('fid1', $time, [], ["flat:{$target}"], []);
 
         $response = $this->client->feed('flat', $target)->getActivities();
         $this->assertCount(1, $response['results']);
@@ -791,7 +791,7 @@ class FeedTest extends TestBase
         $activities = [
             [
                 'actor' => 'actor', 'verb' => 'tweet', 'object' => 1,
-                'to'    => ["flat:${target1}"], 'time' => $time,
+                'to'    => ["flat:{$target1}"], 'time' => $time,
                 'foreign_id' => 'fid1',
             ],
         ];
@@ -800,7 +800,7 @@ class FeedTest extends TestBase
         $response = $this->client->feed('flat', $target1)->getActivities();
         $this->assertCount(1, $response['results']);
 
-        $feed->updateActivityToTargets('fid1', $time, [], ["flat:${target2}"], ["flat:${target1}"]);
+        $feed->updateActivityToTargets('fid1', $time, [], ["flat:{$target2}"], ["flat:{$target1}"]);
         sleep(2);
 
         $response = $this->client->feed('flat', $target1)->getActivities();
@@ -820,7 +820,7 @@ class FeedTest extends TestBase
         $activities = [
             [
                 'actor' => 'actor', 'verb' => 'tweet', 'object' => 1,
-                'to'    => ["flat:${target1}"], 'time' => $time,
+                'to'    => ["flat:{$target1}"], 'time' => $time,
                 'foreign_id' => 'fid1',
             ],
         ];
@@ -829,7 +829,7 @@ class FeedTest extends TestBase
         $response = $this->client->feed('flat', $target1)->getActivities();
         $this->assertCount(1, $response['results']);
 
-        $feed->updateActivityToTargets('fid1', $time, ["flat:${target2}"]);
+        $feed->updateActivityToTargets('fid1', $time, ["flat:{$target2}"]);
 
         $response = $this->client->feed('flat', $target1)->getActivities();
         $this->assertCount(0, $response['results']);
