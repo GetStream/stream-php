@@ -45,7 +45,7 @@ Current releases require PHP `8.0` or higher, and depends on Guzzle version `^7.
 If you need to use the client with an old PHP or earlier versions of Guzzle, you can grab an earlier version of this package, for example:
 
 ```bash
-$ composer require get-stream/stream:"~2.1.0"
+$ composer require get-stream/stream:"~5.0.0"
 ```
 
 See the [action](.github/workflows/ci.yml) for details of how it is built and tested against different PHP versions.
