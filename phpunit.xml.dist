@@ -1,17 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit backupGlobals="false"
-         backupStaticAttributes="false"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertWarningsToExceptions="true"
-         processIsolation="false"
-         bootstrap="vendor/autoload.php"
-         >
-  <filter>
-    <whitelist processUncoveredFilesFromWhitelist="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" backupGlobals="false" backupStaticAttributes="false" colors="true" convertErrorsToExceptions="true" convertWarningsToExceptions="true" processIsolation="false" bootstrap="vendor/autoload.php" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
+  <coverage processUncoveredFiles="true">
+    <include>
       <directory suffix=".php">lib/</directory>
-    </whitelist>
-  </filter>
+    </include>
+  </coverage>
   <testsuites>
     <testsuite name="Unit Test Suite">
       <directory>tests/unit</directory>

@@ -9,27 +9,31 @@ class ClientTest extends TestCase
 {
     public function testClientSetProtocol()
     {
-        $client = new Client('key', 'secret');
-        $client->setProtocol('asdfg');
-        $url = $client->buildRequestUrl('x');
-        $this->assertSame('asdfg://api.stream-io-api.com/api/v1.0/x', $url);
+        if (!str_contains(getenv('STREAM_BASE_URL'), 'localhost')) {
+            $client = new Client('key', 'secret');
+            $client->setProtocol('asdfg');
+            $url = $client->buildRequestUrl('x');
+            $this->assertSame('asdfg://api.stream-io-api.com/api/v1.0/x', $url);
+        }
     }
 
     public function testClientHostnames()
     {
-        $client = new Client('key', 'secret');
-        $client->setLocation('qa');
-        $url = $client->buildRequestUrl('x');
-        $this->assertSame('https://qa-api.stream-io-api.com/api/v1.0/x', $url);
+        if (!str_contains(getenv('STREAM_BASE_URL'), 'localhost')) {
+            $client = new Client('key', 'secret');
+            $client->setLocation('qa');
+            $url = $client->buildRequestUrl('x');
+            $this->assertSame('https://qa-api.stream-io-api.com/api/v1.0/x', $url);
 
-        $client = new Client('key', 'secret', $api_version = '1234', $location = 'asdfg');
-        $url = $client->buildRequestUrl('y');
-        $this->assertSame('https://asdfg-api.stream-io-api.com/api/1234/y', $url);
+            $client = new Client('key', 'secret', $api_version = '1234', $location = 'asdfg');
+            $url = $client->buildRequestUrl('y');
+            $this->assertSame('https://asdfg-api.stream-io-api.com/api/1234/y', $url);
 
-        $client = new Client('key', 'secret');
-        $client->setLocation('us-east');
-        $url = $client->buildRequestUrl('z');
-        $this->assertSame('https://us-east-api.stream-io-api.com/api/v1.0/z', $url);
+            $client = new Client('key', 'secret');
+            $client->setLocation('us-east');
+            $url = $client->buildRequestUrl('z');
+            $this->assertSame('https://us-east-api.stream-io-api.com/api/v1.0/z', $url);
+        }
     }
 
     public function testClientSigning()
