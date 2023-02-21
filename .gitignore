@@ -4,3 +4,5 @@ composer.lock
 .phpunit.result.cache
 .envrc
 .*.cache
+Dockerfile
+Makefile
