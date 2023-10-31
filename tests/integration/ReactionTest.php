@@ -144,6 +144,25 @@ class ReactionTest extends TestBase
         $retrieved_reaction = $this->reactions->get($created_reaction['id']);
     }
 
+    public function testSoftDeleteAndRestoreReaction()
+    {
+        $created_reaction = $this->reactions->add('like', $this->activity_id, 'bob');
+        $retrieved_reaction = $this->reactions->get($created_reaction['id']);
+        $this->assertFalse(array_key_exists('deleted_at', $retrieved_reaction));
+        $this->reactions->delete($created_reaction['id'], true);
+        $retrieved_reaction = $this->reactions->get($created_reaction['id']);
+        $this->assertTrue(array_key_exists('deleted_at', $retrieved_reaction));
+        $this->reactions->restore($created_reaction['id']);
+        $retrieved_reaction = $this->reactions->get($created_reaction['id']);
+        $this->assertFalse(array_key_exists('deleted_at', $retrieved_reaction));
+    }
+
+    public function testRestoreNonexistantReaction()
+    {
+        $this->expectException(\GetStream\Stream\StreamFeedException::class);
+        $this->reactions->restore('non-existant-reaction-id');
+    }
+
     public function testUpdateReaction()
     {
         $data = ['client' => 'php'];
