@@ -139,12 +139,25 @@ class Reactions
 
     /**
      * @param string $reactionId
+     * @param bool $soft // soft delete the reaction so it can be restored afterwards
      *
      * @return array
      */
-    public function delete($reactionId)
+    public function delete($reactionId, bool $soft=false)
     {
-        $response = $this->doRequest('DELETE', 'reaction/' . $reactionId . '/');
+        $response = $this->doRequest('DELETE', 'reaction/' . $reactionId . '/?soft=' . ($soft ? 'true' : 'false'));
+        $body = $response->getBody()->getContents();
+        return json_decode($body, true);
+    }
+
+    /**
+     * @param string $reactionId
+     *
+     * @return array
+     */
+    public function restore($reactionId)
+    {
+        $response = $this->doRequest('PUT', 'reaction/' . $reactionId . '/restore/');
         $body = $response->getBody()->getContents();
         return json_decode($body, true);
     }
