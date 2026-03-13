@@ -47,21 +47,21 @@ class ClientTest extends TestCase
 
     public function testClientFeed()
     {
-        $client = new Client('key', 'secret', $location='qa');
+        $client = new Client('key', str_repeat('s', 32), $location='qa');
         $feed1 = $client->feed('flat', '1');
         $this->assertSame($feed1->getId(), 'flat:1');
     }
 
     public function testCreateReference()
     {
-        $client = new Client('key', 'secret', $location='qa');
+        $client = new Client('key', str_repeat('s', 32), $location='qa');
         $ref = $client->collections()->createReference("item", "42");
         $this->assertEquals($ref, "SO:item:42");
     }
 
     public function testCreateUserReference()
     {
-        $client = new Client('key', 'secret', $location='qa');
+        $client = new Client('key', str_repeat('s', 32), $location='qa');
         $ref = $client->users()->createReference("42");
         $this->assertEquals($ref, "SU:42");
     }
