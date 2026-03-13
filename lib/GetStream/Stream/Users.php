@@ -65,7 +65,7 @@ class Users
      *
      * @return array
      */
-    public function add($userId, array $data=null, $getOrCreate=null)
+    public function add($userId, ?array $data=null, $getOrCreate=null)
     {
         $endpoint = 'user/';
         $payload = [
@@ -126,7 +126,7 @@ class Users
 
      * @return array
      */
-    public function update($userId, array $data=null)
+    public function update($userId, ?array $data=null)
     {
         $payload = [];
         if ($data !== null) {

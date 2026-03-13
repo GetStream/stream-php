@@ -71,7 +71,7 @@ class Reactions
      *
      * @return array
      */
-    public function add($kind, $activityId, $userId, array $data=null, array $targetFeeds=null, $targetFeedsExtraData=null)
+    public function add($kind, $activityId, $userId, ?array $data=null, ?array $targetFeeds=null, $targetFeedsExtraData=null)
     {
         $payload = [
             'kind' => $kind,
@@ -102,7 +102,7 @@ class Reactions
      *
      * @return array
      */
-    public function addChild($kind, $parentId, $userId, array $data=null, array $targetFeeds=null, $targetFeedsExtraData=null)
+    public function addChild($kind, $parentId, $userId, ?array $data=null, ?array $targetFeeds=null, $targetFeedsExtraData=null)
     {
         $payload = [
             'kind' => $kind,
@@ -170,7 +170,7 @@ class Reactions
      *
      * @return array
      */
-    public function filter($lookupField, $lookupValue, $kind=null, array $params=null)
+    public function filter($lookupField, $lookupValue, $kind=null, ?array $params=null)
     {
         if (!in_array($lookupField, ["reaction_id", "activity_id", "user_id"])) {
             throw new StreamFeedException("Invalid request parameters");
@@ -205,7 +205,7 @@ class Reactions
      *
      * @return array
      */
-    public function update($reactionId, array $data=null, array $targetFeeds=null, $targetFeedsExtraData=null)
+    public function update($reactionId, ?array $data=null, ?array $targetFeeds=null, $targetFeedsExtraData=null)
     {
         $payload = [];
         if ($data !== null) {
