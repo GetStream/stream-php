@@ -132,7 +132,7 @@ class Client implements ClientInterface
      * @param  ?array $extra_data
      * @return string
      */
-    public function createUserSessionToken($user_id, array $extra_data=null)
+    public function createUserSessionToken($user_id, ?array $extra_data=null)
     {
         if (is_null($extra_data)) {
             $extra_data = [];
@@ -145,7 +145,7 @@ class Client implements ClientInterface
      * @param  ?array $extra_data
      * @return string
      */
-    public function createUserToken($user_id, array $extra_data=null)
+    public function createUserToken($user_id, ?array $extra_data=null)
     {
         if (is_null($extra_data)) {
             $extra_data = [];
