@@ -2,6 +2,8 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [8.0.0](https://github.com/GetStream/stream-php/compare/v7.1.0...v8.0.0) (2026-03-13)
+
 ## [7.1.0](https://github.com/GetStream/stream-php/compare/7.0.1...7.1.0) (2023-10-31)
 
 ### [7.0.1](https://github.com/GetStream/stream-php/compare/v7.0.0...v7.0.1) (2023-02-21)
