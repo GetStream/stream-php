@@ -1,3 +1,8 @@
+> **`stream-php` is a Feeds v2 client and is now in maintenance mode.** It will continue to
+> receive critical fixes, so it is safe to keep using with a v2 app. New projects should start
+> with Feeds v3 and [`getstream-php`](https://github.com/GetStream/getstream-php) (Packagist `getstream/getstream-php`).
+> Migration guide: https://getstream.io/activity-feeds/docs/php/v2-to-v3-migration/
+
 # Official PHP SDK for [Stream Feeds](https://getstream.io/activity-feeds/)
 
 [![build](https://github.com/GetStream/stream-php/workflows/build/badge.svg)](https://github.com/GetStream/stream-php/actions) [![Latest Stable Version](https://poser.pugx.org/get-stream/stream/v/stable)](https://packagist.org/packages/get-stream/stream)
